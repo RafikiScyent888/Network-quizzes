@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<title>Custom Quiz Setup &ndash; Network+ Practice Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="site-header">
+      <h1>🌱 Build Your Custom Quiz</h1>
+      <p>All objectives are selected by default. Deselect anything you don't want to be tested on.</p>
+    </div>
+
+    <div id="disclaimerSlot"></div>
+    <div id="resumeSlot"></div>
+
+    <div class="card">
+      <div class="count-row">
+        <label for="countInput"><b>Number of questions:</b></label>
+        <input type="range" id="countSlider" min="45" max="245" step="1" value="45" />
+        <input type="number" id="countInput" min="45" max="245" step="1" value="45" />
+      </div>
+      <div id="poolStatus" class="pool-status"></div>
+    </div>
+
+    <div class="card">
+      <div class="obj-toolbar">
+        <b>Objectives</b>
+        <button class="btn ghost" id="selectAllBtn">Select All</button>
+        <button class="btn ghost" id="selectNoneBtn">Deselect All</button>
+      </div>
+      <div id="objectiveList"></div>
+    </div>
+
+    <div style="text-align:center; margin: 20px 0 8px;">
+      <button class="btn" id="startBtn" style="font-size:16px; padding:14px 32px;">Start Custom Quiz</button>
+      <a href="index.html" class="btn ghost" style="margin-left:10px;">Back to Dashboard</a>
+    </div>
+
+    <div id="footerSlot"></div>
+  </div>
+
+  <script src="assets/questions.js"></script>
+  <script src="assets/common.js"></script>
+  <script>
+    document.getElementById("disclaimerSlot").innerHTML = NQ.renderDisclaimer();
+    document.getElementById("footerSlot").innerHTML = NQ.renderFooter();
+    NQ.renderResumeBanner("resumeSlot");
+
+    const MIN_Q = 45, MAX_Q = 245;
+
+    // Only show objectives that actually have questions in the bank.
+    const countsByObjective = {};
+    window.QUESTION_BANK.forEach((q) => {
+      countsByObjective[q.objectiveId] = (countsByObjective[q.objectiveId] || 0) + 1;
+    });
+    const objectives = window.OBJECTIVES.filter((o) => countsByObjective[o.id] > 0);
+
+    const listEl = document.getElementById("objectiveList");
+    const domains = [...new Set(objectives.map((o) => o.domain))];
+    domains.forEach((domain) => {
+      const group = document.createElement("div");
+      group.className = "domain-group";
+      const items = objectives.filter((o) => o.domain === domain);
+      group.innerHTML = `<h3>${domain}</h3>` + items.map((o) => `
+        <label class="objective-row" data-obj="${o.id}">
+          <input type="checkbox" checked value="${o.id}" />
+          <span>${o.id} &mdash; ${o.label}</span>
+          <span class="obj-count">${countsByObjective[o.id]} questions</span>
+        </label>
+      `).join("");
+      listEl.appendChild(group);
+    });
+
+    const checkboxes = () => [...listEl.querySelectorAll('input[type="checkbox"]')];
+
+    function selectedObjectiveIds() {
+      return checkboxes().filter((c) => c.checked).map((c) => c.value);
+    }
+
+    function poolSize() {
+      return NQ.poolForObjectives(selectedObjectiveIds()).length;
+    }
+
+    const slider = document.getElementById("countSlider");
+    const numberInput = document.getElementById("countInput");
+    const poolStatus = document.getElementById("poolStatus");
+    const startBtn = document.getElementById("startBtn");
+
+    function syncCount(value) {
+      const v = Math.max(MIN_Q, Math.min(MAX_Q, parseInt(value, 10) || MIN_Q));
+      slider.value = v;
+      numberInput.value = v;
+      updateStatus();
+    }
+
+    function updateStatus() {
+      const available = poolSize();
+      const requested = parseInt(numberInput.value, 10);
+      if (available < MIN_Q) {
+        poolStatus.className = "pool-status warn";
+        poolStatus.textContent = `Only ${available} questions available for the selected objectives — select more objectives (minimum quiz size is ${MIN_Q}).`;
+        startBtn.disabled = true;
+      } else if (available < requested) {
+        poolStatus.className = "pool-status warn";
+        poolStatus.textContent = `Only ${available} questions available for the selected objectives. The quiz will use all ${available}.`;
+        startBtn.disabled = false;
+      } else {
+        poolStatus.className = "pool-status";
+        poolStatus.textContent = `${available} questions available for the selected objectives. Quiz will use ${requested}.`;
+        startBtn.disabled = false;
+      }
+    }
+
+    slider.addEventListener("input", () => syncCount(slider.value));
+    numberInput.addEventListener("input", () => syncCount(numberInput.value));
+
+    document.getElementById("selectAllBtn").addEventListener("click", () => {
+      checkboxes().forEach((c) => (c.checked = true));
+      updateStatus();
+    });
+    document.getElementById("selectNoneBtn").addEventListener("click", () => {
+      checkboxes().forEach((c) => (c.checked = false));
+      updateStatus();
+    });
+    listEl.addEventListener("change", updateStatus);
+
+    updateStatus();
+
+    startBtn.addEventListener("click", () => {
+      const objectiveIds = selectedObjectiveIds();
+      const available = NQ.poolForObjectives(objectiveIds).length;
+      if (available < MIN_Q) return;
+      const count = Math.min(parseInt(numberInput.value, 10), available);
+      NQ.saveConfig({
+        mode: "custom",
+        count,
+        objectiveIds,
+        theme: "theme-green",
+        label: `Custom Quiz (${count} Questions, ${objectiveIds.length} objective${objectiveIds.length === 1 ? "" : "s"})`,
+      });
+      window.location.href = "quiz.html";
+    });
+  </script>
+</body>
+</html>
