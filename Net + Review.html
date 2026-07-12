@@ -1,0 +1,1577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CompTIA Network+ Master Quiz (45 Questions)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card: #111827;
+      --accent: #38bdf8;
+      --accent-soft: rgba(56, 189, 248, 0.12);
+      --text-main: #e5e7eb;
+      --text-muted: #9ca3af;
+      --border-subtle: #1f2937;
+      --danger: #f97373;
+      --success: #4ade80;
+      --warning: #facc15;
+      --radius-lg: 14px;
+      --radius-md: 10px;
+      --shadow-soft: 0 18px 45px rgba(0, 0, 0, 0.55);
+      --shadow-subtle: 0 10px 30px rgba(15, 23, 42, 0.9);
+      --transition-fast: 0.18s ease-out;
+      --font-main: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--font-main);
+      background: radial-gradient(circle at top, #1f2937 0, #020617 55%);
+      color: var(--text-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .app-shell {
+      width: 100%;
+      max-width: 1080px;
+      background: radial-gradient(circle at top left, #1f2937 0, #020617 55%);
+      border-radius: 24px;
+      box-shadow: var(--shadow-soft);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .app-header {
+      padding: 18px 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(
+        135deg,
+        rgba(15, 23, 42, 0.96),
+        rgba(15, 23, 42, 0.9)
+      );
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      backdrop-filter: blur(18px);
+    }
+
+    .app-title-block {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .app-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      background: radial-gradient(circle at 30% 0, #38bdf8, #0ea5e9 40%, #0369a1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #e0f2fe;
+      font-weight: 700;
+      font-size: 18px;
+      box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.9),
+        0 10px 25px rgba(8, 47, 73, 0.9);
+    }
+
+    .app-title-text {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .app-title-text h1 {
+      margin: 0;
+      font-size: 18px;
+      letter-spacing: 0.02em;
+      color: #e5e7eb;
+    }
+
+    .app-title-text span {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .app-meta {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.35);
+      background: radial-gradient(circle at top, #111827, #020617);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #22c55e;
+      box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.18);
+    }
+
+    .pill-label {
+      color: #e5e7eb;
+    }
+
+    .pill-sub {
+      color: var(--text-muted);
+    }
+
+    .app-body {
+      padding: 18px 22px 20px;
+      display: grid;
+      grid-template-columns: minmax(0, 2.2fr) minmax(260px, 1.1fr);
+      gap: 18px;
+    }
+
+    @media (max-width: 880px) {
+      .app-body {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    .quiz-panel {
+      background: radial-gradient(circle at top left, #020617, #020617 55%);
+      border-radius: 18px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      box-shadow: var(--shadow-subtle);
+      padding: 18px 18px 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .quiz-header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .quiz-topic {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .quiz-topic span {
+      color: var(--accent);
+      font-weight: 500;
+    }
+
+    .quiz-progress {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .progress-bar-shell {
+      width: 120px;
+      height: 6px;
+      border-radius: 999px;
+      background: #020617;
+      border: 1px solid #111827;
+      overflow: hidden;
+    }
+
+    .progress-bar-fill {
+      height: 100%;
+      width: 0%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #38bdf8, #22c55e);
+      transition: width var(--transition-fast);
+    }
+
+    .question-card {
+      background: radial-gradient(circle at top left, #020617, #020617 60%);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      padding: 14px 14px 12px;
+      box-shadow: 0 14px 35px rgba(0, 0, 0, 0.7);
+    }
+
+    .question-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .question-badge {
+      padding: 3px 9px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      color: #e5e7eb;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .question-badge span {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+
+    .question-text {
+      font-size: 15px;
+      line-height: 1.5;
+      margin-bottom: 10px;
+      color: #e5e7eb;
+    }
+
+    .answers-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .answer-option {
+      position: relative;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      background: radial-gradient(circle at top left, #020617, #020617 70%);
+      padding: 9px 10px 9px 40px;
+      font-size: 14px;
+      color: #e5e7eb;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      min-height: 36px;
+      transition: background var(--transition-fast), border-color var(--transition-fast),
+        transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .answer-option:hover {
+      border-color: rgba(56, 189, 248, 0.7);
+      background: radial-gradient(circle at top left, #020617, #020617 65%);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.35);
+      transform: translateY(-1px);
+    }
+
+    .answer-option.disabled {
+      cursor: default;
+      opacity: 0.9;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .answer-option.disabled:hover {
+      border-color: rgba(31, 41, 55, 0.95);
+      background: radial-gradient(circle at top left, #020617, #020617 70%);
+      box-shadow: none;
+      transform: none;
+    }
+
+    .answer-label {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      color: var(--text-muted);
+      background: radial-gradient(circle at top, #020617, #020617 70%);
+    }
+
+    .answer-text {
+      flex: 1;
+    }
+
+    .answer-option.correct {
+      border-color: rgba(74, 222, 128, 0.9);
+      background: radial-gradient(circle at top left, rgba(22, 163, 74, 0.25), #020617);
+      box-shadow: 0 0 0 1px rgba(74, 222, 128, 0.6);
+    }
+
+    .answer-option.correct .answer-label {
+      border-color: rgba(74, 222, 128, 0.9);
+      color: #bbf7d0;
+      background: radial-gradient(circle at top, rgba(21, 128, 61, 0.9), #022c22);
+    }
+
+    .answer-option.incorrect {
+      border-color: rgba(248, 113, 113, 0.9);
+      background: radial-gradient(circle at top left, rgba(127, 29, 29, 0.35), #020617);
+      box-shadow: 0 0 0 1px rgba(248, 113, 113, 0.6);
+    }
+
+    .answer-option.incorrect .answer-label {
+      border-color: rgba(248, 113, 113, 0.9);
+      color: #fecaca;
+      background: radial-gradient(circle at top, rgba(127, 29, 29, 0.9), #450a0a);
+    }
+
+    .question-footer {
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .feedback {
+      min-height: 18px;
+    }
+
+    .feedback.correct {
+      color: var(--success);
+    }
+
+    .feedback.incorrect {
+      color: var(--danger);
+    }
+
+    .nav-buttons {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+      margin-top: 10px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      background: radial-gradient(circle at top, #020617, #020617 70%);
+      color: #e5e7eb;
+      padding: 7px 14px;
+      font-size: 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: background var(--transition-fast), border-color var(--transition-fast),
+        transform var(--transition-fast), box-shadow var(--transition-fast);
+    }
+
+    .btn:hover {
+      border-color: rgba(56, 189, 248, 0.8);
+      background: radial-gradient(circle at top, #020617, #020617 60%);
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.4);
+      transform: translateY(-0.5px);
+    }
+
+    .btn-primary {
+      border-color: rgba(56, 189, 248, 0.9);
+      background: radial-gradient(circle at top, #0ea5e9, #0369a1);
+      box-shadow: 0 10px 25px rgba(8, 47, 73, 0.9);
+    }
+
+    .btn-primary:hover {
+      border-color: rgba(56, 189, 248, 1);
+      background: radial-gradient(circle at top, #38bdf8, #0284c7);
+      box-shadow: 0 12px 30px rgba(8, 47, 73, 1);
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    .sidebar {
+      background: radial-gradient(circle at top left, #020617, #020617 60%);
+      border-radius: 18px;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      box-shadow: var(--shadow-subtle);
+      padding: 14px 14px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .sidebar-section {
+      background: radial-gradient(circle at top left, #020617, #020617 70%);
+      border-radius: 14px;
+      border: 1px solid rgba(31, 41, 55, 0.95);
+      padding: 10px 11px 9px;
+    }
+
+    .sidebar-title {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .score-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .score-label {
+      color: var(--text-muted);
+    }
+
+    .score-value {
+      color: #e5e7eb;
+      font-weight: 500;
+    }
+
+    .score-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, #020617, #020617 70%);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .score-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.18);
+    }
+
+    .question-map {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .q-map-item {
+      height: 22px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: radial-gradient(circle at top, #020617, #020617 70%);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .q-map-item.current {
+      border-color: rgba(56, 189, 248, 0.9);
+      color: #e0f2fe;
+      box-shadow: 0 0 0 1px rgba(56, 189, 248, 0.5);
+    }
+
+    .q-map-item.correct {
+      border-color: rgba(74, 222, 128, 0.9);
+      color: #bbf7d0;
+      background: radial-gradient(circle at top, rgba(22, 163, 74, 0.4), #020617);
+    }
+
+    .q-map-item.incorrect {
+      border-color: rgba(248, 113, 113, 0.9);
+      color: #fecaca;
+      background: radial-gradient(circle at top, rgba(127, 29, 29, 0.4), #020617);
+    }
+
+    .legend-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 6px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .legend-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: radial-gradient(circle at top, #020617, #020617 70%);
+    }
+
+    .legend-dot.correct {
+      border-color: rgba(74, 222, 128, 0.9);
+      background: radial-gradient(circle at top, rgba(22, 163, 74, 0.7), #020617);
+    }
+
+    .legend-dot.incorrect {
+      border-color: rgba(248, 113, 113, 0.9);
+      background: radial-gradient(circle at top, rgba(127, 29, 29, 0.7), #020617);
+    }
+
+    .legend-dot.current {
+      border-color: rgba(56, 189, 248, 0.9);
+      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.7), #020617);
+    }
+
+    .summary-text {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
+    .tag-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 4px;
+    }
+
+    .tag {
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      background: radial-gradient(circle at top, #020617, #020617 70%);
+      color: var(--text-muted);
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="app-title-block">
+        <div class="app-icon">N+</div>
+        <div class="app-title-text">
+          <h1>CompTIA Network+ Master Quiz</h1>
+          <span>45 Questions • Core Network+ Domains</span>
+        </div>
+      </div>
+      <div class="app-meta">
+        <div class="pill">
+          <div class="pill-dot"></div>
+          <span class="pill-label">45 Questions</span>
+          <span class="pill-sub">Randomized order & answers</span>
+        </div>
+      </div>
+    </header>
+
+    <main class="app-body">
+      <section class="quiz-panel">
+        <div class="quiz-header-row">
+          <div class="quiz-topic">
+            Topic: <span>Network+ — OSI, Cables, IP, Security, Cloud, Troubleshooting</span>
+          </div>
+          <div class="quiz-progress">
+            <span id="progressText">Question 1 of 45</span>
+            <div class="progress-bar-shell">
+              <div class="progress-bar-fill" id="progressBar"></div>
+            </div>
+          </div>
+        </div>
+
+        <article class="question-card">
+          <div class="question-meta">
+            <div class="question-badge">
+              <span>Question</span>
+              <strong id="questionNumber">1</strong>
+            </div>
+            <div id="questionCategory">Category: Network Basics</div>
+          </div>
+          <div class="question-text" id="questionText"></div>
+          <div class="answers-list" id="answersList"></div>
+          <div class="question-footer">
+            <div class="feedback" id="feedback"></div>
+            <div id="questionMetaRight"></div>
+          </div>
+        </article>
+
+        <div class="nav-buttons">
+          <button class="btn" id="prevBtn">← Previous</button>
+          <button class="btn btn-primary" id="nextBtn">Next →</button>
+        </div>
+      </section>
+
+      <aside class="sidebar">
+        <div class="sidebar-section">
+          <div class="sidebar-title">Score & Status</div>
+          <div class="score-row">
+            <div class="score-label">Correct</div>
+            <div class="score-value" id="scoreCorrect">0</div>
+          </div>
+          <div class="score-row">
+            <div class="score-label">Incorrect</div>
+            <div class="score-value" id="scoreIncorrect">0</div>
+          </div>
+          <div class="score-row">
+            <div class="score-label">Answered</div>
+            <div class="score-value" id="scoreAnswered">0 / 45</div>
+          </div>
+          <div class="score-pill">
+            <div class="score-dot"></div>
+            <span id="scoreSummary">Work through each question — exam pacing practice.</span>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Question Map</div>
+          <div class="question-map" id="questionMap"></div>
+          <div class="legend-row">
+            <div class="legend-item">
+              <div class="legend-dot current"></div>
+              <span>Current</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot correct"></div>
+              <span>Correct</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot incorrect"></div>
+              <span>Incorrect</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="sidebar-section">
+          <div class="sidebar-title">Focus Areas</div>
+          <div class="tag-row">
+            <div class="tag">OSI & Ports</div>
+            <div class="tag">Cabling & Wireless</div>
+            <div class="tag">Routing & Switching</div>
+            <div class="tag">Security</div>
+            <div class="tag">Cloud & VPN</div>
+            <div class="tag">Troubleshooting</div>
+          </div>
+          <div class="summary-text">
+            Each item is CompTIA-style: read carefully, choose the best answer, and watch the map fill in.
+          </div>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script>
+    function shuffle(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    const questions = shuffle([
+      {
+        id: 1,
+        category: "Open Systems Interconnection (OSI) Model",
+        question:
+          "At which Open Systems Interconnection (OSI) layer does a switch primarily operate when forwarding Ethernet frames within a local area network (LAN)?",
+        answers: [
+          { label: "A", text: "Layer 1 – Physical" },
+          { label: "B", text: "Layer 2 – Data Link" },
+          { label: "C", text: "Layer 3 – Network" },
+          { label: "D", text: "Layer 4 – Transport" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Switches forward frames based on media access control (MAC) addresses at the Data Link layer (Layer 2)."
+      },
+      {
+        id: 2,
+        category: "Open Systems Interconnection (OSI) Model",
+        question:
+          "Which Open Systems Interconnection (OSI) layer is responsible for end-to-end logical addressing and routing between networks?",
+        answers: [
+          { label: "A", text: "Layer 2 – Data Link" },
+          { label: "B", text: "Layer 3 – Network" },
+          { label: "C", text: "Layer 4 – Transport" },
+          { label: "D", text: "Layer 7 – Application" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "The Network layer (Layer 3) handles logical addressing (Internet Protocol (IP)) and routing between networks."
+      },
+      {
+        id: 3,
+        category: "Ports & Protocols",
+        question:
+          "Which port is used by Hypertext Transfer Protocol Secure (HTTPS) to securely access websites over Transport Layer Security (TLS)?",
+        answers: [
+          { label: "A", text: "Transmission Control Protocol (TCP) 80" },
+          { label: "B", text: "Transmission Control Protocol (TCP) 21" },
+          { label: "C", text: "Transmission Control Protocol (TCP) 443" },
+          { label: "D", text: "User Datagram Protocol (UDP) 53" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Hypertext Transfer Protocol Secure (HTTPS) uses Transmission Control Protocol (TCP) port 443 for secure web traffic over Transport Layer Security (TLS)/Secure Sockets Layer (SSL)."
+      },
+      {
+        id: 4,
+        category: "Ports & Protocols",
+        question:
+          "Which protocol and port combination is most appropriate for secure remote command-line access to a Linux server?",
+        answers: [
+          { label: "A", text: "Telnet on Transmission Control Protocol (TCP) 23" },
+          { label: "B", text: "Secure Shell (SSH) on Transmission Control Protocol (TCP) 22" },
+          { label: "C", text: "Remote Desktop Protocol (RDP) on Transmission Control Protocol (TCP) 3389" },
+          { label: "D", text: "Simple Network Management Protocol (SNMP) on User Datagram Protocol (UDP) 161" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Secure Shell (SSH) on Transmission Control Protocol (TCP) 22 provides encrypted remote command-line access."
+      },
+      {
+        id: 5,
+        category: "Cabling",
+        question:
+          "Which twisted-pair cable category is rated for 10 gigabits per second (Gbps) at up to 100 meters?",
+        answers: [
+          { label: "A", text: "Category 5e (CAT 5e)" },
+          { label: "B", text: "Category 6 (CAT 6)" },
+          { label: "C", text: "Category 6A (CAT 6A)" },
+          { label: "D", text: "CAT 3" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Category 6A (CAT 6A) supports 10 gigabits per second (Gbps) up to 100 meters and is designed to reduce alien crosstalk."
+      },
+      {
+        id: 6,
+        category: "Cabling",
+        question:
+          "Which connector type is most commonly used for Ethernet over twisted-pair cabling?",
+        answers: [
+          { label: "A", text: "registered jack 11 (RJ-11)" },
+          { label: "B", text: "registered jack 45 (RJ-45)" },
+          { label: "C", text: "Lucent Connector (LC)" },
+          { label: "D", text: "Bayonet Neill–Concelman (BNC)" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "registered jack 45 (RJ-45) connectors are used for Ethernet over twisted-pair cabling."
+      },
+      {
+        id: 7,
+        category: "Wireless",
+        question:
+          "Which Institute of Electrical and Electronics Engineers (IEEE) standard defines 5 gigahertz (GHz)-only Wi-Fi with maximum theoretical speeds up to 6.9 gigabits per second (Gbps) (with later amendments)?",
+        answers: [
+          { label: "A", text: "802.11n" },
+          { label: "B", text: "802.11ac" },
+          { label: "C", text: "802.11g" },
+          { label: "D", text: "802.11b" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "802.11ac operates in the 5 gigahertz (GHz) band and supports very high throughput with multiple spatial streams."
+      },
+      {
+        id: 8,
+        category: "Wireless",
+        question:
+          "Which security protocol is currently recommended for securing Wi-Fi networks in modern environments?",
+        answers: [
+          { label: "A", text: "Wired Equivalent Privacy (WEP)" },
+          { label: "B", text: "Wi‑Fi Protected Access (WPA)" },
+          { label: "C", text: "Wi‑Fi Protected Access 2 (WPA2) or Wi‑Fi Protected Access 3 (WPA3)" },
+          { label: "D", text: "Open (no encryption)" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Wi‑Fi Protected Access 2 (WPA2) and Wi‑Fi Protected Access 3 (WPA3) are the recommended Wi-Fi security standards; Wired Equivalent Privacy (WEP) and early Wi‑Fi Protected Access (WPA) are considered insecure."
+      },
+      {
+        id: 9,
+        category: "Internet Protocol (IP) Addressing",
+        question:
+          "Which of the following is a valid private Internet Protocol version 4 (IPv4) address?",
+        answers: [
+          { label: "A", text: "8.8.8.8" },
+          { label: "B", text: "172.16.10.5" },
+          { label: "C", text: "192.0.2.10" },
+          { label: "D", text: "11.0.0.1" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "172.16.0.0–172.31.255.255 is a private Class B range; 172.16.10.5 is valid private addressing."
+      },
+      {
+        id: 10,
+        category: "Internet Protocol (IP) Addressing",
+        question:
+          "Which protocol automatically assigns Internet Protocol (IP) addresses, subnet masks, and default gateways to hosts on a network?",
+        answers: [
+          { label: "A", text: "Domain Name System (DNS)" },
+          { label: "B", text: "Dynamic Host Configuration Protocol (DHCP)" },
+          { label: "C", text: "Network Time Protocol (NTP)" },
+          { label: "D", text: "Simple Network Management Protocol (SNMP)" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Dynamic Host Configuration Protocol (DHCP) dynamically assigns Internet Protocol (IP) configuration information to clients."
+      },
+      {
+        id: 11,
+        category: "Routing",
+        question:
+          "Which routing protocol is a distance-vector protocol that uses hop count as its metric and has a maximum of 15 hops?",
+        answers: [
+          { label: "A", text: "Open Shortest Path First (OSPF)" },
+          { label: "B", text: "Enhanced Interior Gateway Routing Protocol (EIGRP)" },
+          { label: "C", text: "Routing Information Protocol (RIP)" },
+          { label: "D", text: "Border Gateway Protocol (BGP)" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Routing Information Protocol (RIP) is a distance-vector protocol with hop count as its metric and a maximum of 15 hops."
+      },
+      {
+        id: 12,
+        category: "Routing",
+        question:
+          "Which routing protocol is link-state and uses areas and link-state advertisements (LSAs) to build a complete topology of the network?",
+        answers: [
+          { label: "A", text: "Routing Information Protocol (RIP)" },
+          { label: "B", text: "Open Shortest Path First (OSPF)" },
+          { label: "C", text: "Border Gateway Protocol (BGP)" },
+          { label: "D", text: "Enhanced Interior Gateway Routing Protocol (EIGRP)" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Open Shortest Path First (OSPF) is a link-state protocol that uses link-state advertisements (LSAs) and areas to build a topology map."
+      },
+      {
+        id: 13,
+        category: "Switching",
+        question:
+          "Which technology allows multiple virtual local area networks (VLANs) to be carried over a single physical switch-to-switch link?",
+        answers: [
+          { label: "A", text: "Port mirroring" },
+          { label: "B", text: "Trunking (Institute of Electrical and Electronics Engineers (IEEE) 802.1Q)" },
+          { label: "C", text: "Port security" },
+          { label: "D", text: "Spanning Tree" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Institute of Electrical and Electronics Engineers (IEEE) 802.1Q trunking tags frames so multiple virtual local area networks (VLANs) can traverse a single physical link."
+      },
+      {
+        id: 14,
+        category: "Switching",
+        question:
+          "Which protocol prevents switching loops by placing redundant links into a blocking state?",
+        answers: [
+          { label: "A", text: "VLAN Trunking Protocol (VTP)" },
+          { label: "B", text: "Spanning Tree Protocol (STP)" },
+          { label: "C", text: "Link Layer Discovery Protocol (LLDP)" },
+          { label: "D", text: "Cisco Discovery Protocol (CDP)" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Spanning Tree Protocol (STP) prevents loops by blocking redundant paths."
+      },
+      {
+        id: 15,
+        category: "wide area network (WAN) Technologies",
+        question:
+          "Which wide area network (WAN) technology uses labels to make forwarding decisions and is often used by service providers?",
+        answers: [
+          { label: "A", text: "Frame Relay" },
+          { label: "B", text: "Multiprotocol Label Switching (MPLS)" },
+          { label: "C", text: "Integrated Services Digital Network (ISDN)" },
+          { label: "D", text: "Dial-up" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Multiprotocol Label Switching (MPLS) uses labels instead of traditional Internet Protocol (IP) routing lookups to forward traffic efficiently."
+      },
+      {
+        id: 16,
+        category: "wide area network (WAN) Technologies",
+        question:
+          "Which broadband technology uses existing telephone lines and supports different upstream and downstream speeds?",
+        answers: [
+          { label: "A", text: "Cable" },
+          { label: "B", text: "Fiber-to-the-home" },
+          { label: "C", text: "Digital Subscriber Line (DSL)" },
+          { label: "D", text: "Satellite" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Digital Subscriber Line (DSL) uses copper telephone lines and often provides asymmetric speeds (Asymmetric Digital Subscriber Line (ADSL))."
+      },
+      {
+        id: 17,
+        category: "Network Services",
+        question:
+          "Which Domain Name System (DNS) record type maps a hostname to an Internet Protocol version 4 (IPv4) address?",
+        answers: [
+          { label: "A", text: "quad-A (AAAA) record" },
+          { label: "B", text: "mail exchange (MX) record" },
+          { label: "C", text: "canonical name (CNAME) record" },
+          { label: "D", text: "address (A) record" }
+        ],
+        correctLabel: "D",
+        explanation:
+          "An address (A) record maps a hostname to an Internet Protocol version 4 (IPv4) address."
+      },
+      {
+        id: 18,
+        category: "Network Services",
+        question:
+          "Which protocol is used to synchronize time across network devices?",
+        answers: [
+          { label: "A", text: "Network Time Protocol (NTP)" },
+          { label: "B", text: "Simple Network Management Protocol (SNMP)" },
+          { label: "C", text: "SMTP" },
+          { label: "D", text: "IMAP" }
+        ],
+        correctLabel: "A",
+        explanation:
+          "Network Time Protocol (NTP) synchronizes clocks across network devices."
+      },
+      {
+        id: 19,
+        category: "Security",
+        question:
+          "Which security concept ensures that users are granted only the permissions they need to perform their job functions?",
+        answers: [
+          { label: "A", text: "Defense in depth" },
+          { label: "B", text: "Least privilege" },
+          { label: "C", text: "Separation of duties" },
+          { label: "D", text: "Implicit deny" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Least privilege restricts users to only the access necessary for their roles."
+      },
+      {
+        id: 20,
+        category: "Security",
+        question:
+          "Which device is primarily used to inspect traffic at Layers 3 and 4 and enforce security policies between networks?",
+        answers: [
+          { label: "A", text: "Switch" },
+          { label: "B", text: "Firewall" },
+          { label: "C", text: "Hub" },
+          { label: "D", text: "Repeater" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Firewalls inspect traffic and enforce security policies, typically at Layers 3 and 4."
+      },
+      {
+        id: 21,
+        category: "Security",
+        question:
+          "Which protocol is commonly used for centralized authentication, authorization, and accounting for remote access and network devices?",
+        answers: [
+          { label: "A", text: "Domain Name System (DNS)" },
+          { label: "B", text: "Remote Authentication Dial-In User Service (RADIUS)" },
+          { label: "C", text: "TFTP" },
+          { label: "D", text: "HTTP" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Remote Authentication Dial-In User Service (RADIUS) provides centralized authentication, authorization, and accounting (AAA) services for network access."
+      },
+      {
+        id: 22,
+        category: "Security",
+        question:
+          "Which type of attack floods a target with traffic from many distributed sources to exhaust its resources?",
+        answers: [
+          { label: "A", text: "Phishing" },
+          { label: "B", text: "Man-in-the-middle" },
+          { label: "C", text: "Distributed Denial of Service (DDoS)" },
+          { label: "D", text: "Structured Query Language (SQL) injection" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "A Distributed Denial of Service (DDoS) attack uses many sources to overwhelm a target."
+      },
+      {
+        id: 23,
+        category: "virtual private network (VPN) & Remote Access",
+        question:
+          "Which virtual private network (VPN) type connects entire networks to each other, such as a branch office to headquarters?",
+        answers: [
+          { label: "A", text: "Remote-access virtual private network (VPN)" },
+          { label: "B", text: "Clientless Secure Sockets Layer (SSL) virtual private network (VPN)" },
+          { label: "C", text: "Site-to-site virtual private network (VPN)" },
+          { label: "D", text: "Host-to-host virtual private network (VPN)" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Site-to-site VPNs connect entire networks, typically using Internet Protocol Security (IPsec) tunnel mode between gateways."
+      },
+      {
+        id: 24,
+        category: "virtual private network (VPN) & Remote Access",
+        question:
+          "Which Internet Protocol Security (IPsec) mode encrypts the entire original Internet Protocol (IP) packet and encapsulates it within a new Internet Protocol (IP) header?",
+        answers: [
+          { label: "A", text: "Transport mode" },
+          { label: "B", text: "Tunnel mode" },
+          { label: "C", text: "Promiscuous mode" },
+          { label: "D", text: "Monitor mode" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Internet Protocol Security (IPsec) tunnel mode encrypts the entire original packet and adds a new outer Internet Protocol (IP) header."
+      },
+      {
+        id: 25,
+        category: "Cloud & Virtualization",
+        question:
+          "Which cloud service model provides virtual machines, storage, and networking while leaving OS and applications under customer control?",
+        answers: [
+          { label: "A", text: "Software as a Service (SaaS)" },
+          { label: "B", text: "Platform as a Service (PaaS)" },
+          { label: "C", text: "Infrastructure as a Service (IaaS)" },
+          { label: "D", text: "Function as a Service (FaaS)" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Infrastructure as a Service (IaaS) provides virtualized infrastructure; the customer manages OS, apps, and data."
+      },
+      {
+        id: 26,
+        category: "Cloud & Virtualization",
+        question:
+          "Which term describes running multiple virtual machines on a single physical host using a hypervisor?",
+        answers: [
+          { label: "A", text: "Segmentation" },
+          { label: "B", text: "Virtualization" },
+          { label: "C", text: "Containerization" },
+          { label: "D", text: "Bonding" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Virtualization allows multiple virtual machines (VMs) to share a single physical host."
+      },
+      {
+        id: 27,
+        category: "Cloud & Virtualization",
+        question:
+          "Which cloud deployment model combines on-premises infrastructure with public cloud resources?",
+        answers: [
+          { label: "A", text: "Public cloud" },
+          { label: "B", text: "Private cloud" },
+          { label: "C", text: "Hybrid cloud" },
+          { label: "D", text: "Community cloud" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Hybrid cloud mixes private and public resources, often used for cloud bursting and flexible workloads."
+      },
+      {
+        id: 28,
+        category: "Monitoring & Management",
+        question:
+          "Which protocol is commonly used to monitor network devices and gather performance statistics?",
+        answers: [
+          { label: "A", text: "Simple Network Management Protocol (SNMP)" },
+          { label: "B", text: "SMTP" },
+          { label: "C", text: "SFTP" },
+          { label: "D", text: "SCP" }
+        ],
+        correctLabel: "A",
+        explanation:
+          "Simple Network Management Protocol (SNMP) is used for monitoring and managing network devices."
+      },
+      {
+        id: 29,
+        category: "Monitoring & Management",
+        question:
+          "Which log type on a firewall would best help you identify repeated blocked connection attempts from the same Internet Protocol (IP)?",
+        answers: [
+          { label: "A", text: "Configuration logs" },
+          { label: "B", text: "Change management logs" },
+          { label: "C", text: "Security/traffic logs" },
+          { label: "D", text: "System uptime logs" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Security or traffic logs show connection attempts and blocks, useful for detecting suspicious activity."
+      },
+      {
+        id: 30,
+        category: "Troubleshooting",
+        question:
+          "A user can ping an Internet Protocol (IP) address on the internet but cannot browse websites by name. Which service is most likely failing?",
+        answers: [
+          { label: "A", text: "Dynamic Host Configuration Protocol (DHCP)" },
+          { label: "B", text: "Domain Name System (DNS)" },
+          { label: "C", text: "Network Time Protocol (NTP)" },
+          { label: "D", text: "Simple Network Management Protocol (SNMP)" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "If Internet Protocol (IP) connectivity works but name resolution fails, Domain Name System (DNS) is the likely issue."
+      },
+      {
+        id: 31,
+        category: "Troubleshooting",
+        question:
+          "Which command on a Windows system displays the current Internet Protocol (IP) configuration, including Internet Protocol (IP) address, subnet mask, and default gateway?",
+        answers: [
+          { label: "A", text: "ping" },
+          { label: "B", text: "tracert" },
+          { label: "C", text: "ipconfig" },
+          { label: "D", text: "nslookup" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "ipconfig shows Internet Protocol (IP) configuration details on Windows systems."
+      },
+      {
+        id: 32,
+        category: "Troubleshooting",
+        question:
+          "Which tool shows the path packets take through the network to a destination, including each hop?",
+        answers: [
+          { label: "A", text: "ping" },
+          { label: "B", text: "traceroute/tracert" },
+          { label: "C", text: "netstat" },
+          { label: "D", text: "arp" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "traceroute (Linux/macOS) or tracert (Windows) shows each hop along the path to a destination."
+      },
+      {
+        id: 33,
+        category: "Physical Layer",
+        question:
+          "Which device regenerates and amplifies signals to extend the distance of a network segment but does not filter traffic?",
+        answers: [
+          { label: "A", text: "Switch" },
+          { label: "B", text: "Router" },
+          { label: "C", text: "Repeater" },
+          { label: "D", text: "Firewall" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Repeaters operate at Layer 1, regenerating signals without any traffic filtering."
+      },
+      {
+        id: 34,
+        category: "Physical Layer",
+        question:
+          "Which fiber connector type is small form-factor and often used in pairs for duplex connections?",
+        answers: [
+          { label: "A", text: "ST" },
+          { label: "B", text: "SC" },
+          { label: "C", text: "Lucent Connector (LC)" },
+          { label: "D", text: "registered jack 11 (RJ-11)" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Lucent Connector (LC) is a small form-factor fiber connector commonly used in duplex pairs."
+      },
+      {
+        id: 35,
+        category: "Network Design",
+        question:
+          "Which topology describes all devices connected to a single central device, such as a switch?",
+        answers: [
+          { label: "A", text: "Bus" },
+          { label: "B", text: "Ring" },
+          { label: "C", text: "Star" },
+          { label: "D", text: "Mesh" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "In a star topology, all devices connect to a central device like a switch."
+      },
+      {
+        id: 36,
+        category: "Network Design",
+        question:
+          "Which design principle involves using multiple redundant links or devices to avoid a single point of failure?",
+        answers: [
+          { label: "A", text: "Convergence" },
+          { label: "B", text: "Redundancy" },
+          { label: "C", text: "Over-subscription" },
+          { label: "D", text: "Virtualization" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Redundancy adds backup links or devices to maintain availability if one fails."
+      },
+      {
+        id: 37,
+        category: "Network Policies",
+        question:
+          "Which document defines acceptable use of company network resources by employees?",
+        answers: [
+          { label: "A", text: "Service Level Agreement (SLA)" },
+          { label: "B", text: "Acceptable Use Policy (AUP)" },
+          { label: "C", text: "Memorandum of Understanding (MOU)" },
+          { label: "D", text: "Non-Disclosure Agreement (NDA)" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "An Acceptable Use Policy (AUP) defines how users may use company resources."
+      },
+      {
+        id: 38,
+        category: "Network Policies",
+        question:
+          "Which type of agreement defines the expected level of service between a provider and a customer?",
+        answers: [
+          { label: "A", text: "Service Level Agreement (SLA)" },
+          { label: "B", text: "Acceptable Use Policy (AUP)" },
+          { label: "C", text: "Non-Disclosure Agreement (NDA)" },
+          { label: "D", text: "Request for Proposal (RFP)" }
+        ],
+        correctLabel: "A",
+        explanation:
+          "A Service Level Agreement (SLA) defines performance and availability expectations."
+      },
+      {
+        id: 39,
+        category: "Authentication & Access",
+        question:
+          "Which authentication method requires two or more different factors, such as something you know and something you have?",
+        answers: [
+          { label: "A", text: "Single sign-on" },
+          { label: "B", text: "Multifactor authentication" },
+          { label: "C", text: "Role-based access control" },
+          { label: "D", text: "Discretionary access control" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Multifactor authentication uses two or more different factor types (knowledge, possession, inherence)."
+      },
+      {
+        id: 40,
+        category: "Authentication & Access",
+        question:
+          "Which directory service protocol is commonly used for centralized authentication in Windows domains?",
+        answers: [
+          { label: "A", text: "Domain Name System (DNS)" },
+          { label: "B", text: "Lightweight Directory Access Protocol (LDAP)" },
+          { label: "C", text: "Network Time Protocol (NTP)" },
+          { label: "D", text: "TFTP" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "Lightweight Directory Access Protocol (LDAP) is used by directory services like Active Directory for centralized authentication and queries."
+      },
+      {
+        id: 41,
+        category: "Wireless Design",
+        question:
+          "Which term describes reducing the transmit power of access points and carefully placing them to minimize co-channel interference?",
+        answers: [
+          { label: "A", text: "Site survey" },
+          { label: "B", text: "Channel bonding" },
+          { label: "C", text: "Cell sizing" },
+          { label: "D", text: "Beamforming" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Cell sizing adjusts access point (AP) power and placement to control coverage and reduce interference."
+      },
+      {
+        id: 42,
+        category: "Wireless Design",
+        question:
+          "Which tool or process is used to map signal strength and identify dead zones before deploying a wireless network?",
+        answers: [
+          { label: "A", text: "Packet capture" },
+          { label: "B", text: "Site survey" },
+          { label: "C", text: "Penetration test" },
+          { label: "D", text: "Vulnerability scan" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "A wireless site survey measures signal strength and interference to plan access point (AP) placement."
+      },
+      {
+        id: 43,
+        category: "Cloud & Edge",
+        question:
+          "Which term describes processing data closer to where it is generated, such as on Internet of Things (IoT) gateways, to reduce latency?",
+        answers: [
+          { label: "A", text: "Fog/edge computing" },
+          { label: "B", text: "Mainframe computing" },
+          { label: "C", text: "Batch processing" },
+          { label: "D", text: "Thick client computing" }
+        ],
+        correctLabel: "A",
+        explanation:
+          "Fog or edge computing processes data near the source to reduce latency and bandwidth usage."
+      },
+      {
+        id: 44,
+        category: "Cloud & Connectivity",
+        question:
+          "Which option best describes a dedicated, private connection between an on-premises network and a cloud provider, bypassing the public internet?",
+        answers: [
+          { label: "A", text: "Internet Protocol Security (IPsec) virtual private network (VPN) over the internet" },
+          { label: "B", text: "Client-based Secure Sockets Layer (SSL) virtual private network (VPN)" },
+          { label: "C", text: "Direct connect / express route" },
+          { label: "D", text: "Remote desktop gateway" }
+        ],
+        correctLabel: "C",
+        explanation:
+          "Services like Amazon Web Services (AWS) Direct Connect and Azure ExpressRoute provide private, dedicated connectivity to the cloud."
+      },
+      {
+        id: 45,
+        category: "Troubleshooting",
+        question:
+          "A user reports intermittent connectivity. You suspect a bad patch cable. Which tool is best to verify the cable’s pinout and continuity?",
+        answers: [
+          { label: "A", text: "Tone generator and probe" },
+          { label: "B", text: "Cable tester" },
+          { label: "C", text: "Multimeter" },
+          { label: "D", text: "optical time-domain reflectometer (OTDR)" }
+        ],
+        correctLabel: "B",
+        explanation:
+          "A basic cable tester verifies continuity and correct pinout for twisted-pair cables."
+      }
+    ]);
+
+    questions.forEach(q => {
+      q.answers = shuffle(q.answers);
+    });
+
+    let currentIndex = 0;
+    const totalQuestions = questions.length;
+    const userAnswers = new Array(totalQuestions).fill(null);
+    const answerResults = new Array(totalQuestions).fill(null);
+
+    const questionTextEl = document.getElementById("questionText");
+    const answersListEl = document.getElementById("answersList");
+    const feedbackEl = document.getElementById("feedback");
+    const questionNumberEl = document.getElementById("questionNumber");
+    const questionCategoryEl = document.getElementById("questionCategory");
+    const questionMetaRightEl = document.getElementById("questionMetaRight");
+    const progressTextEl = document.getElementById("progressText");
+    const progressBarEl = document.getElementById("progressBar");
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const scoreCorrectEl = document.getElementById("scoreCorrect");
+    const scoreIncorrectEl = document.getElementById("scoreIncorrect");
+    const scoreAnsweredEl = document.getElementById("scoreAnswered");
+    const scoreSummaryEl = document.getElementById("scoreSummary");
+    const questionMapEl = document.getElementById("questionMap");
+
+    function updateScorePanel() {
+      let correct = 0;
+      let incorrect = 0;
+      let answered = 0;
+
+      answerResults.forEach(r => {
+        if (r === "correct") {
+          correct++;
+          answered++;
+        } else if (r === "incorrect") {
+          incorrect++;
+          answered++;
+        }
+      });
+
+      scoreCorrectEl.textContent = correct;
+      scoreIncorrectEl.textContent = incorrect;
+      scoreAnsweredEl.textContent = `${answered} / ${totalQuestions}`;
+
+      if (answered === 0) {
+        scoreSummaryEl.textContent = "Work through each question — exam pacing practice.";
+      } else {
+        const percent = Math.round((correct / totalQuestions) * 100);
+        if (percent >= 80) {
+          scoreSummaryEl.textContent = `Excellent: ${percent}% — this is strong Network+ territory.`;
+        } else if (percent >= 60) {
+          scoreSummaryEl.textContent = `Solid: ${percent}% — review missed items to tighten up.`;
+        } else {
+          scoreSummaryEl.textContent = `You’re at ${percent}% — keep cycling the quiz to build mastery.`;
+        }
+      }
+    }
+
+    function buildQuestionMap() {
+      questionMapEl.innerHTML = "";
+      for (let i = 0; i < totalQuestions; i++) {
+        const item = document.createElement("div");
+        item.className = "q-map-item";
+        item.textContent = i + 1;
+
+        if (i === currentIndex) {
+          item.classList.add("current");
+        }
+        if (answerResults[i] === "correct") {
+          item.classList.add("correct");
+        } else if (answerResults[i] === "incorrect") {
+          item.classList.add("incorrect");
+        }
+
+        item.addEventListener("click", () => {
+          currentIndex = i;
+          renderQuestion();
+        });
+
+        questionMapEl.appendChild(item);
+      }
+    }
+
+    function renderQuestion() {
+      const q = questions[currentIndex];
+
+      questionNumberEl.textContent = currentIndex + 1;
+      questionCategoryEl.textContent = `Category: ${q.category}`;
+      questionTextEl.textContent = q.question;
+
+      const answeredLabel = userAnswers[currentIndex]
+        ? "Answered"
+        : "Not answered yet";
+      questionMetaRightEl.textContent = answeredLabel;
+
+      const progressPercent = ((currentIndex + 1) / totalQuestions) * 100;
+      progressTextEl.textContent = `Question ${currentIndex + 1} of ${totalQuestions}`;
+      progressBarEl.style.width = `${progressPercent}%`;
+
+      answersListEl.innerHTML = "";
+      feedbackEl.textContent = "";
+      feedbackEl.className = "feedback";
+
+      const storedAnswer = userAnswers[currentIndex];
+      const storedResult = answerResults[currentIndex];
+
+      q.answers.forEach(ans => {
+        const option = document.createElement("div");
+        option.className = "answer-option";
+        option.dataset.label = ans.label;
+
+        const labelSpan = document.createElement("div");
+        labelSpan.className = "answer-label";
+        labelSpan.textContent = ans.label;
+
+        const textSpan = document.createElement("div");
+        textSpan.className = "answer-text";
+        textSpan.textContent = ans.text;
+
+        option.appendChild(labelSpan);
+        option.appendChild(textSpan);
+
+        option.addEventListener("click", () => {
+          handleAnswerClick(ans.label);
+        });
+
+        answersListEl.appendChild(option);
+      });
+
+      if (storedAnswer) {
+        applyAnswerStyling(storedAnswer, storedResult);
+      }
+
+      prevBtn.disabled = currentIndex === 0;
+      nextBtn.textContent =
+        currentIndex === totalQuestions - 1 ? "Finish →" : "Next →";
+
+      buildQuestionMap();
+      updateScorePanel();
+    }
+
+    function handleAnswerClick(label) {
+      const q = questions[currentIndex];
+      const correctLabel = q.correctLabel;
+
+      userAnswers[currentIndex] = label;
+
+      const isCorrect = label === correctLabel;
+      answerResults[currentIndex] = isCorrect ? "correct" : "incorrect";
+
+      applyAnswerStyling(label, answerResults[currentIndex]);
+
+      feedbackEl.className = "feedback " + (isCorrect ? "correct" : "incorrect");
+      feedbackEl.textContent = isCorrect
+        ? "Correct — that matches the Network+ concept."
+        : `Incorrect — correct answer: ${correctLabel}. ${q.explanation}`;
+
+      questionMetaRightEl.textContent = "Answered";
+
+      buildQuestionMap();
+      updateScorePanel();
+    }
+
+    function applyAnswerStyling(selectedLabel, result) {
+      const q = questions[currentIndex];
+      const correctLabel = q.correctLabel;
+
+      const options = answersListEl.querySelectorAll(".answer-option");
+      options.forEach(opt => {
+        opt.classList.add("disabled");
+        const label = opt.dataset.label;
+
+        if (label === correctLabel) {
+          opt.classList.add("correct");
+        }
+
+        if (label === selectedLabel && result === "incorrect") {
+          opt.classList.add("incorrect");
+        }
+      });
+    }
+
+    prevBtn.addEventListener("click", () => {
+      if (currentIndex > 0) {
+        currentIndex--;
+        renderQuestion();
+      }
+    });
+
+    nextBtn.addEventListener("click", () => {
+      if (currentIndex < totalQuestions - 1) {
+        currentIndex++;
+        renderQuestion();
+      } else {
+        let correct = answerResults.filter(r => r === "correct").length;
+        let percent = Math.round((correct / totalQuestions) * 100);
+        alert(
+          `Quiz complete.\n\nCorrect: ${correct} / ${totalQuestions}\nScore: ${percent}%`
+        );
+      }
+    });
+
+    renderQuestion();
+  </script>
+</body>
+</html>

@@ -1,0 +1,820 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Network+ Wireless & Physical Installations Quiz</title>
+<style>
+  :root {
+    --bg1:#06111f;
+    --bg2:#0b1c33;
+    --panel:#102544;
+    --panel-2:#0d203a;
+    --line:#2a4770;
+    --text:#eaf2ff;
+    --muted:#9eb4d4;
+    --accent:#78a6ff;
+    --good:#12351f;
+    --good-line:#4dd082;
+    --bad:#35161d;
+    --bad-line:#ff7a90;
+    --info:#102b4e;
+    --info-line:#79b8ff;
+    --btn:#18355f;
+    --btn-hover:#204473;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    padding:24px;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color:var(--text);
+    background:
+      radial-gradient(circle at top, #17345f 0%, var(--bg2) 34%, var(--bg1) 100%);
+    min-height:100vh;
+  }
+  .wrap {
+    max-width:980px;
+    margin:0 auto;
+  }
+  .card {
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    border:1px solid rgba(138, 176, 255, 0.20);
+    border-radius:22px;
+    box-shadow:0 18px 50px rgba(0,0,0,0.35);
+    overflow:hidden;
+  }
+  .top {
+    padding:22px 24px 16px;
+    border-bottom:1px solid rgba(138, 176, 255, 0.16);
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.00));
+  }
+  h1 {
+    margin:0 0 8px;
+    font-size:1.6rem;
+    line-height:1.25;
+    letter-spacing:0.2px;
+  }
+  .sub {
+    color:var(--muted);
+    font-size:0.98rem;
+    line-height:1.45;
+  }
+  .statusbar {
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    gap:12px;
+    align-items:center;
+    margin-top:16px;
+  }
+  .progress-shell {
+    height:12px;
+    background:#0a1730;
+    border:1px solid rgba(138,176,255,0.18);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .progress-fill {
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, #6a9cff, #8fd2ff);
+    transition:width 0.25s ease;
+  }
+  .pill {
+    border:1px solid rgba(138,176,255,0.22);
+    background:rgba(255,255,255,0.03);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:0.92rem;
+    color:var(--text);
+    white-space:nowrap;
+  }
+  .main {
+    padding:24px;
+  }
+  .question-num {
+    color:#8fb2f1;
+    font-size:0.92rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    margin-bottom:10px;
+  }
+  .question {
+    font-size:1.2rem;
+    line-height:1.55;
+    margin:0 0 18px;
+  }
+  .answers {
+    display:grid;
+    gap:12px;
+  }
+  .answer-btn {
+    width:100%;
+    text-align:left;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    color:var(--text);
+    padding:14px 16px;
+    cursor:pointer;
+    transition:transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+    font:600 0.98rem/1.45 "Consolas","Menlo","Monaco","Courier New",monospace;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:clip;
+  }
+  .answer-btn:hover:not(:disabled) {
+    transform:translateY(-1px);
+    border-color:#86adff;
+    background:rgba(255,255,255,0.055);
+  }
+  .answer-btn:disabled {
+    cursor:default;
+  }
+  .answer-btn.correct {
+    background:var(--good);
+    border-color:var(--good-line);
+    color:#effff4;
+  }
+  .answer-btn.incorrect {
+    background:var(--bad);
+    border-color:var(--bad-line);
+    color:#fff1f3;
+  }
+  .answer-btn.reveal-correct {
+    background:#102d20;
+    border-color:#55d88c;
+    color:#effff4;
+  }
+  .feedback {
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:16px;
+    display:none;
+    border:1px solid transparent;
+    line-height:1.5;
+  }
+  .feedback.good {
+    display:block;
+    background:var(--good);
+    border-color:var(--good-line);
+  }
+  .feedback.bad {
+    display:block;
+    background:var(--bad);
+    border-color:var(--bad-line);
+  }
+  details {
+    margin-top:14px;
+    border:1px solid rgba(138,176,255,0.18);
+    border-radius:16px;
+    background:var(--info);
+    overflow:hidden;
+  }
+  summary {
+    cursor:pointer;
+    list-style:none;
+    padding:14px 16px;
+    font-weight:700;
+  }
+  summary::-webkit-details-marker { display:none; }
+  .explanation {
+    padding:0 16px 16px;
+    color:#e4efff;
+    line-height:1.55;
+  }
+  .controls {
+    display:flex;
+    gap:12px;
+    flex-wrap:wrap;
+    margin-top:20px;
+  }
+  .btn {
+    border:none;
+    border-radius:14px;
+    padding:12px 16px;
+    font-weight:700;
+    color:white;
+    background:var(--btn);
+    cursor:pointer;
+    transition:background 0.15s ease, transform 0.12s ease;
+  }
+  .btn:hover {
+    background:var(--btn-hover);
+    transform:translateY(-1px);
+  }
+  .btn.secondary {
+    background:transparent;
+    border:1px solid rgba(138,176,255,0.25);
+    color:var(--text);
+  }
+  .btn[disabled] {
+    opacity:0.55;
+    cursor:not-allowed;
+    transform:none;
+  }
+  .result {
+    display:none;
+  }
+  .result.show {
+    display:block;
+  }
+  .score-big {
+    font-size:2rem;
+    font-weight:800;
+    margin:0 0 8px;
+  }
+  .review-list {
+    margin-top:18px;
+    display:grid;
+    gap:14px;
+  }
+  .review-item {
+    border:1px solid rgba(138,176,255,0.18);
+    background:rgba(255,255,255,0.03);
+    border-radius:18px;
+    padding:16px;
+  }
+  .review-item h3 {
+    margin:0 0 10px;
+    font-size:1rem;
+    line-height:1.45;
+  }
+  .tag {
+    display:inline-block;
+    font-size:0.82rem;
+    border-radius:999px;
+    padding:6px 10px;
+    margin-bottom:10px;
+    border:1px solid rgba(255,255,255,0.16);
+  }
+  .tag.good {
+    background:var(--good);
+    border-color:var(--good-line);
+  }
+  .tag.bad {
+    background:var(--bad);
+    border-color:var(--bad-line);
+  }
+  .mini {
+    font:600 0.95rem/1.45 "Consolas","Menlo","Monaco","Courier New",monospace;
+    color:#eef4ff;
+    margin:4px 0;
+    white-space:normal;
+  }
+  @media (max-width: 780px) {
+    body { padding:14px; }
+    .statusbar { grid-template-columns:1fr; }
+    .answer-btn { white-space:normal; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="top">
+      <h1>CompTIA Network+ — Wireless Configurations & Physical Installations</h1>
+      <div class="sub">Scenario-based exam mode with one question at a time, shuffled options, collapsible explanations, and hardened same-domain distractors.</div>
+      <div class="statusbar">
+        <div class="progress-shell"><div id="progressFill" class="progress-fill"></div></div>
+        <div class="pill" id="progressText">Question 1 of 1</div>
+        <div class="pill" id="scoreText">Score 0/0</div>
+      </div>
+    </div>
+
+    <div class="main">
+      <section id="quizPanel">
+        <div class="question-num" id="questionNum"></div>
+        <h2 class="question" id="questionText"></h2>
+        <div class="answers" id="answers"></div>
+        <div id="feedback" class="feedback"></div>
+        <details id="explainBox">
+          <summary>Explanation</summary>
+          <div id="explanationText" class="explanation"></div>
+        </details>
+        <div class="controls">
+          <button id="nextBtn" class="btn" disabled>Next</button>
+          <button id="restartBtn" class="btn secondary">Restart Quiz</button>
+        </div>
+      </section>
+
+      <section id="resultPanel" class="result">
+        <p class="score-big" id="finalScore"></p>
+        <div class="sub" id="finalMsg"></div>
+        <div class="controls">
+          <button id="retryBtn" class="btn">Retry Quiz</button>
+        </div>
+        <div class="review-list" id="reviewList"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+const sourceQuestions = [
+  {
+    "q": "A technician is staging six laptops in a temporary classroom. The laptops need to exchange files directly with one another, and there is no access point (AP) available. Which wireless mode should be used?",
+    "choices": [
+      "Ad hoc mode.",
+      "Bridge mode.",
+      "Mesh mode.",
+      "Repeater mode."
+    ],
+    "correct": 0,
+    "exp": "Ad hoc mode allows wireless clients to communicate directly without an access point (AP). Bridge mode links network segments, mesh provides resilient access point (AP)-to-access point (AP) paths, and repeater mode extends existing coverage."
+  },
+  {
+    "q": "A network engineer must connect two buildings across a parking lot with a focused point-to-point wireless link. Which antenna type is the best fit?",
+    "choices": [
+      "Yagi antenna.",
+      "Dipole antenna.",
+      "Omnidirectional antenna.",
+      "Rubber duck antenna."
+    ],
+    "correct": 0,
+    "exp": "A Yagi antenna is directional and suited for longer point-to-point links. Dipole, omnidirectional, and rubber duck antennas radiate more broadly and are not the best choice for a focused building-to-building path."
+  },
+  {
+    "q": "A wireless admin is deploying three nearby 2.4 gigahertz (GHz) access points in a busy office. Which channel plan best reduces overlap?",
+    "choices": [
+      "Channels 1, 6, and 11.",
+      "Channels 2, 6, and 10.",
+      "Channels 3, 7, and 11.",
+      "Channels 4, 8, and 12."
+    ],
+    "correct": 0,
+    "exp": "In the 2.4 gigahertz (GHz) band, 1, 6, and 11 are the standard non-overlapping channels. The other sets still overlap and create interference."
+  },
+  {
+    "q": "A security team is replacing an old wireless deployment and wants the strongest modern protection for a new employee service set identifier (SSID). Which option should be selected?",
+    "choices": [
+      "Wi‑Fi Protected Access 3 (WPA3) with Simultaneous Authentication of Equals (SAE).",
+      "Wi‑Fi Protected Access 2 (WPA2) with Temporal Key Integrity Protocol (TKIP).",
+      "Wi‑Fi Protected Access (WPA) with Temporal Key Integrity Protocol (TKIP).",
+      "Wired Equivalent Privacy (WEP) with Rivest Cipher 4 (RC4)."
+    ],
+    "correct": 0,
+    "exp": "Wi‑Fi Protected Access 3 (WPA3) with Simultaneous Authentication of Equals (SAE) is the strongest current choice among these options. Wi‑Fi Protected Access 2 (WPA2) with Temporal Key Integrity Protocol (TKIP), Wi‑Fi Protected Access (WPA), and Wired Equivalent Privacy (WEP) are weaker or outdated."
+  },
+  {
+    "q": "Users in a warehouse report poor Wi-Fi reception after new storage walls were installed. Which condition is the most likely cause of signal loss?",
+    "choices": [
+      "Concrete barriers.",
+      "Long Dynamic Host Configuration Protocol (DHCP) leases.",
+      "Disabled service set identifier (SSID) broadcast.",
+      "Misnumbered virtual local area networks (VLANs)."
+    ],
+    "correct": 0,
+    "exp": "Dense materials such as concrete attenuate radio frequency (RF) signals. Dynamic Host Configuration Protocol (DHCP) leases, service set identifier (SSID) broadcast settings, and virtual local area network (VLAN) numbering do not directly cause radio frequency (RF) absorption."
+  },
+  {
+    "q": "A small office needs better Wi-Fi coverage in a conference room, but running new Ethernet is not currently possible. Which device is the best choice?",
+    "choices": [
+      "Wireless range extender.",
+      "Load balancer appliance.",
+      "Forward proxy server.",
+      "Network intrusion detection system (IDS) sensor."
+    ],
+    "correct": 0,
+    "exp": "A wireless range extender retransmits an existing signal into the weak area. The other options do not extend Wi-Fi coverage."
+  },
+  {
+    "q": "A company wants new access points (APs) to support 5 gigahertz (GHz) operation and multi-user, multiple input, multiple output (MU‑MIMO) for higher throughput. Which standard meets that requirement best?",
+    "choices": [
+      "802.11ac standard.",
+      "802.11g standard.",
+      "802.11b standard.",
+      "802.11a bridge mode."
+    ],
+    "correct": 0,
+    "exp": "802.11ac operates on 5 gigahertz (GHz) and supports multi-user, multiple input, multiple output (MU‑MIMO). 802.11g and 802.11b are older, slower standards, and 802.11a bridge mode is not the correct standard reference here."
+  },
+  {
+    "q": "A technician is terminating copper cabling onto a patch panel in a new main distribution frame (MDF). Which tool is required for the job?",
+    "choices": [
+      "Punchdown tool.",
+      "Crimping tool.",
+      "Optical power meter.",
+      "Loopback adapter."
+    ],
+    "correct": 0,
+    "exp": "A punchdown tool seats copper pairs into insulation displacement connector (IDC) terminals on a patch panel. Crimpers are used for modular connectors, while the other tools serve different purposes."
+  },
+  {
+    "q": "A company is configuring enterprise wireless authentication with a Remote Authentication Dial-In User Service (RADIUS) server for employee logins. Which method should be used?",
+    "choices": [
+      "802.1X authentication.",
+      "Wi‑Fi Protected Access 2 (WPA2) personal mode.",
+      "Wi‑Fi Protected Setup (WPS).",
+      "Open authentication."
+    ],
+    "correct": 0,
+    "exp": "802.1X is the enterprise authentication framework used with Remote Authentication Dial-In User Service (RADIUS). Wi‑Fi Protected Access 2 (WPA2) personal uses a shared passphrase, Wi‑Fi Protected Setup (WPS) is for simplified setup, and open authentication provides no real access control."
+  },
+  {
+    "q": "An access point is being mounted in the center of a large open workspace. Which antenna pattern is best for even horizontal coverage?",
+    "choices": [
+      "Omnidirectional pattern.",
+      "Yagi directional pattern.",
+      "Parabolic dish pattern.",
+      "Laser line pattern."
+    ],
+    "correct": 0,
+    "exp": "An omnidirectional antenna radiates in all horizontal directions, making it ideal for broad room coverage. Yagi and parabolic designs are directional."
+  },
+  {
+    "q": "A cable run must pass near industrial motors and electrical lines. Which medium is most resistant to electromagnetic interference (EMI) and radio frequency interference (RFI)?",
+    "choices": [
+      "Fiber optic cable.",
+      "Unshielded twisted pair.",
+      "Shielded twisted pair.",
+      "Thick coaxial cable."
+    ],
+    "correct": 0,
+    "exp": "Fiber optic cable uses light instead of electrical signaling, so it is immune to electromagnetic interference (EMI) and radio frequency interference (RFI). Copper media can still be affected to some degree."
+  },
+  {
+    "q": "A company wants the highest throughput and better efficiency for dense wireless client environments. Which wireless local area network (WLAN) standard is the best choice?",
+    "choices": [
+      "802.11ax standard.",
+      "802.11ac standard.",
+      "802.11n standard.",
+      "802.11g standard."
+    ],
+    "correct": 0,
+    "exp": "802.11ax, also known as Wi-Fi 6, improves efficiency and throughput in dense deployments. The other standards are older and less capable."
+  },
+  {
+    "q": "A rack installer wants to keep patch cables neat and maintain airflow inside a network cabinet. Which component should be added?",
+    "choices": [
+      "Cable management panel.",
+      "Keystone wall plate.",
+      "registered jack 45 (RJ45) strain boot.",
+      "Media converter tray."
+    ],
+    "correct": 0,
+    "exp": "A cable management panel organizes patch cables in a rack and helps preserve airflow. The other items do not provide the same rack-level cable organization."
+  },
+  {
+    "q": "Coverage at the far end of a conference room is weak. Which access point setting most directly affects how far the signal reaches?",
+    "choices": [
+      "Transmit power level.",
+      "Dynamic Host Configuration Protocol (DHCP) lease period.",
+      "Native virtual local area network (VLAN) value.",
+      "service set identifier (SSID) visibility state."
+    ],
+    "correct": 0,
+    "exp": "Transmit power has a direct effect on radio frequency (RF) range. Dynamic Host Configuration Protocol (DHCP) leases, virtual local area network (VLAN) values, and service set identifier (SSID) visibility do not change the physical reach of the signal."
+  },
+  {
+    "q": "Two wired local area networks (LANs) on opposite sides of a courtyard need to be connected over Wi-Fi without laying fiber. Which device role should be used?",
+    "choices": [
+      "Wireless bridge role.",
+      "Wireless repeater role.",
+      "Wireless client role.",
+      "Wireless scanner role."
+    ],
+    "correct": 0,
+    "exp": "A wireless bridge connects separate wired local area network (LAN) segments over a wireless link. A repeater extends coverage, while a client role joins an existing wireless local area network (WLAN)."
+  },
+  {
+    "q": "A wireless admin is assigning 5 gigahertz (GHz) channels and wants to identify the range that requires Dynamic Frequency Selection (DFS) checks for radar. Which range is correct?",
+    "choices": [
+      "Channels 52 through 144.",
+      "Channels 1 through 11.",
+      "Channels 36 through 48.",
+      "Channels 149 through 165."
+    ],
+    "correct": 0,
+    "exp": "Dynamic Frequency Selection (DFS) applies to much of the mid-5 gigahertz (GHz) spectrum, including channels 52 through 144. The 2.4 gigahertz (GHz) channels and the lower and upper non-Dynamic Frequency Selection (DFS) 5 gigahertz (GHz) groups do not match that range."
+  },
+  {
+    "q": "A technician needs to confirm a new Ethernet drop has proper continuity and pin mapping before it is handed off. Which tool should be used first?",
+    "choices": [
+      "Cable tester.",
+      "Tone generator.",
+      "Protocol analyzer.",
+      "Optical loss meter."
+    ],
+    "correct": 0,
+    "exp": "A cable tester verifies continuity and pinout on Ethernet cable. A tone generator traces cable paths, while the other tools are for different tasks."
+  },
+  {
+    "q": "Users need to walk between floors and remain connected to the same wireless network without manually reconnecting. Which feature enables this behavior?",
+    "choices": [
+      "Client roaming.",
+      "Port bonding.",
+      "Packet shaping.",
+      "service set identifier (SSID) cloaking."
+    ],
+    "correct": 0,
+    "exp": "Roaming allows a client to move from one access point (AP) to another while maintaining connectivity. The other features do not describe handoff between access points (APs)."
+  },
+  {
+    "q": "A Wi‑Fi 6 deployment is being optimized for many simultaneous users in a lecture hall. Which feature most directly improves efficient shared access?",
+    "choices": [
+      "orthogonal frequency-division multiple access (OFDMA) scheduling.",
+      "Wi‑Fi Protected Setup (WPS) enrollment.",
+      "Captive portal mode.",
+      "Frequency hopping."
+    ],
+    "correct": 0,
+    "exp": "orthogonal frequency-division multiple access (OFDMA) is a key Wi‑Fi 6 feature that improves spectrum efficiency by dividing channels into smaller resource units for multiple clients."
+  },
+  {
+    "q": "An installer must attach access points securely to the suspended ceiling grid in an office renovation. Which component is intended for that job?",
+    "choices": [
+      "access point (AP) mounting bracket.",
+      "Surface raceway cover.",
+      "Rack cable lacer.",
+      "Patch panel insert."
+    ],
+    "correct": 0,
+    "exp": "An access point (AP) mounting bracket is designed to secure the access point to the ceiling structure. The other items are used for different installation tasks."
+  },
+  {
+    "q": "A legacy guest wireless local area network (WLAN) still uses a weak encryption method that can be cracked quickly and should be removed. Which method is it?",
+    "choices": [
+      "Wired Equivalent Privacy (WEP) security.",
+      "Wi‑Fi Protected Access 3 (WPA3) security.",
+      "Wi‑Fi Protected Access 2 (WPA2) with Advanced Encryption Standard (AES) security.",
+      "Wi‑Fi Protected Access 2 (WPA2) Enterprise security."
+    ],
+    "correct": 0,
+    "exp": "Wired Equivalent Privacy (WEP) is obsolete and insecure. Wi‑Fi Protected Access 3 (WPA3), Wi‑Fi Protected Access 2 (WPA2) with Advanced Encryption Standard (AES), and Wi‑Fi Protected Access 2 (WPA2) Enterprise are stronger options than Wired Equivalent Privacy (WEP)."
+  },
+  {
+    "q": "A warehouse with tall metal shelving has unstable signal quality because radio waves are bouncing off surfaces. What is the most likely radio frequency (RF) issue?",
+    "choices": [
+      "Multipath interference.",
+      "Address exhaustion.",
+      "Subnet overlap.",
+      "Route summarization."
+    ],
+    "correct": 0,
+    "exp": "Reflective surfaces can create multipath interference by causing radio frequency (RF) signals to arrive along multiple paths. The other answers are unrelated to radio frequency (RF) reflection."
+  },
+  {
+    "q": "A long-distance directional wireless connection is being built between two buildings to link their wired networks. Which wireless mode best fits the design?",
+    "choices": [
+      "Bridge mode.",
+      "Ad hoc mode.",
+      "Hotspot mode.",
+      "Monitor mode."
+    ],
+    "correct": 0,
+    "exp": "Bridge mode is used to connect separate wired networks over a wireless link. Ad hoc mode is client-to-client, hotspot mode provides access service, and monitor mode is for capture and analysis."
+  },
+  {
+    "q": "A company needs an outdoor backbone run between buildings for a wireless backhaul project. Which cable type is most appropriate for the long distance?",
+    "choices": [
+      "Fiber optic cable.",
+      "Category 3 cable.",
+      "Category 5e cable.",
+      "RG-59 coax cable."
+    ],
+    "correct": 0,
+    "exp": "Fiber is the best choice for long outdoor interbuilding runs because of distance capability and electromagnetic interference (EMI) immunity. The copper options are less suitable for this backbone use."
+  },
+  {
+    "q": "An administrator wants to increase throughput on a 5 gigahertz (GHz) access point (AP) by combining adjacent channels into a wider channel. Which feature is being configured?",
+    "choices": [
+      "Channel bonding.",
+      "Band steering.",
+      "Airtime fairness.",
+      "Client isolation."
+    ],
+    "correct": 0,
+    "exp": "Channel bonding combines adjacent channels to create greater bandwidth. Band steering nudges clients between bands, airtime fairness adjusts usage, and client isolation separates endpoints."
+  },
+  {
+    "q": "A technician is routing data cabling along an office wall and wants both protection and a clean appearance. Which item should be installed?",
+    "choices": [
+      "Surface raceway.",
+      "Cable certifier.",
+      "Patch panel shelf.",
+      "Modular coupler."
+    ],
+    "correct": 0,
+    "exp": "A surface raceway protects and conceals cabling routed along a wall. The other items do not provide wall-mounted cable protection."
+  },
+  {
+    "q": "A wireless engineer wants the access point (AP) to focus radio frequency (RF) energy toward associated clients to improve signal quality and throughput. Which feature should be enabled?",
+    "choices": [
+      "Beamforming feature.",
+      "Channel hopping feature.",
+      "service set identifier (SSID) hiding feature.",
+      "Port mirroring feature."
+    ],
+    "correct": 0,
+    "exp": "Beamforming directs radio frequency (RF) energy toward clients to improve signal quality. The other options do not perform directional radio frequency (RF) optimization."
+  },
+  {
+    "q": "During a cabling project, a technician must identify the matching far-end cable hidden inside a wall cavity. Which tool pair is best for the task?",
+    "choices": [
+      "Tone generator and probe.",
+      "Crimper and die set.",
+      "Cable tester and loopback.",
+      "Protocol sniffer and tap."
+    ],
+    "correct": 0,
+    "exp": "A tone generator and probe help trace and identify cable runs through walls or ceilings. The other tool pairs do not provide the same tracing function."
+  },
+  {
+    "q": "A large facility wants wireless coverage that can automatically reroute traffic if one access point (AP) fails. Which topology best provides self-healing behavior?",
+    "choices": [
+      "Mesh topology.",
+      "Star topology.",
+      "Bus topology.",
+      "Ring topology."
+    ],
+    "correct": 0,
+    "exp": "A mesh topology can reroute traffic dynamically when a node becomes unavailable. Star, bus, and ring do not describe the same wireless self-healing design."
+  }
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function letter(index) {
+  return ["A", "B", "C", "D"][index] || "?";
+}
+
+function nbspPad(text, target) {
+  const bare = text.replace(/ /g, "\u00A0");
+  const diff = Math.max(0, target - text.length);
+  return bare + "\u00A0".repeat(diff);
+}
+
+function buildQuiz() {
+  return shuffle(sourceQuestions).map((q) => {
+    const options = q.choices.map((text, idx) => ({
+      text,
+      correct: idx === q.correct
+    }));
+    const shuffled = shuffle(options);
+    const maxLen = Math.max(...shuffled.map(o => o.text.length));
+    return {
+      q: q.q,
+      explanation: q.exp,
+      options: shuffled.map((opt, idx) => ({
+        label: `${letter(idx)}) ${nbspPad(opt.text, maxLen)}`,
+        text: opt.text,
+        correct: opt.correct
+      }))
+    };
+  });
+}
+
+let quiz = buildQuiz();
+let current = 0;
+let score = 0;
+let locked = false;
+let history = [];
+
+const quizPanel = document.getElementById("quizPanel");
+const resultPanel = document.getElementById("resultPanel");
+const questionNum = document.getElementById("questionNum");
+const questionText = document.getElementById("questionText");
+const answersDiv = document.getElementById("answers");
+const feedback = document.getElementById("feedback");
+const explainBox = document.getElementById("explainBox");
+const explanationText = document.getElementById("explanationText");
+const nextBtn = document.getElementById("nextBtn");
+const restartBtn = document.getElementById("restartBtn");
+const retryBtn = document.getElementById("retryBtn");
+const progressFill = document.getElementById("progressFill");
+const progressText = document.getElementById("progressText");
+const scoreText = document.getElementById("scoreText");
+const finalScore = document.getElementById("finalScore");
+const finalMsg = document.getElementById("finalMsg");
+const reviewList = document.getElementById("reviewList");
+
+function updateHeader() {
+  const answered = history.length;
+  const pct = ((current) / quiz.length) * 100;
+  progressFill.style.width = `${pct}%`;
+  progressText.textContent = `Question ${Math.min(current + 1, quiz.length)} of ${quiz.length}`;
+  scoreText.textContent = `Score ${score}/${answered}`;
+}
+
+function renderQuestion() {
+  locked = false;
+  nextBtn.disabled = true;
+  feedback.className = "feedback";
+  feedback.textContent = "";
+  explainBox.open = false;
+  explanationText.textContent = "";
+  answersDiv.innerHTML = "";
+
+  const item = quiz[current];
+  questionNum.textContent = `Question ${current + 1}`;
+  questionText.textContent = item.q;
+  explanationText.textContent = item.explanation;
+
+  item.options.forEach((opt) => {
+    const btn = document.createElement("button");
+    btn.className = "answer-btn";
+    btn.innerHTML = opt.label;
+    btn.addEventListener("click", () => selectAnswer(btn, opt, item.options));
+    answersDiv.appendChild(btn);
+  });
+
+  updateHeader();
+}
+
+function selectAnswer(clickedBtn, opt, options) {
+  if (locked) return;
+  locked = true;
+  const buttons = [...answersDiv.querySelectorAll(".answer-btn")];
+  buttons.forEach(b => b.disabled = true);
+
+  const correctOption = options.find(o => o.correct);
+  const correctIndex = options.findIndex(o => o.correct);
+
+  if (opt.correct) {
+    score += 1;
+    clickedBtn.classList.add("correct");
+    feedback.className = "feedback good";
+    feedback.textContent = `Correct. ${letter(correctIndex)} is the best fit for this scenario.`;
+  } else {
+    clickedBtn.classList.add("incorrect");
+    const correctBtn = buttons[correctIndex];
+    if (correctBtn) correctBtn.classList.add("reveal-correct");
+    feedback.className = "feedback bad";
+    feedback.textContent = `Not this one. The best answer is ${letter(correctIndex)} because it matches the wireless or installation requirement more precisely.`;
+  }
+
+  history.push({
+    question: quiz[current].q,
+    chosen: opt.text,
+    correct: correctOption.text,
+    wasCorrect: opt.correct,
+    explanation: quiz[current].explanation
+  });
+
+  explainBox.open = true;
+  nextBtn.disabled = false;
+  scoreText.textContent = `Score ${score}/${history.length}`;
+}
+
+function showResults() {
+  progressFill.style.width = "100%";
+  progressText.textContent = `Completed ${quiz.length} of ${quiz.length}`;
+  scoreText.textContent = `Score ${score}/${quiz.length}`;
+  quizPanel.style.display = "none";
+  resultPanel.classList.add("show");
+
+  const pct = Math.round((score / quiz.length) * 100);
+  finalScore.textContent = `Final Score: ${score}/${quiz.length} (${pct}%)`;
+
+  let msg = "Keep drilling the explanations and near-miss differences.";
+  if (pct >= 90) msg = "Strong work. Your answer selection is looking exam-ready.";
+  else if (pct >= 75) msg = "Nice job. A few near-miss concepts still need tightening.";
+  else if (pct >= 60) msg = "Good foundation. Focus on standards, antennas, and install tools.";
+  finalMsg.textContent = msg;
+
+  reviewList.innerHTML = history.map((item, idx) => `
+    <div class="review-item">
+      <div class="tag ${item.wasCorrect ? "good" : "bad"}">${item.wasCorrect ? "Correct" : "Review Needed"}</div>
+      <h3>${idx + 1}. ${item.question}</h3>
+      <div class="mini">Your answer: ${item.chosen}</div>
+      <div class="mini">Best answer: ${item.correct}</div>
+      <div class="sub">${item.explanation}</div>
+    </div>
+  `).join("");
+}
+
+nextBtn.addEventListener("click", () => {
+  current += 1;
+  if (current >= quiz.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+});
+
+function restartQuiz() {
+  quiz = buildQuiz();
+  current = 0;
+  score = 0;
+  locked = false;
+  history = [];
+  resultPanel.classList.remove("show");
+  quizPanel.style.display = "block";
+  renderQuestion();
+}
+
+restartBtn.addEventListener("click", restartQuiz);
+retryBtn.addEventListener("click", restartQuiz);
+
+renderQuestion();
+</script>
+</body>
+</html>
