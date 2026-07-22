@@ -1,0 +1,131 @@
+24. IPsec mode encrypting entire packet:
+A. Transport
+👉 B. Tunnel
+C. Promiscuous
+D. Monitor
+
+25. Cloud model with VMs + user OS control:
+A. SaaS
+B. PaaS
+👉 C. IaaS
+D. FaaS
+
+26. Running multiple VMs on one host:
+A. Segmentation
+👉 B. Virtualization
+C. Containerization
+D. Bonding
+
+27. Combines on-prem + cloud:
+A. Public
+B. Private
+👉 C. Hybrid
+D. Community
+
+28. Network monitoring protocol:
+👉 A. SNMP
+B. SMTP
+C. SFTP
+D. SCP
+
+29. Logs for blocked traffic attempts:
+A. Config
+B. Change
+👉 C. Security/traffic logs
+D. Uptime
+
+30. Can ping IP but not names → issue:
+A. DHCP
+👉 B. DNS
+C. NTP
+D. SNMP
+
+31. Windows IP config command:
+A. ping
+B. tracert
+👉 C. ipconfig
+D. nslookup
+
+32. Shows packet path/hops:
+A. ping
+👉 B. traceroute/tracert
+C. netstat
+D. arp
+
+33. Regenerates signal (Layer 1):
+A. Switch
+B. Router
+👉 C. Repeater
+D. Firewall
+
+34. Small duplex fiber connector:
+A. ST
+B. SC
+👉 C. LC
+D. RJ-11
+
+35. All devices connect to central device:
+A. Bus
+B. Ring
+👉 C. Star
+D. Mesh
+
+36. Avoid single point of failure:
+A. Convergence
+👉 B. Redundancy
+C. Oversubscription
+D. Virtualization
+
+37. Defines acceptable network use:
+A. SLA
+👉 B. AUP
+C. MOU
+D. NDA
+
+38. Defines service expectations:
+👉 A. SLA
+B. AUP
+C. NDA
+D. RFP
+
+39. Uses multiple authentication factors:
+A. SSO
+👉 B. MFA
+C. RBAC
+D. DAC
+
+40. Directory service protocol:
+A. DNS
+👉 B. LDAP
+C. NTP
+D. TFTP
+
+41. Adjust AP power to reduce interference:
+A. Site survey
+B. Channel bonding
+👉 C. Cell sizing
+D. Beamforming
+
+42. Maps wireless signal strength:
+A. Packet capture
+👉 B. Site survey
+C. Pen test
+D. Vulnerability scan
+
+43. Processing near data source:
+👉 A. Edge computing
+B. Mainframe
+C. Batch
+D. Thick client
+
+44. Private cloud connection (not internet):
+A. IPsec VPN
+B. SSL VPN
+👉 C. Direct Connect / ExpressRoute
+D. RDP Gateway
+
+45. Tool to test cable pinout:
+A. Tone generator
+👉 B. Cable tester
+C. Multimeter
+D. OTDR

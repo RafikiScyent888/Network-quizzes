@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Network+ Networking Appliances, Applications & Functions Quiz</title>
+<style>
+  :root {
+    --bg1:#06111f;
+    --bg2:#0b1c33;
+    --panel:#102544;
+    --panel-2:#0d203a;
+    --line:#2a4770;
+    --text:#eaf2ff;
+    --muted:#9eb4d4;
+    --accent:#78a6ff;
+    --good:#12351f;
+    --good-line:#4dd082;
+    --bad:#35161d;
+    --bad-line:#ff7a90;
+    --info:#102b4e;
+    --info-line:#79b8ff;
+    --btn:#18355f;
+    --btn-hover:#204473;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    padding:24px;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color:var(--text);
+    background: radial-gradient(circle at top, #17345f 0%, var(--bg2) 34%, var(--bg1) 100%);
+    min-height:100vh;
+  }
+  .wrap { max-width:980px; margin:0 auto; }
+  .card {
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    border:1px solid rgba(138,176,255,0.20);
+    border-radius:22px;
+    box-shadow:0 18px 50px rgba(0,0,0,0.35);
+    overflow:hidden;
+  }
+  .top {
+    padding:22px 24px 16px;
+    border-bottom:1px solid rgba(138,176,255,0.16);
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.00));
+  }
+  h1 { margin:0 0 8px; font-size:1.6rem; line-height:1.25; letter-spacing:0.2px; }
+  .sub { color:var(--muted); font-size:0.98rem; line-height:1.45; }
+  .statusbar {
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    gap:12px;
+    align-items:center;
+    margin-top:16px;
+  }
+  .progress-shell {
+    height:12px;
+    background:#0a1730;
+    border:1px solid rgba(138,176,255,0.18);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .progress-fill {
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, #6a9cff, #8fd2ff);
+    transition:width 0.25s ease;
+  }
+  .pill {
+    border:1px solid rgba(138,176,255,0.22);
+    background:rgba(255,255,255,0.03);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:0.92rem;
+    color:var(--text);
+    white-space:nowrap;
+  }
+  .main { padding:24px; }
+  .question-num {
+    color:#8fb2f1;
+    font-size:0.92rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    margin-bottom:10px;
+  }
+  .question { font-size:1.2rem; line-height:1.55; margin:0 0 18px; }
+  .answers { display:grid; gap:12px; }
+  .answer-btn {
+    width:100%;
+    text-align:left;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    color:var(--text);
+    padding:14px 16px;
+    cursor:pointer;
+    transition:transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+    font:600 0.98rem/1.45 "Consolas","Menlo","Monaco","Courier New",monospace;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:clip;
+  }
+  .answer-btn:hover:not(:disabled) {
+    transform:translateY(-1px);
+    border-color:#86adff;
+    background:rgba(255,255,255,0.055);
+  }
+  .answer-btn:disabled { cursor:default; }
+  .answer-btn.correct {
+    background:var(--good);
+    border-color:var(--good-line);
+    color:#effff4;
+  }
+  .answer-btn.incorrect {
+    background:var(--bad);
+    border-color:var(--bad-line);
+    color:#fff1f3;
+  }
+  .answer-btn.reveal-correct {
+    background:#102d20;
+    border-color:#55d88c;
+    color:#effff4;
+  }
+  .feedback {
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:16px;
+    display:none;
+    border:1px solid transparent;
+    line-height:1.5;
+  }
+  .feedback.good { display:block; background:var(--good); border-color:var(--good-line); }
+  .feedback.bad { display:block; background:var(--bad); border-color:var(--bad-line); }
+  details {
+    margin-top:14px;
+    border:1px solid rgba(138,176,255,0.18);
+    border-radius:16px;
+    background:var(--info);
+    overflow:hidden;
+  }
+  summary {
+    cursor:pointer;
+    list-style:none;
+    padding:14px 16px;
+    font-weight:700;
+  }
+  summary::-webkit-details-marker { display:none; }
+  .explanation { padding:0 16px 16px; color:#e4efff; line-height:1.55; }
+  .controls { display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
+  .btn {
+    border:none;
+    border-radius:14px;
+    padding:12px 16px;
+    font-weight:700;
+    color:white;
+    background:var(--btn);
+    cursor:pointer;
+    transition:background 0.15s ease, transform 0.12s ease;
+  }
+  .btn:hover { background:var(--btn-hover); transform:translateY(-1px); }
+  .btn.secondary {
+    background:transparent;
+    border:1px solid rgba(138,176,255,0.25);
+    color:var(--text);
+  }
+  .btn[disabled] { opacity:0.55; cursor:not-allowed; transform:none; }
+  .result { display:none; }
+  .result.show { display:block; }
+  .score-big { font-size:2rem; font-weight:800; margin:0 0 8px; }
+  .review-list { margin-top:18px; display:grid; gap:14px; }
+  .review-item {
+    border:1px solid rgba(138,176,255,0.18);
+    background:rgba(255,255,255,0.03);
+    border-radius:18px;
+    padding:16px;
+  }
+  .review-item h3 { margin:0 0 10px; font-size:1rem; line-height:1.45; }
+  .tag {
+    display:inline-block;
+    font-size:0.82rem;
+    border-radius:999px;
+    padding:6px 10px;
+    margin-bottom:10px;
+    border:1px solid rgba(255,255,255,0.16);
+  }
+  .tag.good { background:var(--good); border-color:var(--good-line); }
+  .tag.bad { background:var(--bad); border-color:var(--bad-line); }
+  .mini {
+    font:600 0.95rem/1.45 "Consolas","Menlo","Monaco","Courier New",monospace;
+    color:#eef4ff;
+    margin:4px 0;
+    white-space:normal;
+  }
+  @media (max-width: 780px) {
+    body { padding:14px; }
+    .statusbar { grid-template-columns:1fr; }
+    .answer-btn { white-space:normal; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="top">
+      <h1>Network+ Networking Appliances, Applications & Functions Quiz</h1>
+      <div class="sub">Scenario-based exam mode with one question at a time, shuffled options, collapsible explanations, and same-domain near-miss distractors.</div>
+      <div class="statusbar">
+        <div class="progress-shell"><div id="progressFill" class="progress-fill"></div></div>
+        <div class="pill" id="progressText">Question 1 of 1</div>
+        <div class="pill" id="scoreText">Score 0/0</div>
+      </div>
+    </div>
+
+    <div class="main">
+      <section id="quizPanel">
+        <div class="question-num" id="questionNum"></div>
+        <h2 class="question" id="questionText"></h2>
+        <div class="answers" id="answers"></div>
+        <div id="feedback" class="feedback"></div>
+        <details id="explainBox">
+          <summary>Explanation</summary>
+          <div id="explanationText" class="explanation"></div>
+        </details>
+        <div class="controls">
+          <button id="nextBtn" class="btn" disabled>Next</button>
+          <button id="restartBtn" class="btn secondary">Restart Quiz</button>
+        </div>
+      </section>
+
+      <section id="resultPanel" class="result">
+        <p class="score-big" id="finalScore"></p>
+        <div class="sub" id="finalMsg"></div>
+        <div class="controls">
+          <button id="retryBtn" class="btn">Retry Quiz</button>
+        </div>
+        <div class="review-list" id="reviewList"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+const sourceQuestions = [
+  {
+    "q": "A branch office adds a new remote subnet, and the network team wants routers to learn the path automatically instead of updating each route by hand. Which approach best fits that goal?",
+    "choices": [
+      "Dynamic routing.",
+      "Static routing.",
+      "Port mirroring.",
+      "NAT overload."
+    ],
+    "correct": 0,
+    "exp": "Dynamic routing protocols learn and adjust routes automatically as the network changes."
+  },
+  {
+    "q": "A small network uses a simple routing protocol that chooses paths by counting how many routers a packet crosses. Which protocol fits that description best?",
+    "choices": [
+      "RIP.",
+      "OSPF.",
+      "BGP.",
+      "802.1Q."
+    ],
+    "correct": 0,
+    "exp": "Routing Information Protocol (RIP) is a distance-vector routing protocol that uses hop count as its metric."
+  },
+  {
+    "q": "A technician is reviewing a router that has an interface directly connected to 192.168.10.0/24. Which route source is normally most preferred for that network?",
+    "choices": [
+      "Directly connected route.",
+      "Static default route.",
+      "RIP-learned route.",
+      "BGP-learned route."
+    ],
+    "correct": 0,
+    "exp": "A directly connected network has the best administrative distance and is preferred over learned alternatives."
+  },
+  {
+    "q": "An enterprise wants an interior routing protocol that builds a topology map and supports areas for large internal networks. Which protocol is the best match?",
+    "choices": [
+      "OSPF.",
+      "RIP.",
+      "ARP.",
+      "SMTP."
+    ],
+    "correct": 0,
+    "exp": "Open Shortest Path First (OSPF) is a link-state routing protocol that supports hierarchical design with areas."
+  },
+  {
+    "q": "A service provider router exchanges routes with other autonomous systems on the internet. Which routing protocol is designed for that role?",
+    "choices": [
+      "BGP.",
+      "OSPF.",
+      "EIGRP.",
+      "RSTP."
+    ],
+    "correct": 0,
+    "exp": "Border Gateway Protocol (BGP) is the path-vector protocol used to exchange routes between autonomous systems."
+  },
+  {
+    "q": "A host needs to send traffic to a destination that is not listed in the router table as a specific match. Which route does the router use as the gateway of last resort?",
+    "choices": [
+      "Default route.",
+      "Host route.",
+      "Connected route.",
+      "Floating route."
+    ],
+    "correct": 0,
+    "exp": "A default route is used when no more specific route matches the destination network."
+  },
+  {
+    "q": "A switch begins forwarding a frame as soon as it reads the destination MAC address, without waiting for the full frame. Which switching method is being used?",
+    "choices": [
+      "Cut-through switching.",
+      "Store-and-forward switching.",
+      "Circuit switching.",
+      "Packet shaping."
+    ],
+    "correct": 0,
+    "exp": "Cut-through switching forwards early after reading the destination Media Access Control (MAC) field."
+  },
+  {
+    "q": "A switch in a noisy environment must verify the FCS before sending frames onward. Which switching method best fits this requirement?",
+    "choices": [
+      "Store-and-forward switching.",
+      "Cut-through switching.",
+      "Fast reroute.",
+      "Source routing."
+    ],
+    "correct": 0,
+    "exp": "Store-and-forward switching buffers the full frame and checks for errors before forwarding."
+  },
+  {
+    "q": "A campus network has redundant switch links, and users start seeing broadcast storms after a misconfiguration. Which protocol is meant to prevent this Layer 2 problem?",
+    "choices": [
+      "STP.",
+      "HSRP.",
+      "RIP.",
+      "NTP."
+    ],
+    "correct": 0,
+    "exp": "Spanning Tree Protocol blocks redundant Layer 2 paths to prevent switching loops."
+  },
+  {
+    "q": "A network engineer wants faster recovery from a failed switch link than legacy STP typically provides. Which standard should be used?",
+    "choices": [
+      "RSTP.",
+      "VTP.",
+      "LACP.",
+      "PAT."
+    ],
+    "correct": 0,
+    "exp": "Rapid Spanning Tree Protocol (RSTP) converges faster than traditional Spanning Tree Protocol (STP)."
+  },
+  {
+    "q": "Two switches must carry traffic for several VLANs across one physical uplink. Which feature should be configured on that link?",
+    "choices": [
+      "802.1Q trunking.",
+      "Port security.",
+      "Loopback mode.",
+      "APIPA."
+    ],
+    "correct": 0,
+    "exp": "An IEEE 802.1Q trunk tags frames so multiple Virtual Local Area Networks (VLANs) can share the same physical link."
+  },
+  {
+    "q": "A user device is connected to a normal office switchport and should belong to only one VLAN with untagged traffic. What kind of switchport is that?",
+    "choices": [
+      "Access port.",
+      "Trunk port.",
+      "Routed port.",
+      "Mirror port."
+    ],
+    "correct": 0,
+    "exp": "An access port carries untagged traffic for a single Virtual Local Area Network (VLAN)."
+  },
+  {
+    "q": "Finance users in VLAN 20 need to reach servers in VLAN 30. Which device or function is required for that communication?",
+    "choices": [
+      "Inter-VLAN routing on a router or Layer 3 switch.",
+      "A Layer 1 hub between the VLANs.",
+      "A longer trunk cable.",
+      "A different STP priority only."
+    ],
+    "correct": 0,
+    "exp": "Traffic between Virtual Local Area Networks (VLANs) requires Layer 3 routing, either on a router or a multilayer switch."
+  },
+  {
+    "q": "A technician asks what a routing table actually tells a router. Which answer is best?",
+    "choices": [
+      "Which next hop or exit interface to use for a destination network.",
+      "Which MAC addresses are allowed on each port.",
+      "Which VLAN name belongs to each switch.",
+      "Which DNS server resolves local hosts."
+    ],
+    "correct": 0,
+    "exp": "A routing table lists destination networks and the next hop or exit interface used to reach them."
+  },
+  {
+    "q": "A network team wants routes to remain fixed until an administrator changes them manually. Which type of route should they use?",
+    "choices": [
+      "Static route.",
+      "Dynamic route.",
+      "Connected route.",
+      "Default learned route."
+    ],
+    "correct": 0,
+    "exp": "A static route is manually configured and stays in place until it is changed or removed."
+  },
+  {
+    "q": "Why do many organizations choose dynamic routing instead of building large networks entirely with static routes?",
+    "choices": [
+      "It adapts automatically when topology changes occur.",
+      "It eliminates the need for IP addressing.",
+      "It prevents every routing loop by default.",
+      "It turns Layer 2 switches into routers."
+    ],
+    "correct": 0,
+    "exp": "Dynamic routing protocols can learn and update paths automatically when the network changes."
+  },
+  {
+    "q": "An engineer mentions a routing protocol that uses TCP port 179. Which protocol is being discussed?",
+    "choices": [
+      "BGP.",
+      "RIP.",
+      "OSPF.",
+      "ICMP."
+    ],
+    "correct": 0,
+    "exp": "Border Gateway Protocol (BGP) uses Transmission Control Protocol (TCP) port 179 for peer sessions."
+  },
+  {
+    "q": "A company creates separate logical networks for voice devices, printers, and employee PCs on the same physical switch infrastructure. What technology is being used?",
+    "choices": [
+      "VLANs.",
+      "NAT pools.",
+      "Loopback interfaces.",
+      "Port channels."
+    ],
+    "correct": 0,
+    "exp": "Virtual Local Area Networks (VLANs) logically segment a Layer 2 network into separate broadcast domains."
+  },
+  {
+    "q": "A switch forwards Ethernet frames by learning which hardware addresses live on which ports. Which table stores that information?",
+    "choices": [
+      "MAC address table.",
+      "Routing table.",
+      "ARP cache.",
+      "DNS zone file."
+    ],
+    "correct": 0,
+    "exp": "A switch Media Access Control (MAC) address table maps learned MAC addresses to specific switch ports."
+  },
+  {
+    "q": "A security policy says a public lobby switchport should learn only one approved device MAC address. Which switch feature supports that requirement?",
+    "choices": [
+      "Port security.",
+      "Trunking.",
+      "Spanning tree.",
+      "CDP."
+    ],
+    "correct": 0,
+    "exp": "Port security can restrict how many Media Access Control (MAC) addresses are allowed on a port and which ones are accepted."
+  },
+  {
+    "q": "A user can reach local devices on the same subnet but cannot reach any remote network. Which host setting should be checked first?",
+    "choices": [
+      "Default gateway.",
+      "Subnet mask classful default.",
+      "VLAN name.",
+      "Switch port speed only."
+    ],
+    "correct": 0,
+    "exp": "The default gateway is what a host uses to send traffic to remote networks."
+  },
+  {
+    "q": "An engineer wants to bundle several physical switch links into one logical connection for higher throughput and redundancy. Which technology should be configured?",
+    "choices": [
+      "Link aggregation with LACP.",
+      "Port mirroring.",
+      "Private VLANs.",
+      "Split horizon."
+    ],
+    "correct": 0,
+    "exp": "Link Aggregation Control Protocol (LACP) and similar link aggregation methods combine multiple physical links into one logical port channel for resiliency and bandwidth."
+  },
+  {
+    "q": "Several Cisco switches need to share VLAN information automatically across their switching domain. Which protocol is associated with that task?",
+    "choices": [
+      "VTP.",
+      "LLDP.",
+      "SNMP.",
+      "HSRP."
+    ],
+    "correct": 0,
+    "exp": "VLAN Trunking Protocol (VTP) is a Cisco protocol used to distribute Virtual Local Area Network (VLAN) information among switches."
+  },
+  {
+    "q": "A protocol builds a full view of the network and calculates best paths from that topology map instead of relying only on periodic neighbor updates. What type of routing protocol is this?",
+    "choices": [
+      "Link-state.",
+      "Distance-vector.",
+      "Path-vector.",
+      "Static-only."
+    ],
+    "correct": 0,
+    "exp": "Link-state protocols build a topology map and then calculate optimal paths."
+  },
+  {
+    "q": "A technician wants to describe what makes a router different from a Layer 2 switch. Which statement is most accurate?",
+    "choices": [
+      "A router forwards traffic between IP networks using Layer 3 addressing.",
+      "A router forwards frames using MAC addresses inside one VLAN only.",
+      "A router repeats electrical signals to extend cable length.",
+      "A router tags multiple VLANs on a trunk by itself without routing."
+    ],
+    "correct": 0,
+    "exp": "Routers operate at Layer 3 and forward packets between different IP networks."
+  },
+  {
+    "q": "A switchport is connected to another switch and must carry voice, data, and management VLANs at the same time. Which port type should be used?",
+    "choices": [
+      "Trunk port.",
+      "Access port.",
+      "Disabled port.",
+      "Console port."
+    ],
+    "correct": 0,
+    "exp": "A trunk port is used when multiple VLANs must cross the same physical connection."
+  },
+  {
+    "q": "A network admin is comparing OSPF and RIP. Which statement best describes OSPF in that comparison?",
+    "choices": [
+      "It is a link-state protocol that scales better in larger internal networks.",
+      "It is a distance-vector protocol limited mainly by hop count.",
+      "It is the main protocol used between internet autonomous systems.",
+      "It is a switching protocol that prevents loops on trunks."
+    ],
+    "correct": 0,
+    "exp": "Open Shortest Path First (OSPF) is a link-state Interior Gateway Protocol (IGP) that generally scales better than Routing Information Protocol (RIP) in larger enterprise environments."
+  },
+  {
+    "q": "A user plugs into a switch and causes a loop by connecting two wall jacks together in the same VLAN. What symptom is most likely to appear first?",
+    "choices": [
+      "Broadcast storm and unstable switching.",
+      "Immediate DNS zone corruption.",
+      "Loss of NAT translations on the firewall.",
+      "A BGP peer reset on the edge router."
+    ],
+    "correct": 0,
+    "exp": "Layer 2 loops commonly lead to broadcast storms, MAC table instability, and network slowdown."
+  },
+  {
+    "q": "An engineer says EIGRP is often described as an advanced distance-vector or hybrid routing protocol. What family of protocol is being referenced?",
+    "choices": [
+      "Dynamic routing protocol.",
+      "VLAN trunking protocol.",
+      "Wireless roaming protocol.",
+      "Time synchronization protocol."
+    ],
+    "correct": 0,
+    "exp": "Enhanced Interior Gateway Routing Protocol (EIGRP) is a dynamic routing protocol and is often described as an advanced distance-vector or hybrid approach."
+  },
+  {
+    "q": "A network design calls for logical separation of departments at Layer 2 and controlled communication between them at Layer 3. Which combination best matches that design?",
+    "choices": [
+      "VLANs with inter-VLAN routing.",
+      "Hubs with repeaters.",
+      "Proxies with DHCP relays.",
+      "NAT with port mirroring."
+    ],
+    "correct": 0,
+    "exp": "Virtual Local Area Networks (VLANs) create Layer 2 separation, and inter-VLAN routing enables controlled traffic flow between those VLANs."
+  }
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function letter(index) {
+  return ["A", "B", "C", "D"][index] || "?";
+}
+
+function nbspPad(text, target) {
+  const bare = text.replace(/ /g, "\u00A0");
+  const diff = Math.max(0, target - text.length);
+  return bare + "\u00A0".repeat(diff);
+}
+
+function buildQuiz() {
+  return shuffle(sourceQuestions).map((q) => {
+    const options = q.choices.map((text, idx) => ({ text, correct: idx === q.correct }));
+    const shuffled = shuffle(options);
+    const maxLen = Math.max(...shuffled.map(o => o.text.length));
+    return {
+      q: q.q,
+      explanation: q.exp,
+      options: shuffled.map((opt, idx) => ({
+        label: `${letter(idx)}) ${nbspPad(opt.text, maxLen)}`,
+        text: opt.text,
+        correct: opt.correct
+      }))
+    };
+  });
+}
+
+let quiz = buildQuiz();
+let current = 0;
+let score = 0;
+let locked = false;
+let history = [];
+
+const quizPanel = document.getElementById("quizPanel");
+const resultPanel = document.getElementById("resultPanel");
+const questionNum = document.getElementById("questionNum");
+const questionText = document.getElementById("questionText");
+const answersDiv = document.getElementById("answers");
+const feedback = document.getElementById("feedback");
+const explainBox = document.getElementById("explainBox");
+const explanationText = document.getElementById("explanationText");
+const nextBtn = document.getElementById("nextBtn");
+const restartBtn = document.getElementById("restartBtn");
+const retryBtn = document.getElementById("retryBtn");
+const progressFill = document.getElementById("progressFill");
+const progressText = document.getElementById("progressText");
+const scoreText = document.getElementById("scoreText");
+const finalScore = document.getElementById("finalScore");
+const finalMsg = document.getElementById("finalMsg");
+const reviewList = document.getElementById("reviewList");
+
+function updateHeader() {
+  const answered = history.length;
+  const pct = ((current) / quiz.length) * 100;
+  progressFill.style.width = `${pct}%`;
+  progressText.textContent = `Question ${Math.min(current + 1, quiz.length)} of ${quiz.length}`;
+  scoreText.textContent = `Score ${score}/${answered}`;
+}
+
+function renderQuestion() {
+  locked = false;
+  nextBtn.disabled = true;
+  feedback.className = "feedback";
+  feedback.textContent = "";
+  explainBox.open = false;
+  explanationText.textContent = "";
+  answersDiv.innerHTML = "";
+
+  const item = quiz[current];
+  questionNum.textContent = `Question ${current + 1}`;
+  questionText.textContent = item.q;
+  explanationText.textContent = item.explanation;
+
+  item.options.forEach((opt) => {
+    const btn = document.createElement("button");
+    btn.className = "answer-btn";
+    btn.innerHTML = opt.label;
+    btn.addEventListener("click", () => selectAnswer(btn, opt, item.options));
+    answersDiv.appendChild(btn);
+  });
+
+  updateHeader();
+}
+
+function selectAnswer(clickedBtn, opt, options) {
+  if (locked) return;
+  locked = true;
+  const buttons = [...answersDiv.querySelectorAll(".answer-btn")];
+  buttons.forEach(b => b.disabled = true);
+
+  const correctOption = options.find(o => o.correct);
+  const correctIndex = options.findIndex(o => o.correct);
+
+  if (opt.correct) {
+    score += 1;
+    clickedBtn.classList.add("correct");
+    feedback.className = "feedback good";
+    feedback.textContent = `Correct. ${letter(correctIndex)} is the best fit for this network role or function.`;
+  } else {
+    clickedBtn.classList.add("incorrect");
+    const correctBtn = buttons[correctIndex];
+    if (correctBtn) correctBtn.classList.add("reveal-correct");
+    feedback.className = "feedback bad";
+    feedback.textContent = `Not this one. The best answer is ${letter(correctIndex)} because it matches the appliance function more precisely.`;
+  }
+
+  history.push({
+    question: quiz[current].q,
+    chosen: opt.text,
+    correct: correctOption.text,
+    wasCorrect: opt.correct,
+    explanation: quiz[current].explanation
+  });
+
+  explainBox.open = true;
+  nextBtn.disabled = false;
+  scoreText.textContent = `Score ${score}/${history.length}`;
+}
+
+function showResults() {
+  progressFill.style.width = "100%";
+  progressText.textContent = `Completed ${quiz.length} of ${quiz.length}`;
+  scoreText.textContent = `Score ${score}/${quiz.length}`;
+  quizPanel.style.display = "none";
+  resultPanel.classList.add("show");
+
+  const pct = Math.round((score / quiz.length) * 100);
+  finalScore.textContent = `Final Score: ${score}/${quiz.length} (${pct}%)`;
+
+  let msg = "Keep drilling what each appliance does, where it fits, and how it differs from similar tools.";
+  if (pct >= 90) msg = "Strong work. Your appliance recognition and function matching look exam-ready.";
+  else if (pct >= 75) msg = "Nice job. A few appliance and service near-misses still need tightening.";
+  else if (pct >= 60) msg = "Good foundation. Focus on appliance purpose, traffic flow, and security roles.";
+  finalMsg.textContent = msg;
+
+  reviewList.innerHTML = history.map((item, idx) => `
+    <div class="review-item">
+      <div class="tag ${item.wasCorrect ? "good" : "bad"}">${item.wasCorrect ? "Correct" : "Review Needed"}</div>
+      <h3>${idx + 1}. ${item.question}</h3>
+      <div class="mini">Your answer: ${item.chosen}</div>
+      <div class="mini">Best answer: ${item.correct}</div>
+      <div class="sub">${item.explanation}</div>
+    </div>
+  `).join("");
+}
+
+nextBtn.addEventListener("click", () => {
+  current += 1;
+  if (current >= quiz.length) showResults();
+  else renderQuestion();
+});
+
+function restartQuiz() {
+  quiz = buildQuiz();
+  current = 0;
+  score = 0;
+  locked = false;
+  history = [];
+  resultPanel.classList.remove("show");
+  quizPanel.style.display = "block";
+  renderQuestion();
+}
+
+restartBtn.addEventListener("click", restartQuiz);
+retryBtn.addEventListener("click", restartQuiz);
+
+renderQuestion();
+</script>
+</body>
+</html>

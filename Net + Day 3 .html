@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Network+ Networking Appliances, Applications & Functions Quiz</title>
+<style>
+  :root {
+    --bg1:#06111f;
+    --bg2:#0b1c33;
+    --panel:#102544;
+    --panel-2:#0d203a;
+    --line:#2a4770;
+    --text:#eaf2ff;
+    --muted:#9eb4d4;
+    --accent:#78a6ff;
+    --good:#12351f;
+    --good-line:#4dd082;
+    --bad:#35161d;
+    --bad-line:#ff7a90;
+    --info:#102b4e;
+    --info-line:#79b8ff;
+    --btn:#18355f;
+    --btn-hover:#204473;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    padding:24px;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color:var(--text);
+    background: radial-gradient(circle at top, #17345f 0%, var(--bg2) 34%, var(--bg1) 100%);
+    min-height:100vh;
+  }
+  .wrap { max-width:980px; margin:0 auto; }
+  .card {
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    border:1px solid rgba(138,176,255,0.20);
+    border-radius:22px;
+    box-shadow:0 18px 50px rgba(0,0,0,0.35);
+    overflow:hidden;
+  }
+  .top {
+    padding:22px 24px 16px;
+    border-bottom:1px solid rgba(138,176,255,0.16);
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.00));
+  }
+  h1 { margin:0 0 8px; font-size:1.6rem; line-height:1.25; letter-spacing:0.2px; }
+  .sub { color:var(--muted); font-size:0.98rem; line-height:1.45; }
+  .statusbar {
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    gap:12px;
+    align-items:center;
+    margin-top:16px;
+  }
+  .progress-shell {
+    height:12px;
+    background:#0a1730;
+    border:1px solid rgba(138,176,255,0.18);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .progress-fill {
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, #6a9cff, #8fd2ff);
+    transition:width 0.25s ease;
+  }
+  .pill {
+    border:1px solid rgba(138,176,255,0.22);
+    background:rgba(255,255,255,0.03);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:0.92rem;
+    color:var(--text);
+    white-space:nowrap;
+  }
+  .main { padding:24px; }
+  .question-num {
+    color:#8fb2f1;
+    font-size:0.92rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    margin-bottom:10px;
+  }
+  .question { font-size:1.2rem; line-height:1.55; margin:0 0 18px; }
+  .answers { display:grid; gap:12px; }
+  .answer-btn {
+    width:100%;
+    text-align:left;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    color:var(--text);
+    padding:14px 16px;
+    cursor:pointer;
+    transition:transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+    font:600 0.98rem/1.45 "Consolas","Menlo","Monaco","Courier New",monospace;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:clip;
+  }
+  .answer-btn:hover:not(:disabled) {
+    transform:translateY(-1px);
+    border-color:#86adff;
+    background:rgba(255,255,255,0.055);
+  }
+  .answer-btn:disabled { cursor:default; }
+  .answer-btn.correct {
+    background:var(--good);
+    border-color:var(--good-line);
+    color:#effff4;
+  }
+  .answer-btn.incorrect {
+    background:var(--bad);
+    border-color:var(--bad-line);
+    color:#fff1f3;
+  }
+  .answer-btn.reveal-correct {
+    background:#102d20;
+    border-color:#55d88c;
+    color:#effff4;
+  }
+  .feedback {
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:16px;
+    display:none;
+    border:1px solid transparent;
+    line-height:1.5;
+  }
+  .feedback.good { display:block; background:var(--good); border-color:var(--good-line); }
+  .feedback.bad { display:block; background:var(--bad); border-color:var(--bad-line); }
+  details {
+    margin-top:14px;
+    border:1px solid rgba(138,176,255,0.18);
+    border-radius:16px;
+    background:var(--info);
+    overflow:hidden;
+  }
+  summary {
+    cursor:pointer;
+    list-style:none;
+    padding:14px 16px;
+    font-weight:700;
+  }
+  summary::-webkit-details-marker { display:none; }
+  .explanation { padding:0 16px 16px; color:#e4efff; line-height:1.55; }
+  .controls { display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
+  .btn {
+    border:none;
+    border-radius:14px;
+    padding:12px 16px;
+    font-weight:700;
+    color:white;
+    background:var(--btn);
+    cursor:pointer;
+    transition:background 0.15s ease, transform 0.12s ease;
+  }
+  .btn:hover { background:var(--btn-hover); transform:translateY(-1px); }
+  .btn.secondary {
+    background:transparent;
+    border:1px solid rgba(138,176,255,0.25);
+    color:var(--text);
+  }
+  .btn[disabled] { opacity:0.55; cursor:not-allowed; transform:none; }
+  .result { display:none; }
+  .result.show { display:block; }
+  .score-big { font-size:2rem; font-weight:800; margin:0 0 8px; }
+  .review-list { margin-top:18px; display:grid; gap:14px; }
+  .review-item {
+    border:1px solid rgba(138,176,255,0.18);
+    background:rgba(255,255,255,0.03);
+    border-radius:18px;
+    padding:16px;
+  }
+  .review-item h3 { margin:0 0 10px; font-size:1rem; line-height:1.45; }
+  .tag {
+    display:inline-block;
+    font-size:0.82rem;
+    border-radius:999px;
+    padding:6px 10px;
+    margin-bottom:10px;
+    border:1px solid rgba(255,255,255,0.16);
+  }
+  .tag.good { background:var(--good); border-color:var(--good-line); }
+  .tag.bad { background:var(--bad); border-color:var(--bad-line); }
+  .mini {
+    font:600 0.95rem/1.45 "Consolas","Menlo","Monaco","Courier New",monospace;
+    color:#eef4ff;
+    margin:4px 0;
+    white-space:normal;
+  }
+  @media (max-width: 780px) {
+    body { padding:14px; }
+    .statusbar { grid-template-columns:1fr; }
+    .answer-btn { white-space:normal; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="top">
+      <h1>Network+ Networking Appliances, Applications & Functions Quiz</h1>
+      <div class="sub">Scenario-based exam mode with one question at a time, shuffled options, collapsible explanations, and same-domain near-miss distractors.</div>
+      <div class="statusbar">
+        <div class="progress-shell"><div id="progressFill" class="progress-fill"></div></div>
+        <div class="pill" id="progressText">Question 1 of 1</div>
+        <div class="pill" id="scoreText">Score 0/0</div>
+      </div>
+    </div>
+
+    <div class="main">
+      <section id="quizPanel">
+        <div class="question-num" id="questionNum"></div>
+        <h2 class="question" id="questionText"></h2>
+        <div class="answers" id="answers"></div>
+        <div id="feedback" class="feedback"></div>
+        <details id="explainBox">
+          <summary>Explanation</summary>
+          <div id="explanationText" class="explanation"></div>
+        </details>
+        <div class="controls">
+          <button id="nextBtn" class="btn" disabled>Next</button>
+          <button id="restartBtn" class="btn secondary">Restart Quiz</button>
+        </div>
+      </section>
+
+      <section id="resultPanel" class="result">
+        <p class="score-big" id="finalScore"></p>
+        <div class="sub" id="finalMsg"></div>
+        <div class="controls">
+          <button id="retryBtn" class="btn">Retry Quiz</button>
+        </div>
+        <div class="review-list" id="reviewList"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+const sourceQuestions = [
+  {
+    "q": "A user on a small office LAN can reach the local printer but cannot reach a device on another floor. Which device is most likely forwarding traffic between those IP networks?",
+    "choices": [
+      "Router.",
+      "Switch.",
+      "Hub.",
+      "Patch panel."
+    ],
+    "correct": 0,
+    "exp": "Routers make forwarding decisions with IP addressing and move traffic between different networks or subnets."
+  },
+  {
+    "q": "A technician replaces an unmanaged device with one that separates collision domains and forwards frames based on MAC addresses. Which appliance was installed?",
+    "choices": [
+      "Switch.",
+      "Router.",
+      "Firewall.",
+      "Load balancer."
+    ],
+    "correct": 0,
+    "exp": "A switch is the Layer 2 device that forwards traffic by MAC address and gives each port its own collision domain."
+  },
+  {
+    "q": "A company wants to inspect traffic by application, user, and content instead of relying only on ports and IP addresses. Which appliance best fits that need?",
+    "choices": [
+      "Next-generation firewall.",
+      "Layer 2 switch.",
+      "Repeater.",
+      "Media converter."
+    ],
+    "correct": 0,
+    "exp": "A next-generation firewall can inspect traffic at higher layers and apply application-aware security policies."
+  },
+  {
+    "q": "Users say the customer portal slows down whenever one web server gets overloaded. Which appliance is designed to spread requests across multiple servers?",
+    "choices": [
+      "Load balancer.",
+      "Proxy server.",
+      "IDS sensor.",
+      "RADIUS server."
+    ],
+    "correct": 0,
+    "exp": "A load balancer distributes client connections across backend servers to improve performance and availability."
+  },
+  {
+    "q": "A school wants to reduce repeated internet downloads of the same web content and speed up browsing for students. Which appliance would help most?",
+    "choices": [
+      "Proxy server.",
+      "Patch panel.",
+      "Wireless bridge.",
+      "PoE injector."
+    ],
+    "correct": 0,
+    "exp": "A proxy server can cache web content so repeated requests do not always have to go back out to the internet."
+  },
+  {
+    "q": "Remote VPN users must log in with centralized credentials before they are allowed onto the network. Which server role is commonly used for that authentication?",
+    "choices": [
+      "RADIUS server.",
+      "DHCP server.",
+      "Syslog server.",
+      "File server."
+    ],
+    "correct": 0,
+    "exp": "RADIUS is commonly used to centralize authentication and authorization for VPN and network access."
+  },
+  {
+    "q": "A warehouse Wi‑Fi signal is weak in one corner, and the business wants to extend coverage without running new cable. Which device is the best fit?",
+    "choices": [
+      "Wireless extender.",
+      "Load balancer.",
+      "Spam filter.",
+      "VPN concentrator."
+    ],
+    "correct": 0,
+    "exp": "A wireless extender repeats or retransmits the existing wireless signal to expand coverage."
+  },
+  {
+    "q": "An office router is providing internet access for many internal hosts that all use private IPv4 addresses. Which function is letting those hosts share a public address?",
+    "choices": [
+      "NAT.",
+      "QoS.",
+      "PoE.",
+      "TFTP."
+    ],
+    "correct": 0,
+    "exp": "Network Address Translation lets private internal addresses be translated to a public address for outbound internet access."
+  },
+  {
+    "q": "A technician is trying to extend a copper Ethernet run beyond its normal distance by regenerating the electrical signal. Which device performs that function?",
+    "choices": [
+      "Repeater.",
+      "Firewall.",
+      "Proxy.",
+      "Content filter."
+    ],
+    "correct": 0,
+    "exp": "A repeater regenerates a weakened signal so it can travel farther on the medium."
+  },
+  {
+    "q": "A security policy says certain inbound traffic must be allowed while other traffic must be blocked based on rule sets. Which appliance primarily handles that job?",
+    "choices": [
+      "Firewall.",
+      "Switch.",
+      "Hub.",
+      "Punchdown block."
+    ],
+    "correct": 0,
+    "exp": "A firewall enforces permit and deny rules on network traffic."
+  },
+  {
+    "q": "A junior tech plugs several hosts into an old device and notices that every frame is sent out every port. Which device is the tech most likely using?",
+    "choices": [
+      "Hub.",
+      "Switch.",
+      "Router.",
+      "Bridge."
+    ],
+    "correct": 0,
+    "exp": "A hub is a basic Layer 1 device that repeats traffic to all ports instead of forwarding selectively."
+  },
+  {
+    "q": "A company wants to terminate many encrypted remote-access tunnels on a dedicated platform rather than on a standard router. Which appliance is designed for that?",
+    "choices": [
+      "VPN concentrator.",
+      "Load balancer.",
+      "Proxy server.",
+      "Wireless controller."
+    ],
+    "correct": 0,
+    "exp": "A VPN concentrator is built to terminate and manage many VPN tunnels efficiently."
+  },
+  {
+    "q": "Employees can connect to Wi‑Fi, but they have to type IP settings manually because nothing is assigning them automatically. Which server role is missing?",
+    "choices": [
+      "DHCP server.",
+      "DNS server.",
+      "NTP server.",
+      "AAA server."
+    ],
+    "correct": 0,
+    "exp": "DHCP automatically assigns IP addresses and related settings like the subnet mask, gateway, and often DNS servers."
+  },
+  {
+    "q": "Users can reach internal resources by IP address but not by hostname. Which network service should be checked first?",
+    "choices": [
+      "DNS server.",
+      "DHCP server.",
+      "Proxy server.",
+      "RADIUS server."
+    ],
+    "correct": 0,
+    "exp": "DNS resolves hostnames to IP addresses, so hostname failures point there first."
+  },
+  {
+    "q": "A security analyst wants a tool that watches traffic and generates alerts when suspicious patterns are detected, but does not block packets automatically. Which appliance fits?",
+    "choices": [
+      "IDS.",
+      "IPS.",
+      "Web filter.",
+      "Load balancer."
+    ],
+    "correct": 0,
+    "exp": "An IDS detects suspicious traffic and alerts on it, while an IPS goes a step further and actively blocks."
+  },
+  {
+    "q": "A company wants malicious traffic stopped in real time instead of just logged for later review. Which security appliance is the better choice?",
+    "choices": [
+      "IPS.",
+      "IDS.",
+      "Proxy server.",
+      "DHCP server."
+    ],
+    "correct": 0,
+    "exp": "An IPS is designed to detect and actively prevent or block malicious traffic."
+  },
+  {
+    "q": "A branch office uses two ISP circuits and wants one appliance to combine them for resiliency and better use of bandwidth. Which appliance best matches that goal?",
+    "choices": [
+      "WAN aggregator.",
+      "Content filter.",
+      "Loopback adapter.",
+      "Mail gateway."
+    ],
+    "correct": 0,
+    "exp": "A WAN aggregator combines multiple WAN links for redundancy, performance, or load-sharing."
+  },
+  {
+    "q": "Management wants to block categories like gambling and malware sites before users ever reach them. Which appliance is best suited for that policy?",
+    "choices": [
+      "Web security gateway.",
+      "Patch management server.",
+      "VPN concentrator.",
+      "Media converter."
+    ],
+    "correct": 0,
+    "exp": "A web security gateway can enforce browsing policies and filter traffic by category or reputation."
+  },
+  {
+    "q": "A department needs a central place where shared documents can be stored and accessed by many users. Which server role is the most direct fit?",
+    "choices": [
+      "File server.",
+      "DNS server.",
+      "Load balancer.",
+      "IDS sensor."
+    ],
+    "correct": 0,
+    "exp": "A file server is used to store and share files over the network."
+  },
+  {
+    "q": "An IT team wants endpoints to receive operating system and software updates from a centralized internal system. Which appliance supports that process?",
+    "choices": [
+      "Patch management server.",
+      "Wireless extender.",
+      "Router.",
+      "Protocol analyzer."
+    ],
+    "correct": 0,
+    "exp": "A patch management server helps distribute approved updates to managed devices."
+  },
+  {
+    "q": "A company wants one back-end service to handle authentication, authorization, and accounting for network access. Which role does that describe?",
+    "choices": [
+      "AAA server.",
+      "Proxy server.",
+      "DHCP relay.",
+      "File share."
+    ],
+    "correct": 0,
+    "exp": "AAA stands for authentication, authorization, and accounting."
+  },
+  {
+    "q": "A parent organization wants branch offices to block websites based on categories such as social media or adult content. Which appliance most directly fits?",
+    "choices": [
+      "Content filter.",
+      "Switch.",
+      "Cable tester.",
+      "VPN tunnel."
+    ],
+    "correct": 0,
+    "exp": "A content filter blocks or allows traffic based on policy categories or specific web content rules."
+  },
+  {
+    "q": "A technician needs to capture packets during a slow application complaint and inspect the headers in detail. Which tool should be used?",
+    "choices": [
+      "Protocol analyzer.",
+      "Patch panel.",
+      "Repeater.",
+      "Load balancer."
+    ],
+    "correct": 0,
+    "exp": "A protocol analyzer captures and decodes packets so a technician can troubleshoot network behavior."
+  },
+  {
+    "q": "A security team wants logs from many devices collected in one place and correlated for suspicious patterns. Which platform best fits?",
+    "choices": [
+      "SIEM.",
+      "DHCP server.",
+      "Content filter.",
+      "Wireless bridge."
+    ],
+    "correct": 0,
+    "exp": "A SIEM centralizes log collection and correlation so analysts can investigate events across many systems."
+  },
+  {
+    "q": "A malware analyst wants to open a suspicious file in an isolated environment where it cannot affect production systems. What should be used?",
+    "choices": [
+      "Sandbox.",
+      "Load balancer.",
+      "Proxy cache.",
+      "DHCP scope."
+    ],
+    "correct": 0,
+    "exp": "A sandbox isolates code or files for safe analysis and testing."
+  },
+  {
+    "q": "A company with slow branch links wants to compress and optimize repetitive traffic between sites to improve perceived performance. Which appliance is designed for that?",
+    "choices": [
+      "WAN accelerator.",
+      "Hub.",
+      "NGFW.",
+      "PoE injector."
+    ],
+    "correct": 0,
+    "exp": "A WAN accelerator improves application performance across slower WAN links by using techniques like caching and optimization."
+  },
+  {
+    "q": "A network team needs an appliance that stores and forwards email messages for users in the organization. Which role is being described?",
+    "choices": [
+      "Mail server.",
+      "DNS server.",
+      "IDS.",
+      "VPN concentrator."
+    ],
+    "correct": 0,
+    "exp": "A mail server handles email delivery, storage, and forwarding."
+  },
+  {
+    "q": "A technician is documenting a network closet and wants to identify the device that simply organizes cable terminations without processing traffic. Which item is that?",
+    "choices": [
+      "Patch panel.",
+      "Router.",
+      "Firewall.",
+      "Proxy server."
+    ],
+    "correct": 0,
+    "exp": "A patch panel is passive hardware for cable organization and termination. It does not forward traffic."
+  },
+  {
+    "q": "A network engineer needs to connect two different network segments and also break up broadcast domains. Which appliance is the usual answer?",
+    "choices": [
+      "Router.",
+      "Hub.",
+      "Repeater.",
+      "Punchdown tool."
+    ],
+    "correct": 0,
+    "exp": "Routers separate broadcast domains and connect different IP networks."
+  },
+  {
+    "q": "A technician wants a device that can place multiple backend servers behind one public-facing service while checking which servers are healthy. Which appliance best fits?",
+    "choices": [
+      "Load balancer.",
+      "Protocol analyzer.",
+      "DHCP server.",
+      "Repeater."
+    ],
+    "correct": 0,
+    "exp": "A load balancer can monitor server health and direct client requests only to available backend systems."
+  }
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function letter(index) {
+  return ["A", "B", "C", "D"][index] || "?";
+}
+
+function nbspPad(text, target) {
+  const bare = text.replace(/ /g, "\u00A0");
+  const diff = Math.max(0, target - text.length);
+  return bare + "\u00A0".repeat(diff);
+}
+
+function buildQuiz() {
+  return shuffle(sourceQuestions).map((q) => {
+    const options = q.choices.map((text, idx) => ({ text, correct: idx === q.correct }));
+    const shuffled = shuffle(options);
+    const maxLen = Math.max(...shuffled.map(o => o.text.length));
+    return {
+      q: q.q,
+      explanation: q.exp,
+      options: shuffled.map((opt, idx) => ({
+        label: `${letter(idx)}) ${nbspPad(opt.text, maxLen)}`,
+        text: opt.text,
+        correct: opt.correct
+      }))
+    };
+  });
+}
+
+let quiz = buildQuiz();
+let current = 0;
+let score = 0;
+let locked = false;
+let history = [];
+
+const quizPanel = document.getElementById("quizPanel");
+const resultPanel = document.getElementById("resultPanel");
+const questionNum = document.getElementById("questionNum");
+const questionText = document.getElementById("questionText");
+const answersDiv = document.getElementById("answers");
+const feedback = document.getElementById("feedback");
+const explainBox = document.getElementById("explainBox");
+const explanationText = document.getElementById("explanationText");
+const nextBtn = document.getElementById("nextBtn");
+const restartBtn = document.getElementById("restartBtn");
+const retryBtn = document.getElementById("retryBtn");
+const progressFill = document.getElementById("progressFill");
+const progressText = document.getElementById("progressText");
+const scoreText = document.getElementById("scoreText");
+const finalScore = document.getElementById("finalScore");
+const finalMsg = document.getElementById("finalMsg");
+const reviewList = document.getElementById("reviewList");
+
+function updateHeader() {
+  const answered = history.length;
+  const pct = ((current) / quiz.length) * 100;
+  progressFill.style.width = `${pct}%`;
+  progressText.textContent = `Question ${Math.min(current + 1, quiz.length)} of ${quiz.length}`;
+  scoreText.textContent = `Score ${score}/${answered}`;
+}
+
+function renderQuestion() {
+  locked = false;
+  nextBtn.disabled = true;
+  feedback.className = "feedback";
+  feedback.textContent = "";
+  explainBox.open = false;
+  explanationText.textContent = "";
+  answersDiv.innerHTML = "";
+
+  const item = quiz[current];
+  questionNum.textContent = `Question ${current + 1}`;
+  questionText.textContent = item.q;
+  explanationText.textContent = item.explanation;
+
+  item.options.forEach((opt) => {
+    const btn = document.createElement("button");
+    btn.className = "answer-btn";
+    btn.innerHTML = opt.label;
+    btn.addEventListener("click", () => selectAnswer(btn, opt, item.options));
+    answersDiv.appendChild(btn);
+  });
+
+  updateHeader();
+}
+
+function selectAnswer(clickedBtn, opt, options) {
+  if (locked) return;
+  locked = true;
+  const buttons = [...answersDiv.querySelectorAll(".answer-btn")];
+  buttons.forEach(b => b.disabled = true);
+
+  const correctOption = options.find(o => o.correct);
+  const correctIndex = options.findIndex(o => o.correct);
+
+  if (opt.correct) {
+    score += 1;
+    clickedBtn.classList.add("correct");
+    feedback.className = "feedback good";
+    feedback.textContent = `Correct. ${letter(correctIndex)} is the best fit for this network role or function.`;
+  } else {
+    clickedBtn.classList.add("incorrect");
+    const correctBtn = buttons[correctIndex];
+    if (correctBtn) correctBtn.classList.add("reveal-correct");
+    feedback.className = "feedback bad";
+    feedback.textContent = `Not this one. The best answer is ${letter(correctIndex)} because it matches the appliance function more precisely.`;
+  }
+
+  history.push({
+    question: quiz[current].q,
+    chosen: opt.text,
+    correct: correctOption.text,
+    wasCorrect: opt.correct,
+    explanation: quiz[current].explanation
+  });
+
+  explainBox.open = true;
+  nextBtn.disabled = false;
+  scoreText.textContent = `Score ${score}/${history.length}`;
+}
+
+function showResults() {
+  progressFill.style.width = "100%";
+  progressText.textContent = `Completed ${quiz.length} of ${quiz.length}`;
+  scoreText.textContent = `Score ${score}/${quiz.length}`;
+  quizPanel.style.display = "none";
+  resultPanel.classList.add("show");
+
+  const pct = Math.round((score / quiz.length) * 100);
+  finalScore.textContent = `Final Score: ${score}/${quiz.length} (${pct}%)`;
+
+  let msg = "Keep drilling what each appliance does, where it fits, and how it differs from similar tools.";
+  if (pct >= 90) msg = "Strong work. Your appliance recognition and function matching look exam-ready.";
+  else if (pct >= 75) msg = "Nice job. A few appliance and service near-misses still need tightening.";
+  else if (pct >= 60) msg = "Good foundation. Focus on appliance purpose, traffic flow, and security roles.";
+  finalMsg.textContent = msg;
+
+  reviewList.innerHTML = history.map((item, idx) => `
+    <div class="review-item">
+      <div class="tag ${item.wasCorrect ? "good" : "bad"}">${item.wasCorrect ? "Correct" : "Review Needed"}</div>
+      <h3>${idx + 1}. ${item.question}</h3>
+      <div class="mini">Your answer: ${item.chosen}</div>
+      <div class="mini">Best answer: ${item.correct}</div>
+      <div class="sub">${item.explanation}</div>
+    </div>
+  `).join("");
+}
+
+nextBtn.addEventListener("click", () => {
+  current += 1;
+  if (current >= quiz.length) showResults();
+  else renderQuestion();
+});
+
+function restartQuiz() {
+  quiz = buildQuiz();
+  current = 0;
+  score = 0;
+  locked = false;
+  history = [];
+  resultPanel.classList.remove("show");
+  quizPanel.style.display = "block";
+  renderQuestion();
+}
+
+restartBtn.addEventListener("click", restartQuiz);
+retryBtn.addEventListener("click", restartQuiz);
+
+renderQuestion();
+</script>
+</body>
+</html>

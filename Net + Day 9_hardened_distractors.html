@@ -1,0 +1,969 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Network+ – Day 9 | Saved Quiz Format</title>
+  <style>
+    :root {
+      --bg: #08111f;
+      --panel: #0d1830;
+      --panel-2: #122142;
+      --line: #23365f;
+      --text: #e9eefc;
+      --muted: #9eb0d8;
+      --accent: #7fb0ff;
+      --accent-2: #b9d2ff;
+      --good: #77d39a;
+      --bad: #ff9b9b;
+      --warn: #ffd37a;
+      --shadow: 0 18px 40px rgba(0, 0, 0, 0.28);
+      --radius: 18px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+      --sans: Inter, Segoe UI, Arial, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: var(--sans);
+      background:
+        radial-gradient(circle at top, rgba(127,176,255,0.08), transparent 28%),
+        linear-gradient(180deg, #07101d 0%, #08111f 100%);
+      color: var(--text);
+      padding: 24px;
+    }
+
+    .wrap {
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .hero,
+    .card,
+    .results {
+      background: linear-gradient(180deg, rgba(18,33,66,0.96), rgba(10,21,42,0.98));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .hero {
+      padding: 24px;
+      margin-bottom: 18px;
+    }
+
+    .eyebrow {
+      font-size: 0.86rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      margin: 0 0 8px;
+      font-size: clamp(1.6rem, 2.2vw, 2.4rem);
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 0;
+      font-size: 1rem;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .stat {
+      background: rgba(6, 15, 31, 0.55);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 12px 14px;
+    }
+
+    .stat-label {
+      color: var(--muted);
+      font-size: 0.82rem;
+      margin-bottom: 6px;
+    }
+
+    .stat-value {
+      font-weight: 800;
+      font-size: 1.08rem;
+    }
+
+    .progress-shell {
+      margin: 18px 0 16px;
+    }
+
+    .progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    .progress-bar {
+      width: 100%;
+      height: 12px;
+      background: rgba(255,255,255,0.06);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent), var(--accent-2));
+      transition: width 0.25s ease;
+    }
+
+    .card {
+      padding: 22px;
+    }
+
+    .question-number {
+      color: var(--accent);
+      font-size: 0.92rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .question-text {
+      font-size: 1.12rem;
+      line-height: 1.55;
+      margin-bottom: 18px;
+      font-weight: 650;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option {
+      border: 1px solid var(--line);
+      background: rgba(8, 17, 31, 0.78);
+      border-radius: 14px;
+      padding: 0;
+      overflow: hidden;
+      transition: border-color 0.18s ease, transform 0.18s ease, background 0.18s ease;
+    }
+
+    .option:hover {
+      border-color: #4f72b8;
+      transform: translateY(-1px);
+    }
+
+    .option input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .option label {
+      display: block;
+      width: 100%;
+      padding: 14px 16px;
+      cursor: pointer;
+    }
+
+    .option-text {
+      display: block;
+      white-space: pre;
+      font-family: var(--mono);
+      font-size: 0.98rem;
+      line-height: 1.4;
+      color: var(--text);
+    }
+
+    .option.selected {
+      border-color: var(--accent);
+      background: rgba(18, 40, 78, 0.9);
+    }
+
+    .option.locked label {
+      cursor: default;
+    }
+
+    .feedback {
+      margin-top: 16px;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid transparent;
+      display: none;
+      line-height: 1.45;
+    }
+
+    .feedback.good {
+      display: block;
+      background: rgba(49, 111, 71, 0.18);
+      border-color: rgba(119, 211, 154, 0.34);
+      color: #d9ffe6;
+    }
+
+    .feedback.bad {
+      display: block;
+      background: rgba(112, 44, 44, 0.18);
+      border-color: rgba(255, 155, 155, 0.30);
+      color: #ffe1e1;
+    }
+
+    details.explainer {
+      margin-top: 14px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: rgba(255,255,255,0.03);
+      overflow: hidden;
+      display: none;
+    }
+
+    details.explainer.visible {
+      display: block;
+    }
+
+    details.explainer summary {
+      list-style: none;
+      cursor: pointer;
+      padding: 14px 16px;
+      font-weight: 700;
+      color: var(--accent-2);
+    }
+
+    details.explainer summary::-webkit-details-marker { display: none; }
+
+    .explanation-body {
+      padding: 0 16px 16px;
+      color: #d8e3ff;
+      line-height: 1.55;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .nav-left {
+      color: var(--muted);
+      font-size: 0.94rem;
+    }
+
+    button {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: linear-gradient(180deg, #1a2e59, #14264c);
+      color: var(--text);
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-weight: 800;
+      cursor: pointer;
+      transition: transform 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+    }
+
+    button:hover:not(:disabled) {
+      transform: translateY(-1px);
+      border-color: #5f83c7;
+    }
+
+    button:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+
+    .secondary {
+      background: rgba(255,255,255,0.04);
+    }
+
+    .results {
+      display: none;
+      margin-top: 18px;
+      padding: 24px;
+    }
+
+    .results h2 {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+
+    .results p {
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .review-list {
+      margin-top: 18px;
+      display: grid;
+      gap: 12px;
+    }
+
+    .review-item {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px 16px;
+      background: rgba(255,255,255,0.03);
+    }
+
+    .review-item.good { border-color: rgba(119, 211, 154, 0.35); }
+    .review-item.bad  { border-color: rgba(255, 155, 155, 0.28); }
+
+    .review-q {
+      font-weight: 700;
+      margin-bottom: 10px;
+      line-height: 1.5;
+    }
+
+    .review-line {
+      color: var(--muted);
+      font-family: var(--mono);
+      white-space: pre-wrap;
+      line-height: 1.5;
+      margin-bottom: 6px;
+    }
+
+    @media (max-width: 720px) {
+      body { padding: 14px; }
+      .hero, .card, .results { padding: 18px; }
+      .stats { grid-template-columns: 1fr; }
+      .option-text { font-size: 0.92rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="eyebrow">Exam Mode</div>
+      <h1>CompTIA Network+ Practice Quiz</h1>
+      <p class="subtitle">Day 9 · Troubleshooting Tools &amp; Techniques · 30 questions · one at a time.</p>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">Format</div>
+          <div class="stat-value">Saved quiz engine</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Flow</div>
+          <div class="stat-value">Shuffle + instant feedback</div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">Explanations</div>
+          <div class="stat-value">Collapsible</div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="quizCard">
+      <div class="progress-shell">
+        <div class="progress-row">
+          <div id="progressText">Question 1 of 30</div>
+          <div id="scoreText">Score: 0 / 0</div>
+        </div>
+        <div class="progress-bar" aria-hidden="true">
+          <div class="progress-fill" id="progressFill"></div>
+        </div>
+      </div>
+
+      <div class="question-number" id="questionNumber">Question 1</div>
+      <div class="question-text" id="questionText"></div>
+      <div class="options" id="options"></div>
+      <div class="feedback" id="feedback"></div>
+
+      <details class="explainer" id="explainer">
+        <summary>Explanation</summary>
+        <div class="explanation-body" id="explanationBody"></div>
+      </details>
+
+      <div class="nav">
+        <div class="nav-left" id="navHint">Choose one answer.</div>
+        <div>
+          <button class="secondary" id="restartBtn" type="button">Restart</button>
+          <button id="nextBtn" type="button" disabled>Next</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="results" id="results"></section>
+  </div>
+
+  <script>
+    const RAW_QUESTIONS = [
+  {
+    "q": "A technician needs to verify end-to-end Internet Protocol-layer reachability between two hosts while also observing latency variations that may indicate congestion or path instability. Which troubleshooting tool is MOST appropriate?",
+    "a": [
+      "ping",
+      "traceroute",
+      "pathping",
+      "netstat"
+    ],
+    "c": 0,
+    "e": "ping uses Internet Control Message Protocol echo requests to confirm reachability and measure round-trip time. traceroute maps hops, pathping combines path and loss analysis, and netstat focuses on local sessions."
+  },
+  {
+    "q": "A network engineer suspects that a routing loop or asymmetric path is causing intermittent packet loss. Which tool provides hop-by-hop visibility into the forwarding path taken by packets?",
+    "a": [
+      "traceroute",
+      "pathping",
+      "route print",
+      "netstat -r"
+    ],
+    "c": 0,
+    "e": "traceroute reveals each hop along the packet path, making it the best first tool for locating where routing behavior changes."
+  },
+  {
+    "q": "A user reports that a workstation cannot communicate with nearby devices on the same subnet, but the default gateway responds normally. Which command can reveal incorrect Address Resolution Protocol cache entries contributing to the issue?",
+    "a": [
+      "arp -a",
+      "route print",
+      "ipconfig /all",
+      "nslookup"
+    ],
+    "c": 0,
+    "e": "arp -a displays Internet Protocol-to-Media Access Control mappings in the local Address Resolution Protocol cache, which helps diagnose local-segment resolution problems."
+  },
+  {
+    "q": "A technician needs to determine which active Transmission Control Protocol and User Datagram Protocol sessions exist on a workstation and identify the associated processes. Which tool should be used?",
+    "a": [
+      "netstat",
+      "ipconfig",
+      "tracert",
+      "arp -a"
+    ],
+    "c": 0,
+    "e": "netstat shows active connections, listening ports, and, with the right switches, associated processes. The other commands focus on addressing, path tracing, or Address Resolution Protocol entries."
+  },
+  {
+    "q": "A network administrator must verify that a Domain Name System server is returning authoritative responses for a specific domain. Which tool provides detailed query and response information?",
+    "a": [
+      "dig",
+      "nslookup",
+      "host",
+      "ping"
+    ],
+    "c": 0,
+    "e": "dig is the most detailed query tool for reviewing Domain Name System responses, flags, and authority information. nslookup can help too, but dig is more precise for this objective."
+  },
+  {
+    "q": "A technician suspects that a workstation is receiving an incorrect Internet Protocol configuration from Dynamic Host Configuration Protocol. Which command displays the current address, default gateway, and Domain Name System settings?",
+    "a": [
+      "ipconfig /all",
+      "netstat -an",
+      "route print",
+      "arp -a"
+    ],
+    "c": 0,
+    "e": "ipconfig /all shows the full local Transmission Control Protocol or Internet Protocol configuration, including Dynamic Host Configuration Protocol details, gateway, and Domain Name System servers."
+  },
+  {
+    "q": "A network engineer needs to test whether a remote server is reachable on Transmission Control Protocol port 443 and determine whether a firewall is blocking the connection. Which tool is MOST appropriate?",
+    "a": [
+      "telnet",
+      "curl",
+      "Test-NetConnection",
+      "ping"
+    ],
+    "c": 0,
+    "e": "telnet is the classic exam answer for testing whether a specific Transmission Control Protocol port accepts a connection. ping does not test ports, and the other tools are platform-specific alternatives."
+  },
+  {
+    "q": "A technician needs to capture and analyze packet-level traffic to identify malformed frames or retransmissions. Which tool should be used?",
+    "a": [
+      "Protocol analyzer",
+      "Interface monitor",
+      "Port scanner",
+      "Loopback plug"
+    ],
+    "c": 0,
+    "e": "A protocol analyzer such as Wireshark captures and decodes frames and packets for deep traffic inspection. The other options do not provide full packet payload analysis."
+  },
+  {
+    "q": "A network team wants to verify that a switch port is negotiating the correct speed and duplex settings. Which tool provides real-time interface statistics?",
+    "a": [
+      "Interface monitoring tool",
+      "Protocol analyzer",
+      "Cable certifier",
+      "Tone generator"
+    ],
+    "c": 0,
+    "e": "An interface monitoring tool shows link speed, duplex, errors, and utilization in real time. The other tools are for packet capture, cable certification, or cable tracing."
+  },
+  {
+    "q": "A technician needs to determine whether a cable fault exists between a workstation and a switch. Which tool can detect opens, shorts, and wire-pair misalignments?",
+    "a": [
+      "Cable tester",
+      "Cable certifier",
+      "Tone generator and probe",
+      "Loopback plug"
+    ],
+    "c": 0,
+    "e": "A cable tester checks basic copper continuity and pinout faults such as opens, shorts, and crossed pairs. A cable certifier is more advanced and validates standards compliance."
+  },
+  {
+    "q": "A fiber-optic link is experiencing intermittent signal loss. Which tool measures light loss and identifies breaks or bends along the cable?",
+    "a": [
+      "Optical time-domain reflectometer",
+      "Light meter",
+      "Cable certifier",
+      "Tone generator"
+    ],
+    "c": 0,
+    "e": "An optical time-domain reflectometer identifies distance to faults and measures attenuation events along a fiber run. A light meter measures loss but does not locate faults along the path the same way."
+  },
+  {
+    "q": "A technician needs to trace an unknown copper cable run through a wiring closet. Which tool pair is MOST appropriate?",
+    "a": [
+      "Tone generator and probe",
+      "Cable tester and certifier",
+      "Punchdown tool and crimper",
+      "Loopback plug and multimeter"
+    ],
+    "c": 0,
+    "e": "A tone generator and probe are used to identify and trace cable runs through bundles and patch panels. The other tools are for termination, testing, or network interface card checks."
+  },
+  {
+    "q": "A network engineer wants to validate that a newly installed copper cable meets performance standards for Category 6. Which tool should be used?",
+    "a": [
+      "Cable certifier",
+      "Cable tester",
+      "Tone generator",
+      "Multimeter"
+    ],
+    "c": 0,
+    "e": "A cable certifier validates that the installed link meets the electrical and performance requirements for the specified cable category."
+  },
+  {
+    "q": "A technician suspects a workstation network interface card is malfunctioning. Which tool can simulate a network connection and verify transmit and receive functionality on the adapter?",
+    "a": [
+      "Loopback plug",
+      "Protocol analyzer",
+      "Tone generator",
+      "Cable tester"
+    ],
+    "c": 0,
+    "e": "A loopback plug returns the transmitted signal back to the network interface card so the technician can verify local send and receive behavior."
+  },
+  {
+    "q": "A network administrator needs to determine whether a firewall is blocking outbound traffic to a specific destination service. Which tool can test connectivity to a specific Transmission Control Protocol port?",
+    "a": [
+      "telnet",
+      "tracert",
+      "arp -a",
+      "route print"
+    ],
+    "c": 0,
+    "e": "telnet can attempt a session to a specific Transmission Control Protocol port, which helps confirm whether outbound access is allowed."
+  },
+  {
+    "q": "A technician needs to identify excessive broadcast traffic on a network segment. Which tool provides packet-level visibility into traffic types?",
+    "a": [
+      "Protocol analyzer",
+      "NetFlow collector",
+      "Interface monitor",
+      "ipconfig /all"
+    ],
+    "c": 0,
+    "e": "A protocol analyzer shows the actual frames and packets on the segment, making it the best way to confirm broadcast volume and sources."
+  },
+  {
+    "q": "A user reports slow network performance. The technician wants to determine whether the issue is due to high utilization on a switch port. Which tool is MOST appropriate?",
+    "a": [
+      "Interface statistics monitor",
+      "Protocol analyzer",
+      "traceroute",
+      "nslookup"
+    ],
+    "c": 0,
+    "e": "An interface statistics monitor shows bandwidth use, discards, and errors on the switch port. That is the most direct way to confirm high utilization."
+  },
+  {
+    "q": "A technician needs to verify that a workstation is receiving Dynamic Host Configuration Protocol information from the correct server. Which command can release and renew the Internet Protocol address lease?",
+    "a": [
+      "ipconfig /release and ipconfig /renew",
+      "arp -d *",
+      "route print",
+      "netstat -an"
+    ],
+    "c": 0,
+    "e": "ipconfig /release drops the current lease and ipconfig /renew requests a new one from Dynamic Host Configuration Protocol. The other commands do not request a new lease."
+  },
+  {
+    "q": "A network engineer suspects that a misconfigured static route is causing traffic to take an unexpected path. Which command displays the local routing table?",
+    "a": [
+      "route print",
+      "netstat -an",
+      "arp -a",
+      "ipconfig /displaydns"
+    ],
+    "c": 0,
+    "e": "route print displays the host routing table and next-hop information, which is what the engineer needs to inspect."
+  },
+  {
+    "q": "A technician needs to verify that a Domain Name System server is reachable and responding to name queries. Which tool provides name-resolution testing against a specific server?",
+    "a": [
+      "nslookup",
+      "ping",
+      "arp -a",
+      "netstat"
+    ],
+    "c": 0,
+    "e": "nslookup is designed to query Domain Name System servers directly for name-resolution testing. ping only tests basic reachability by address or resolved name."
+  },
+  {
+    "q": "A network administrator wants to determine whether a workstation is using the correct default gateway. Which command displays the gateway currently assigned to the host?",
+    "a": [
+      "ipconfig",
+      "route add",
+      "netstat -r",
+      "arp -d"
+    ],
+    "c": 0,
+    "e": "ipconfig shows the assigned default gateway directly. netstat -r and route print can also expose routes, but ipconfig is the direct configuration-view command."
+  },
+  {
+    "q": "A technician needs to identify which device on the local network is responding to Address Resolution Protocol requests incorrectly and causing intermittent connectivity issues. Which tool helps identify Internet Protocol-to-Media Access Control mappings?",
+    "a": [
+      "arp -a",
+      "ping",
+      "nslookup",
+      "tracert"
+    ],
+    "c": 0,
+    "e": "arp -a displays local Address Resolution Protocol cache entries, which map Internet Protocol addresses to Media Access Control addresses on the local segment."
+  },
+  {
+    "q": "A network engineer wants to determine whether packet fragmentation is occurring along a path because of a Maximum Transmission Unit mismatch. Which tool can test that condition most directly?",
+    "a": [
+      "ping with the Don't Fragment flag",
+      "traceroute",
+      "arp -a",
+      "netstat -s"
+    ],
+    "c": 0,
+    "e": "Using ping with the Don't Fragment flag helps determine whether a packet of a given size can traverse the path without fragmentation."
+  },
+  {
+    "q": "A technician needs to verify that a switch port is not experiencing excessive cyclic redundancy check errors. Which tool provides this information most directly?",
+    "a": [
+      "Interface statistics monitor",
+      "Protocol analyzer",
+      "Cable tester",
+      "ping"
+    ],
+    "c": 0,
+    "e": "Interface statistics show cyclic redundancy check errors, runts, giants, and other port-level counters that indicate physical or duplex problems."
+  },
+  {
+    "q": "A network engineer suspects that a Dynamic Host Configuration Protocol server is issuing duplicate Internet Protocol addresses. Which command on an affected client is the BEST first step to confirm the address currently assigned?",
+    "a": [
+      "ipconfig /all",
+      "arp -a",
+      "netstat -r",
+      "nslookup"
+    ],
+    "c": 0,
+    "e": "ipconfig /all confirms the client address, lease details, and Dynamic Host Configuration Protocol server information. That makes it the best first client-side verification step."
+  },
+  {
+    "q": "A technician needs to determine whether a remote host is reachable on a specific User Datagram Protocol port. Which tool is MOST appropriate?",
+    "a": [
+      "nc (netcat)",
+      "telnet",
+      "ping",
+      "arp -a"
+    ],
+    "c": 0,
+    "e": "Netcat can test both Transmission Control Protocol and User Datagram Protocol connectivity. telnet is typically used for Transmission Control Protocol only."
+  },
+  {
+    "q": "A network administrator wants to verify that a firewall is blocking inbound traffic on a specific port. Which tool can simulate a connection attempt from an external host to that service?",
+    "a": [
+      "telnet",
+      "dig",
+      "route print",
+      "ipconfig"
+    ],
+    "c": 0,
+    "e": "telnet can attempt a basic session to a specific Transmission Control Protocol port from outside the network, helping validate whether the firewall is allowing or blocking access."
+  },
+  {
+    "q": "A technician needs to determine whether a workstation is using Internet Protocol version 6 or Internet Protocol version 4 for outbound connections. Which tool displays active connections and protocol families?",
+    "a": [
+      "netstat",
+      "ping",
+      "arp",
+      "dig"
+    ],
+    "c": 0,
+    "e": "netstat shows active sessions and listening sockets, including whether those entries use Internet Protocol version 4 or Internet Protocol version 6."
+  },
+  {
+    "q": "A network engineer wants to identify the Media Access Control address of a device on the same local subnet. Which tool should be used FIRST to help populate the Address Resolution Protocol cache before viewing it?",
+    "a": [
+      "ping",
+      "arp",
+      "traceroute",
+      "nslookup"
+    ],
+    "c": 0,
+    "e": "On a local subnet, pinging the target first can trigger Address Resolution Protocol resolution. After that, arp can display the resulting Internet Protocol-to-Media Access Control mapping."
+  },
+  {
+    "q": "A technician needs to verify that a workstation can reach a remote server but suspects a routing issue somewhere between them. Which tool shows each hop along the path?",
+    "a": [
+      "traceroute",
+      "ping",
+      "arp -a",
+      "netstat"
+    ],
+    "c": 0,
+    "e": "traceroute lists each router hop between the source and destination, which makes it the standard tool for isolating routing-path problems."
+  }
+];
+
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function padOptions(options) {
+      const normalized = options.map(opt => opt.endsWith('.') ? opt : opt + '.');
+      const maxLen = Math.max(...normalized.map(opt => opt.length));
+      return normalized.map(opt => opt + '\u00A0'.repeat(maxLen - opt.length));
+    }
+
+    function buildQuizData(rawQuestions) {
+      return shuffle(rawQuestions).map((q) => {
+        const correct = q.a[q.c];
+        const shuffledOptions = shuffle(q.a);
+        const paddedOptions = padOptions(shuffledOptions);
+        return {
+          question: q.q,
+          explanation: q.e,
+          correct,
+          options: shuffledOptions.map((text, idx) => ({
+            raw: text,
+            padded: paddedOptions[idx],
+            isCorrect: text === correct
+          }))
+        };
+      });
+    }
+
+    const state = {
+      questions: buildQuizData(RAW_QUESTIONS),
+      index: 0,
+      score: 0,
+      answered: 0,
+      locked: false,
+      selected: null,
+      review: []
+    };
+
+    const questionNumber = document.getElementById('questionNumber');
+    const questionText = document.getElementById('questionText');
+    const optionsEl = document.getElementById('options');
+    const feedbackEl = document.getElementById('feedback');
+    const explainerEl = document.getElementById('explainer');
+    const explanationBody = document.getElementById('explanationBody');
+    const nextBtn = document.getElementById('nextBtn');
+    const restartBtn = document.getElementById('restartBtn');
+    const progressText = document.getElementById('progressText');
+    const scoreText = document.getElementById('scoreText');
+    const progressFill = document.getElementById('progressFill');
+    const navHint = document.getElementById('navHint');
+    const quizCard = document.getElementById('quizCard');
+    const resultsEl = document.getElementById('results');
+
+    function updateHeader() {
+      progressText.textContent = `Question ${state.index + 1} of ${state.questions.length}`;
+      scoreText.textContent = `Score: ${state.score} / ${state.answered}`;
+      progressFill.style.width = `${(state.index / state.questions.length) * 100}%`;
+    }
+
+    function renderQuestion() {
+      const item = state.questions[state.index];
+      state.locked = false;
+      state.selected = null;
+
+      updateHeader();
+      resultsEl.style.display = 'none';
+      quizCard.style.display = 'block';
+
+      questionNumber.textContent = `Question ${state.index + 1}`;
+      questionText.textContent = item.question;
+      feedbackEl.className = 'feedback';
+      feedbackEl.textContent = '';
+      explanationBody.textContent = item.explanation;
+      explainerEl.className = 'explainer';
+      explainerEl.open = false;
+      nextBtn.disabled = true;
+      nextBtn.textContent = state.index === state.questions.length - 1 ? 'Finish' : 'Next';
+      navHint.textContent = 'Choose one answer for instant feedback.';
+
+      optionsEl.innerHTML = '';
+
+      item.options.forEach((option, idx) => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'option';
+
+        const input = document.createElement('input');
+        input.type = 'radio';
+        input.name = `q-${state.index}`;
+        input.id = `q-${state.index}-${idx}`;
+
+        const label = document.createElement('label');
+        label.htmlFor = input.id;
+
+        const text = document.createElement('span');
+        text.className = 'option-text';
+        text.textContent = `${String.fromCharCode(65 + idx)}) ${option.padded}`;
+
+        label.appendChild(text);
+        wrapper.appendChild(input);
+        wrapper.appendChild(label);
+
+        wrapper.addEventListener('click', () => {
+          if (state.locked) return;
+          [...optionsEl.children].forEach(el => el.classList.remove('selected'));
+          wrapper.classList.add('selected');
+          state.selected = option;
+          nextBtn.disabled = false;
+          navHint.textContent = 'Answer graded instantly.';
+          lockAndGrade();
+        });
+
+        optionsEl.appendChild(wrapper);
+      });
+    }
+
+    function lockAndGrade() {
+      if (state.locked || !state.selected) return;
+      const item = state.questions[state.index];
+      state.locked = true;
+      state.answered += 1;
+
+      const isCorrect = state.selected.isCorrect;
+      if (isCorrect) state.score += 1;
+
+      feedbackEl.className = `feedback ${isCorrect ? 'good' : 'bad'}`;
+      feedbackEl.textContent = isCorrect
+        ? 'Correct. That choice best fits the objective tested here.'
+        : 'Not this one. Focus on the protocol or service role being described, then compare what each option actually does.';
+
+      explainerEl.className = 'explainer visible';
+      navHint.textContent = isCorrect
+        ? 'Review the explanation, then move to the next question.'
+        : 'Open the explanation, then move to the next question.';
+
+      [...optionsEl.children].forEach((el) => el.classList.add('locked'));
+
+      state.review.push({
+        question: item.question,
+        chosen: state.selected.raw,
+        correct: item.correct,
+        explanation: item.explanation,
+        isCorrect
+      });
+
+      scoreText.textContent = `Score: ${state.score} / ${state.answered}`;
+      nextBtn.textContent = state.index === state.questions.length - 1 ? 'Finish' : 'Next';
+    }
+
+    function nextStep() {
+      if (!state.locked) {
+        lockAndGrade();
+        return;
+      }
+
+      if (state.index < state.questions.length - 1) {
+        state.index += 1;
+        renderQuestion();
+      } else {
+        renderResults();
+      }
+    }
+
+    function renderResults() {
+      quizCard.style.display = 'none';
+      progressFill.style.width = '100%';
+      const pct = Math.round((state.score / state.questions.length) * 100);
+
+      const summary = pct >= 90
+        ? 'Strong pass. Your recall on these services and management concepts is in good shape.'
+        : pct >= 75
+          ? 'Solid work. A quick review of missed protocol roles should tighten this up fast.'
+          : pct >= 60
+            ? 'Decent base. Revisit service purpose, common ports, and what each tool actually measures or configures.'
+            : 'Good checkpoint. Slow down on the wording and map each clue to the exact protocol, feature, or document.';
+
+      const reviewHtml = state.review.map((item, idx) => `
+        <div class="review-item ${item.isCorrect ? 'good' : 'bad'}">
+          <div class="review-q">${idx + 1}. ${escapeHtml(item.question)}</div>
+          <div class="review-line">Your answer: ${escapeHtml(item.chosen)}.</div>
+          <div class="review-line">Correct answer: ${escapeHtml(item.correct)}.</div>
+          <div class="review-line">Why: ${escapeHtml(item.explanation)}</div>
+        </div>
+      `).join('');
+
+      resultsEl.innerHTML = `
+        <h2>Quiz complete</h2>
+        <p><strong>Final score:</strong> ${state.score} / ${state.questions.length} (${pct}%).</p>
+        <p>${summary}</p>
+        <div class="nav" style="margin-top:16px;">
+          <div class="nav-left">Per-load shuffle is active, so a restart gives a fresh order.</div>
+          <div><button id="resultsRestartBtn" type="button">Restart quiz</button></div>
+        </div>
+        <div class="review-list">${reviewHtml}</div>
+      `;
+      resultsEl.style.display = 'block';
+      document.getElementById('resultsRestartBtn').addEventListener('click', restartQuiz);
+    }
+
+    function restartQuiz() {
+      state.questions = buildQuizData(RAW_QUESTIONS);
+      state.index = 0;
+      state.score = 0;
+      state.answered = 0;
+      state.locked = false;
+      state.selected = null;
+      state.review = [];
+      renderQuestion();
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    nextBtn.addEventListener('click', nextStep);
+    restartBtn.addEventListener('click', restartQuiz);
+
+    renderQuestion();
+  </script>
+</body>
+</html>

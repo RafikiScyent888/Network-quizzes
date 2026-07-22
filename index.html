@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+<title>Network+ Practice Hub</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
+<link rel="stylesheet" href="assets/style.css" />
+</head>
+<body>
+  <div class="wrap">
+    <div class="site-header">
+      <h1>⚡ Network+ Practice Hub</h1>
+      <p>CompTIA Network+ (N10-009) style practice questions, tagged by objective.</p>
+    </div>
+
+    <div id="disclaimerSlot"></div>
+    <div id="resumeSlot"></div>
+
+    <div class="card">
+      <h2 style="margin-top:0;">Quick Quizzes</h2>
+      <p style="color:#475569; margin-top:-4px;">Randomized questions pulled from every objective. Great for a fast check-in.</p>
+      <div class="tile-grid">
+        <a href="#" class="tile theme-lightning" data-count="10">
+          <div>
+            <div class="tile-icon">⚡</div>
+            <div class="tile-title">Lightning Round</div>
+            <div class="tile-sub">Quick 10-question quiz</div>
+          </div>
+          <div class="tile-count">10 Questions</div>
+        </a>
+        <a href="#" class="tile theme-fire" data-count="15">
+          <div>
+            <div class="tile-icon">🔥</div>
+            <div class="tile-title">Fire Drill</div>
+            <div class="tile-sub">Quick 15-question quiz</div>
+          </div>
+          <div class="tile-count">15 Questions</div>
+        </a>
+        <a href="#" class="tile theme-storm" data-count="20">
+          <div>
+            <div class="tile-icon">⛈️</div>
+            <div class="tile-title">Storm Warning</div>
+            <div class="tile-sub">Quick 20-question quiz</div>
+          </div>
+          <div class="tile-count">20 Questions</div>
+        </a>
+        <a href="#" class="tile theme-sun" data-count="25">
+          <div>
+            <div class="tile-icon">☀️</div>
+            <div class="tile-title">Sunny Review</div>
+            <div class="tile-sub">Quick 25-question quiz</div>
+          </div>
+          <div class="tile-count">25 Questions</div>
+        </a>
+      </div>
+    </div>
+
+    <div class="card">
+      <h2 style="margin-top:0;">Full Custom Quiz</h2>
+      <p style="color:#475569; margin-top:-4px;">Pick your objectives and question count (45&ndash;245). Scored out of 100.</p>
+      <div class="tile-grid" style="grid-template-columns: 1fr;">
+        <a href="custom.html" class="tile theme-green">
+          <div>
+            <div class="tile-icon">🌱</div>
+            <div class="tile-title">Custom Objective Quiz</div>
+            <div class="tile-sub">All objectives selected by default &mdash; deselect what you don't want to test on.</div>
+          </div>
+          <div class="tile-count">45&ndash;245 Questions</div>
+        </a>
+      </div>
+    </div>
+
+    <div id="footerSlot"></div>
+  </div>
+
+  <script src="assets/questions.js"></script>
+  <script src="assets/common.js"></script>
+  <script>
+    document.getElementById("disclaimerSlot").innerHTML = NQ.renderDisclaimer();
+    document.getElementById("footerSlot").innerHTML = NQ.renderFooter();
+    NQ.renderResumeBanner("resumeSlot");
+
+    const allObjectiveIds = window.OBJECTIVES.map((o) => o.id);
+    const themeMeta = {
+      lightning: "theme-lightning",
+      fire: "theme-fire",
+      storm: "theme-storm",
+      sun: "theme-sun",
+    };
+    document.querySelectorAll(".tile[data-count]").forEach((tile) => {
+      tile.addEventListener("click", (e) => {
+        e.preventDefault();
+        const count = parseInt(tile.dataset.count, 10);
+        const themeClass = [...tile.classList].find((c) => c.startsWith("theme-"));
+        const pool = NQ.poolForObjectives(allObjectiveIds);
+        const n = Math.min(count, pool.length);
+        NQ.saveConfig({
+          mode: "quick",
+          count: n,
+          objectiveIds: allObjectiveIds,
+          theme: themeClass,
+          label: `Quick Quiz (${n} Questions)`,
+        });
+        window.location.href = "quiz.html";
+      });
+    });
+  </script>
+</body>
+</html>

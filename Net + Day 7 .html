@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Network+ Day 7 - Saved Format</title>
+<style>
+  :root {
+    --bg1:#06111f;
+    --bg2:#0b1c33;
+    --panel:#102544;
+    --panel-2:#0d203a;
+    --line:#2a4770;
+    --text:#eaf2ff;
+    --muted:#9eb4d4;
+    --accent:#78a6ff;
+    --good:#12351f;
+    --good-line:#4dd082;
+    --bad:#35161d;
+    --bad-line:#ff7a90;
+    --info:#102b4e;
+    --btn:#18355f;
+    --btn-hover:#204473;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    padding:24px;
+    font-family:"Segoe UI",Tahoma,sans-serif;
+    color:var(--text);
+    background:radial-gradient(circle at top, #17345f 0%, var(--bg2) 34%, var(--bg1) 100%);
+    min-height:100vh;
+  }
+  .wrap { max-width:980px; margin:0 auto; }
+  .card {
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    border:1px solid rgba(138,176,255,0.20);
+    border-radius:22px;
+    box-shadow:0 18px 50px rgba(0,0,0,0.35);
+    overflow:hidden;
+  }
+  .top {
+    padding:22px 24px 16px;
+    border-bottom:1px solid rgba(138,176,255,0.16);
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.00));
+  }
+  h1 { margin:0 0 8px; font-size:1.6rem; line-height:1.25; letter-spacing:0.2px; }
+  .sub { color:var(--muted); font-size:0.98rem; line-height:1.45; }
+  .statusbar {
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    gap:12px;
+    align-items:center;
+    margin-top:16px;
+  }
+  .progress-shell {
+    height:12px;
+    background:#0a1730;
+    border:1px solid rgba(138,176,255,0.18);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .progress-fill {
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, #6a9cff, #8fd2ff);
+    transition:width 0.25s ease;
+  }
+  .pill {
+    border:1px solid rgba(138,176,255,0.22);
+    background:rgba(255,255,255,0.03);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:0.92rem;
+    color:var(--text);
+    white-space:nowrap;
+  }
+  .main { padding:24px; }
+  .question-num {
+    color:#8fb2f1;
+    font-size:0.92rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    margin-bottom:10px;
+  }
+  .question { font-size:1.2rem; line-height:1.55; margin:0 0 18px; }
+  .answers { display:grid; gap:12px; }
+  .answer-btn {
+    width:100%;
+    text-align:left;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    color:var(--text);
+    padding:14px 16px;
+    cursor:pointer;
+    transition:transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+    font:600 0.98rem/1.45 "Consolas","Menlo","Monaco","Courier New",monospace;
+    white-space:normal;
+  }
+  .answer-btn:hover:not(:disabled) {
+    transform:translateY(-1px);
+    border-color:#86adff;
+    background:rgba(255,255,255,0.055);
+  }
+  .answer-btn:disabled { cursor:default; }
+  .answer-btn.correct {
+    background:var(--good);
+    border-color:var(--good-line);
+    color:#effff4;
+  }
+  .answer-btn.incorrect {
+    background:var(--bad);
+    border-color:var(--bad-line);
+    color:#fff1f3;
+  }
+  .answer-btn.reveal-correct {
+    background:#102d20;
+    border-color:#55d88c;
+    color:#effff4;
+  }
+  .feedback {
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:16px;
+    display:none;
+    border:1px solid transparent;
+    line-height:1.5;
+  }
+  .feedback.good { display:block; background:var(--good); border-color:var(--good-line); }
+  .feedback.bad { display:block; background:var(--bad); border-color:var(--bad-line); }
+  details {
+    margin-top:14px;
+    border:1px solid rgba(138,176,255,0.18);
+    border-radius:16px;
+    background:var(--info);
+    overflow:hidden;
+  }
+  summary {
+    cursor:pointer;
+    list-style:none;
+    padding:14px 16px;
+    font-weight:700;
+  }
+  summary::-webkit-details-marker { display:none; }
+  .explanation { padding:0 16px 16px; color:#e4efff; line-height:1.55; }
+  .controls { display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
+  .btn {
+    border:none;
+    border-radius:14px;
+    padding:12px 16px;
+    font-weight:700;
+    color:white;
+    background:var(--btn);
+    cursor:pointer;
+    transition:background 0.15s ease, transform 0.12s ease;
+  }
+  .btn:hover { background:var(--btn-hover); transform:translateY(-1px); }
+  .btn.secondary {
+    background:transparent;
+    border:1px solid rgba(138,176,255,0.25);
+    color:var(--text);
+  }
+  .btn[disabled] { opacity:0.55; cursor:not-allowed; transform:none; }
+  .result { display:none; }
+  .result.show { display:block; }
+  .score-big { font-size:2rem; font-weight:800; margin:0 0 8px; }
+  .review-list { margin-top:18px; display:grid; gap:14px; }
+  .review-item {
+    border:1px solid rgba(138,176,255,0.18);
+    background:rgba(255,255,255,0.03);
+    border-radius:18px;
+    padding:16px;
+  }
+  .review-item h3 { margin:0 0 10px; font-size:1rem; line-height:1.45; }
+  .tag {
+    display:inline-block;
+    font-size:0.82rem;
+    border-radius:999px;
+    padding:6px 10px;
+    margin-bottom:10px;
+    border:1px solid rgba(255,255,255,0.16);
+  }
+  .tag.good { background:var(--good); border-color:var(--good-line); }
+  .tag.bad { background:var(--bad); border-color:var(--bad-line); }
+  .mini {
+    font:600 0.95rem/1.45 "Consolas","Menlo","Monaco","Courier New",monospace;
+    color:#eef4ff;
+    margin:4px 0;
+    white-space:normal;
+  }
+  @media (max-width:780px) {
+    body { padding:14px; }
+    .statusbar { grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="top">
+      <h1>Network+ Application Services Quiz</h1>
+      <div class="sub">Scenario-based exam mode with one question at a time, shuffled options, collapsible explanations, and expanded acronyms in the explanations.</div>
+      <div class="statusbar">
+        <div class="progress-shell"><div id="progressFill" class="progress-fill"></div></div>
+        <div class="pill" id="progressText">Question 1 of 1</div>
+        <div class="pill" id="scoreText">Score 0/0</div>
+      </div>
+    </div>
+
+    <div class="main">
+      <section id="quizPanel">
+        <div class="question-num" id="questionNum"></div>
+        <h2 class="question" id="questionText"></h2>
+        <div class="answers" id="answers"></div>
+        <div id="feedback" class="feedback"></div>
+        <details id="explainBox">
+          <summary>Explanation</summary>
+          <div id="explanationText" class="explanation"></div>
+        </details>
+        <div class="controls">
+          <button id="nextBtn" class="btn" disabled>Next</button>
+          <button id="restartBtn" class="btn secondary">Restart Quiz</button>
+        </div>
+      </section>
+
+      <section id="resultPanel" class="result">
+        <p class="score-big" id="finalScore"></p>
+        <div class="sub" id="finalMsg"></div>
+        <div class="controls">
+          <button id="retryBtn" class="btn">Retry Quiz</button>
+        </div>
+        <div class="review-list" id="reviewList"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+
+const sourceQuestions = [
+  {
+    "q": "Which protocol is primarily responsible for translating human-readable hostnames into IP addresses on a TCP/IP network?",
+    "choices": [
+      "DHCP.",
+      "DNS.",
+      "NTP.",
+      "SNMP."
+    ],
+    "correct": 1,
+    "exp": "Domain Name System (DNS) resolves hostnames such as www.example.com into Internet Protocol (IP) addresses so devices can find each other on a network.",
+    "choiceExps": [
+      "Dynamic Host Configuration Protocol (DHCP) automatically assigns IP settings to clients; it does not resolve names to addresses.",
+      "Domain Name System (DNS) is correct because it translates hostnames into IP addresses.",
+      "Network Time Protocol (NTP) synchronizes time on network devices; it does not perform name resolution.",
+      "Simple Network Management Protocol (SNMP) is used for monitoring and management, not hostname resolution."
+    ]
+  },
+  {
+    "q": "A network administrator wants clients to automatically receive IP addresses, subnet masks, default gateways, and DNS server information. Which service should be configured?",
+    "choices": [
+      "DNS.",
+      "RADIUS.",
+      "DHCP.",
+      "LDAP."
+    ],
+    "correct": 2,
+    "exp": "Dynamic Host Configuration Protocol (DHCP) automatically leases IP configuration details such as IP address, subnet mask, default gateway, and Domain Name System (DNS) server information.",
+    "choiceExps": [
+      "Domain Name System (DNS) resolves names to IP addresses, but it does not hand out client IP configuration.",
+      "Remote Authentication Dial-In User Service (RADIUS) handles centralized authentication, authorization, and accounting, not address assignment.",
+      "Dynamic Host Configuration Protocol (DHCP) is correct because it automatically provides client network settings.",
+      "Lightweight Directory Access Protocol (LDAP) provides directory services and authentication lookups, not IP addressing."
+    ]
+  },
+  {
+    "q": "Which application service is most associated with providing centralized authentication, authorization, and accounting for remote access or wireless clients?",
+    "choices": [
+      "RADIUS.",
+      "DNS.",
+      "NTP.",
+      "TFTP."
+    ],
+    "correct": 0,
+    "exp": "Remote Authentication Dial-In User Service (RADIUS) is commonly used for centralized authentication, authorization, and accounting (AAA) for virtual private network (VPN), wireless, and other remote access solutions.",
+    "choiceExps": [
+      "Remote Authentication Dial-In User Service (RADIUS) is correct because it provides centralized AAA for remote and wireless access.",
+      "Domain Name System (DNS) resolves names, not user access decisions.",
+      "Network Time Protocol (NTP) keeps clocks synchronized, which helps logs and authentication systems, but it is not the AAA service itself.",
+      "Trivial File Transfer Protocol (TFTP) transfers files and configurations without authentication features."
+    ]
+  },
+  {
+    "q": "A company wants to distribute software images to many network devices using a simple, lightweight protocol that does not require authentication. Which protocol is best suited?",
+    "choices": [
+      "FTP.",
+      "TFTP.",
+      "SFTP.",
+      "HTTPS."
+    ],
+    "correct": 1,
+    "exp": "Trivial File Transfer Protocol (TFTP) is a lightweight User Datagram Protocol (UDP)-based file transfer protocol commonly used for boot images and configuration files. It is simple, but it does not provide authentication or encryption.",
+    "choiceExps": [
+      "File Transfer Protocol (FTP) can transfer files, but it is heavier and not the classic lightweight choice for device boot images.",
+      "Trivial File Transfer Protocol (TFTP) is correct because it is simple, lightweight, and commonly used for network device image or configuration transfers.",
+      "SSH File Transfer Protocol (SFTP) is secure and encrypted, but it is not the lightweight no-authentication protocol described here.",
+      "Hypertext Transfer Protocol Secure (HTTPS) is encrypted web transport, not the typical lightweight device imaging protocol in this context."
+    ]
+  },
+  {
+    "q": "Which service is used to synchronize the clocks of devices across a network to a common time source?",
+    "choices": [
+      "NTP.",
+      "DNS.",
+      "DHCP.",
+      "SMTP."
+    ],
+    "correct": 0,
+    "exp": "Network Time Protocol (NTP) synchronizes time across network devices so logs, certificates, authentication, and scheduled tasks stay consistent.",
+    "choiceExps": [
+      "Network Time Protocol (NTP) is correct because it synchronizes system clocks across devices.",
+      "Domain Name System (DNS) resolves names, not time.",
+      "Dynamic Host Configuration Protocol (DHCP) assigns IP settings, not clock settings.",
+      "Simple Mail Transfer Protocol (SMTP) sends email and does not synchronize device time."
+    ]
+  },
+  {
+    "q": "A security engineer wants to prevent internal users from directly accessing websites and instead have a server fetch web content on their behalf. Which service provides this functionality?",
+    "choices": [
+      "Load balancer.",
+      "Proxy server.",
+      "RADIUS server.",
+      "NTP server."
+    ],
+    "correct": 1,
+    "exp": "A proxy server acts as an intermediary between clients and web servers. It can fetch content on behalf of users and is often used for filtering, logging, and caching.",
+    "choiceExps": [
+      "A load balancer distributes traffic across backend servers; it is not primarily used to fetch web content on behalf of internal users.",
+      "A proxy server is correct because it intermediates client web requests and can apply filtering or caching.",
+      "A Remote Authentication Dial-In User Service (RADIUS) server handles authentication and accounting, not web content retrieval.",
+      "A Network Time Protocol (NTP) server provides time synchronization, not web proxy services."
+    ]
+  },
+  {
+    "q": "Which type of proxy is specifically designed to handle HTTP and HTTPS traffic for web browsing?",
+    "choices": [
+      "Reverse proxy.",
+      "Transparent proxy.",
+      "Web proxy.",
+      "SOCKS proxy."
+    ],
+    "correct": 2,
+    "exp": "A web proxy is designed specifically for Hypertext Transfer Protocol (HTTP) and Hypertext Transfer Protocol Secure (HTTPS) traffic and is commonly used for browsing control, caching, and content inspection.",
+    "choiceExps": [
+      "A reverse proxy protects or fronts servers, not end-user browsing traffic.",
+      "A transparent proxy intercepts traffic without client configuration, but it describes deployment style rather than the specific web-browsing role asked here.",
+      "A web proxy is correct because it is built to handle HTTP and HTTPS web traffic.",
+      "A SOCKS proxy can relay multiple traffic types, but it is broader and not specifically the web-focused proxy named here."
+    ]
+  },
+  {
+    "q": "Which application service is commonly used to distribute incoming client requests across multiple servers to improve availability and performance?",
+    "choices": [
+      "Proxy server.",
+      "Load balancer.",
+      "DHCP relay.",
+      "NTP server."
+    ],
+    "correct": 1,
+    "exp": "A load balancer distributes incoming client requests across multiple backend servers to improve scalability, responsiveness, and fault tolerance.",
+    "choiceExps": [
+      "A proxy server intermediates requests, but balancing traffic across multiple backend servers is the core role of a load balancer.",
+      "A load balancer is correct because it spreads traffic across multiple servers.",
+      "A Dynamic Host Configuration Protocol (DHCP) relay forwards address-assignment requests between subnets and does not distribute application traffic.",
+      "A Network Time Protocol (NTP) server synchronizes time and is unrelated to server traffic distribution."
+    ]
+  },
+  {
+    "q": "A network team deploys a device that terminates client connections and then establishes new connections to backend servers, hiding the servers from direct client access. What is this an example of?",
+    "choices": [
+      "Forward proxy.",
+      "DNS server.",
+      "Reverse proxy.",
+      "DHCP server."
+    ],
+    "correct": 2,
+    "exp": "A reverse proxy sits in front of servers, accepts client requests, and forwards them to internal backend servers while hiding those servers from direct public access.",
+    "choiceExps": [
+      "A forward proxy sits in front of clients, not servers.",
+      "A Domain Name System (DNS) server resolves names to addresses and does not terminate application sessions in this way.",
+      "A reverse proxy is correct because it fronts backend servers and hides them from clients.",
+      "A Dynamic Host Configuration Protocol (DHCP) server assigns IP settings and does not broker application sessions."
+    ]
+  },
+  {
+    "q": "Which protocol is typically used by VoIP phones to discover call managers and obtain configuration details automatically?",
+    "choices": [
+      "SIP.",
+      "TFTP.",
+      "NTP.",
+      "SNMP."
+    ],
+    "correct": 1,
+    "exp": "Many Voice over Internet Protocol (VoIP) phones use Trivial File Transfer Protocol (TFTP) to download configuration files or firmware during startup.",
+    "choiceExps": [
+      "Session Initiation Protocol (SIP) handles call signaling, but many phones still use a separate service such as TFTP to pull configuration files.",
+      "Trivial File Transfer Protocol (TFTP) is correct because many VoIP phones download configuration details from it during boot.",
+      "Network Time Protocol (NTP) synchronizes the phone clock but does not usually deliver the configuration files themselves.",
+      "Simple Network Management Protocol (SNMP) monitors and manages devices rather than serving boot-time configuration in this scenario."
+    ]
+  },
+  {
+    "q": "Which protocol is most associated with setting up, modifying, and tearing down VoIP sessions between endpoints?",
+    "choices": [
+      "RTP.",
+      "SIP.",
+      "NTP.",
+      "DNS."
+    ],
+    "correct": 1,
+    "exp": "Session Initiation Protocol (SIP) handles Voice over Internet Protocol (VoIP) signaling, including establishing, modifying, and terminating sessions. Real-time Transport Protocol (RTP) carries the actual voice data.",
+    "choiceExps": [
+      "Real-time Transport Protocol (RTP) carries the voice media, but it does not set up or tear down the call.",
+      "Session Initiation Protocol (SIP) is correct because it manages call signaling and session control.",
+      "Network Time Protocol (NTP) handles clock synchronization, not call signaling.",
+      "Domain Name System (DNS) may help locate services, but it does not control the VoIP session lifecycle."
+    ]
+  },
+  {
+    "q": "In a VoIP deployment, which protocol is primarily responsible for carrying the actual voice payload between endpoints?",
+    "choices": [
+      "SIP.",
+      "RTP.",
+      "NTP.",
+      "SNMP."
+    ],
+    "correct": 1,
+    "exp": "Real-time Transport Protocol (RTP) carries the audio stream for Voice over Internet Protocol (VoIP) communications. Session Initiation Protocol (SIP) is used for signaling, not the media payload itself.",
+    "choiceExps": [
+      "Session Initiation Protocol (SIP) sets up the call, but it does not carry the live voice stream.",
+      "Real-time Transport Protocol (RTP) is correct because it transports the actual voice media.",
+      "Network Time Protocol (NTP) synchronizes time, not voice payloads.",
+      "Simple Network Management Protocol (SNMP) monitors devices and is unrelated to carrying call audio."
+    ]
+  },
+  {
+    "q": "Which service allows a DHCP server to provide IP configuration to clients located on a different subnet?",
+    "choices": [
+      "DHCP relay.",
+      "DNS forwarder.",
+      "Proxy ARP.",
+      "NAT gateway."
+    ],
+    "correct": 0,
+    "exp": "A Dynamic Host Configuration Protocol (DHCP) relay forwards DHCP requests from one subnet to a DHCP server on another subnet so clients can still receive automatic IP configuration without a local DHCP server on every network.",
+    "choiceExps": [
+      "Dynamic Host Configuration Protocol (DHCP) relay is correct because it forwards DHCP messages across subnet boundaries.",
+      "A Domain Name System (DNS) forwarder relays name-resolution queries, not address-assignment traffic.",
+      "Proxy Address Resolution Protocol (ARP) answers ARP requests on behalf of another host and does not relay DHCP traffic.",
+      "A Network Address Translation (NAT) gateway translates addresses for routed traffic, not DHCP discovery and lease traffic."
+    ]
+  },
+  {
+    "q": "A network administrator configures a device to translate private IP addresses to a single public IP address when accessing the internet. Which service is being used?",
+    "choices": [
+      "PAT.",
+      "Proxy.",
+      "NTP.",
+      "RADIUS."
+    ],
+    "correct": 0,
+    "exp": "Port Address Translation (PAT), a form of Network Address Translation (NAT), maps many private IP addresses to one public IP address by using different source port numbers.",
+    "choiceExps": [
+      "Port Address Translation (PAT) is correct because it lets many internal hosts share one public IP by tracking port numbers.",
+      "A proxy can intermediate traffic at the application layer, but it is not the standard address-translation mechanism described here.",
+      "Network Time Protocol (NTP) handles time synchronization, not address translation.",
+      "Remote Authentication Dial-In User Service (RADIUS) handles centralized authentication and accounting, not IP translation."
+    ]
+  },
+  {
+    "q": "Which application service is commonly used to centralize user authentication for network devices such as switches, routers, and VPN concentrators?",
+    "choices": [
+      "DNS.",
+      "RADIUS or TACACS+.",
+      "NTP.",
+      "TFTP."
+    ],
+    "correct": 1,
+    "exp": "Remote Authentication Dial-In User Service (RADIUS) and Terminal Access Controller Access-Control System Plus (TACACS+) are centralized authentication, authorization, and accounting (AAA) protocols commonly used for network infrastructure administration.",
+    "choiceExps": [
+      "Domain Name System (DNS) resolves names and is not a centralized login service for infrastructure devices.",
+      "Remote Authentication Dial-In User Service (RADIUS) or Terminal Access Controller Access-Control System Plus (TACACS+) is correct because these are the common centralized AAA choices for device administration.",
+      "Network Time Protocol (NTP) synchronizes clocks and does not authenticate administrators.",
+      "Trivial File Transfer Protocol (TFTP) transfers files and configurations, not user logins."
+    ]
+  },
+  {
+    "q": "A company wants to ensure that internal hostnames (such as fileserver.corp.local) are resolved only inside the organization. Which service should be configured for this?",
+    "choices": [
+      "Public DNS hosting.",
+      "Internal DNS server.",
+      "DHCP relay.",
+      "Reverse proxy."
+    ],
+    "correct": 1,
+    "exp": "An internal Domain Name System (DNS) server can host private zones and records that are only available within the organization’s network.",
+    "choiceExps": [
+      "Public Domain Name System (DNS) hosting would expose records externally and is not the best fit for internal-only name resolution.",
+      "An internal Domain Name System (DNS) server is correct because it keeps private records available only inside the organization.",
+      "A Dynamic Host Configuration Protocol (DHCP) relay forwards DHCP requests and does not resolve hostnames.",
+      "A reverse proxy fronts application servers and is unrelated to internal-only name resolution."
+    ]
+  },
+  {
+    "q": "Which DNS record type is used to map a hostname to an IPv4 address?",
+    "choices": [
+      "AAAA record.",
+      "MX record.",
+      "CNAME record.",
+      "A record."
+    ],
+    "correct": 3,
+    "exp": "An A record maps a hostname to an Internet Protocol version 4 (IPv4) address. An AAAA record maps to Internet Protocol version 6 (IPv6), a Mail Exchanger (MX) record identifies mail servers, and a Canonical Name (CNAME) record creates an alias.",
+    "choiceExps": [
+      "An AAAA record maps a hostname to an Internet Protocol version 6 (IPv6) address, not IPv4.",
+      "A Mail Exchanger (MX) record identifies the mail server for a domain, not a host's IPv4 address.",
+      "A Canonical Name (CNAME) record aliases one name to another name rather than directly storing the IPv4 address asked for here.",
+      "An A record is correct because it maps a hostname directly to an Internet Protocol version 4 (IPv4) address."
+    ]
+  },
+  {
+    "q": "Which DNS record type is used to map a hostname to an IPv6 address?",
+    "choices": [
+      "A record.",
+      "AAAA record.",
+      "PTR record.",
+      "TXT record."
+    ],
+    "correct": 1,
+    "exp": "An AAAA record maps a hostname to an Internet Protocol version 6 (IPv6) address. An A record is for Internet Protocol version 4 (IPv4), a Pointer (PTR) record is for reverse lookups, and a Text (TXT) record stores arbitrary text.",
+    "choiceExps": [
+      "An A record maps to Internet Protocol version 4 (IPv4), not IPv6.",
+      "An AAAA record is correct because it maps a hostname to an Internet Protocol version 6 (IPv6) address.",
+      "A Pointer (PTR) record is used for reverse lookups from address to name, not forward mapping to IPv6.",
+      "A Text (TXT) record stores text data such as verification strings or policy information, not host address mappings."
+    ]
+  },
+  {
+    "q": "Which DNS record type is used to specify the mail server responsible for accepting email on behalf of a domain?",
+    "choices": [
+      "MX record.",
+      "NS record.",
+      "SRV record.",
+      "CNAME record."
+    ],
+    "correct": 0,
+    "exp": "A Mail Exchanger (MX) record specifies which mail servers accept email for a domain.",
+    "choiceExps": [
+      "A Mail Exchanger (MX) record is correct because it identifies the mail server for the domain.",
+      "A Name Server (NS) record identifies authoritative DNS servers for a zone, not the mail server used to accept email.",
+      "A Service (SRV) record advertises the location of specific services, but standard email routing for domains uses MX records.",
+      "A Canonical Name (CNAME) record creates an alias and does not define the domain’s mail exchanger."
+    ]
+  },
+  {
+    "q": "Which DNS record type is commonly used to specify the location of services such as SIP servers or LDAP servers?",
+    "choices": [
+      "SRV record.",
+      "TXT record.",
+      "PTR record.",
+      "SOA record."
+    ],
+    "correct": 0,
+    "exp": "A Service (SRV) record specifies the hostname and port information for a service such as Session Initiation Protocol (SIP) or Lightweight Directory Access Protocol (LDAP).",
+    "choiceExps": [
+      "A Service (SRV) record is correct because it advertises the target host and port for a service.",
+      "A Text (TXT) record stores text-based information such as verification or policy data, not structured service location details.",
+      "A Pointer (PTR) record is used for reverse lookups, not advertising service endpoints.",
+      "A Start of Authority (SOA) record describes authoritative zone information, not individual service locations."
+    ]
+  },
+  {
+    "q": "A network engineer wants to offload SSL/TLS encryption from backend web servers to a dedicated device. Which application service is most relevant?",
+    "choices": [
+      "DHCP relay.",
+      "SSL offloading on a load balancer.",
+      "NTP server.",
+      "TFTP server."
+    ],
+    "correct": 1,
+    "exp": "Many load balancers can perform Secure Sockets Layer / Transport Layer Security (SSL/TLS) offloading by terminating encrypted sessions and passing traffic to backend servers, reducing server processing overhead.",
+    "choiceExps": [
+      "A Dynamic Host Configuration Protocol (DHCP) relay forwards DHCP traffic and has nothing to do with web encryption termination.",
+      "Secure Sockets Layer / Transport Layer Security (SSL/TLS) offloading on a load balancer is correct because it lets a dedicated device handle encryption and decryption.",
+      "A Network Time Protocol (NTP) server synchronizes time and is unrelated to TLS termination.",
+      "A Trivial File Transfer Protocol (TFTP) server serves files and configurations, not encrypted web sessions."
+    ]
+  },
+  {
+    "q": "Which service can cache frequently requested web content to reduce bandwidth usage and improve response times for users?",
+    "choices": [
+      "DNS server.",
+      "Caching proxy.",
+      "NTP server.",
+      "RADIUS server."
+    ],
+    "correct": 1,
+    "exp": "A caching proxy stores copies of frequently requested web content locally so repeated requests can be served faster and with less bandwidth use.",
+    "choiceExps": [
+      "A Domain Name System (DNS) server caches name-resolution data, but it does not typically cache full web content for users.",
+      "A caching proxy is correct because it stores and reuses previously fetched web content.",
+      "A Network Time Protocol (NTP) server handles time synchronization, not web-object caching.",
+      "A Remote Authentication Dial-In User Service (RADIUS) server handles authentication and accounting, not content caching."
+    ]
+  },
+  {
+    "q": "Which protocol is commonly used by network devices to send alerts and performance data to a centralized monitoring system?",
+    "choices": [
+      "SNMP.",
+      "SIP.",
+      "RTP.",
+      "TFTP."
+    ],
+    "correct": 0,
+    "exp": "Simple Network Management Protocol (SNMP) is used to monitor and manage network devices. It can collect statistics and send traps or alerts to centralized monitoring systems.",
+    "choiceExps": [
+      "Simple Network Management Protocol (SNMP) is correct because it is used for monitoring, statistics, and alerting from network devices.",
+      "Session Initiation Protocol (SIP) is a signaling protocol for Voice over Internet Protocol (VoIP), not a device monitoring protocol.",
+      "Real-time Transport Protocol (RTP) carries audio or video streams and is not used for infrastructure monitoring alerts.",
+      "Trivial File Transfer Protocol (TFTP) transfers files but does not provide centralized performance monitoring."
+    ]
+  },
+  {
+    "q": "A network administrator wants to allow external users to access a web application hosted on internal servers while hiding the internal server IP addresses. Which service is best suited?",
+    "choices": [
+      "Forward proxy.",
+      "Reverse proxy or application load balancer.",
+      "DHCP relay.",
+      "NTP server."
+    ],
+    "correct": 1,
+    "exp": "A reverse proxy or application load balancer presents a single public-facing endpoint while forwarding requests to internal servers and hiding their private addresses.",
+    "choiceExps": [
+      "A forward proxy represents clients going outbound, not public users reaching internal application servers.",
+      "A reverse proxy or application load balancer is correct because it fronts internal servers and hides their direct addresses.",
+      "A Dynamic Host Configuration Protocol (DHCP) relay forwards DHCP traffic between subnets and is unrelated to publishing web applications.",
+      "A Network Time Protocol (NTP) server handles clock synchronization and does not proxy web applications."
+    ]
+  },
+  {
+    "q": "Which application service is most associated with providing directory-based authentication and authorization, often used by Windows domains?",
+    "choices": [
+      "DNS.",
+      "LDAP/Active Directory.",
+      "NTP.",
+      "TFTP."
+    ],
+    "correct": 1,
+    "exp": "Lightweight Directory Access Protocol (LDAP) directory services, such as Microsoft Active Directory, provide centralized identity, authentication, and authorization information for domain resources.",
+    "choiceExps": [
+      "Domain Name System (DNS) is important in Windows domains, but the directory-based authentication and authorization service itself is LDAP / Active Directory.",
+      "Lightweight Directory Access Protocol (LDAP) / Active Directory is correct because it provides centralized directory-based identity and access services.",
+      "Network Time Protocol (NTP) helps keep authentication timestamps accurate, but it is not the directory service.",
+      "Trivial File Transfer Protocol (TFTP) transfers files and is unrelated to directory-based sign-in services."
+    ]
+  },
+  {
+    "q": "A network engineer configures a device to inspect HTTP and HTTPS traffic, apply URL filtering, and block malicious sites. Which type of service is this?",
+    "choices": [
+      "NTP server.",
+      "Web security gateway.",
+      "DHCP server.",
+      "RADIUS server."
+    ],
+    "correct": 1,
+    "exp": "A web security gateway inspects Hypertext Transfer Protocol (HTTP) and Hypertext Transfer Protocol Secure (HTTPS) traffic, applies URL filtering policies, and helps block malicious or inappropriate web content.",
+    "choiceExps": [
+      "A Network Time Protocol (NTP) server synchronizes time and does not inspect web traffic.",
+      "A web security gateway is correct because it filters and inspects web traffic for policy enforcement and threat protection.",
+      "A Dynamic Host Configuration Protocol (DHCP) server assigns IP settings and does not perform URL filtering.",
+      "A Remote Authentication Dial-In User Service (RADIUS) server authenticates users, but it is not a web content filtering gateway."
+    ]
+  },
+  {
+    "q": "Which protocol is typically used by email clients to retrieve messages from a mail server while leaving a copy on the server?",
+    "choices": [
+      "SMTP.",
+      "IMAP.",
+      "SNMP.",
+      "RTP."
+    ],
+    "correct": 1,
+    "exp": "Internet Message Access Protocol (IMAP) allows an email client to access and manage messages stored on the mail server so they remain available across multiple devices.",
+    "choiceExps": [
+      "Simple Mail Transfer Protocol (SMTP) sends email; it is not the primary protocol for retrieving stored messages.",
+      "Internet Message Access Protocol (IMAP) is correct because it retrieves and manages mail while keeping messages on the server.",
+      "Simple Network Management Protocol (SNMP) monitors devices and is unrelated to email retrieval.",
+      "Real-time Transport Protocol (RTP) carries media streams and has nothing to do with mail access."
+    ]
+  },
+  {
+    "q": "Which protocol is primarily used to send email from a client to a mail server or between mail servers?",
+    "choices": [
+      "IMAP.",
+      "POP3.",
+      "SMTP.",
+      "FTP."
+    ],
+    "correct": 2,
+    "exp": "Simple Mail Transfer Protocol (SMTP) is the standard protocol for sending email from a client to a mail server and between mail servers.",
+    "choiceExps": [
+      "Internet Message Access Protocol (IMAP) retrieves and manages existing mail; it is not the primary send protocol.",
+      "Post Office Protocol version 3 (POP3) retrieves mail from a server and is not primarily used to send it.",
+      "Simple Mail Transfer Protocol (SMTP) is correct because it sends email between clients and servers or between mail servers.",
+      "File Transfer Protocol (FTP) transfers files and is unrelated to standard email transport."
+    ]
+  },
+  {
+    "q": "A network administrator wants to ensure that DNS queries from internal clients are forwarded to external DNS servers while still allowing internal caching. Which feature should be configured?",
+    "choices": [
+      "DNS forwarding.",
+      "DHCP relay.",
+      "NTP peering.",
+      "RADIUS proxy."
+    ],
+    "correct": 0,
+    "exp": "Domain Name System (DNS) forwarding sends queries that cannot be resolved locally to upstream DNS servers while still allowing the internal DNS server to cache the responses.",
+    "choiceExps": [
+      "Domain Name System (DNS) forwarding is correct because it passes unresolved queries upstream while preserving local caching.",
+      "A Dynamic Host Configuration Protocol (DHCP) relay handles DHCP traffic between subnets, not DNS query forwarding.",
+      "Network Time Protocol (NTP) peering exchanges time information, not name-resolution traffic.",
+      "A Remote Authentication Dial-In User Service (RADIUS) proxy relays AAA traffic, not DNS lookups."
+    ]
+  },
+  {
+    "q": "Which application service is responsible for mapping a domain name to the IP address of a content delivery network (CDN) edge node closest to the user?",
+    "choices": [
+      "DHCP.",
+      "DNS.",
+      "NTP.",
+      "SNMP."
+    ],
+    "correct": 1,
+    "exp": "Domain Name System (DNS) can return different Internet Protocol (IP) addresses based on user location or policy, which allows a content delivery network (CDN) to direct users to an appropriate edge node.",
+    "choiceExps": [
+      "Dynamic Host Configuration Protocol (DHCP) assigns client addressing information and does not select a CDN edge node.",
+      "Domain Name System (DNS) is correct because it maps the domain name to an IP address, including CDN-aware responses.",
+      "Network Time Protocol (NTP) synchronizes time and is unrelated to selecting content-delivery endpoints.",
+      "Simple Network Management Protocol (SNMP) monitors devices and is not part of CDN name-to-address mapping."
+    ]
+  }
+];
+
+function shuffle(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+}
+
+function prepQuestions() {
+  const cloned = sourceQuestions.map(q => {
+    const choices = q.choices.map((text, idx) => ({ text, original: idx, why: q.choiceExps[idx] }));
+    shuffle(choices);
+    return {
+      q: q.q,
+      choices: choices.map(c => c.text),
+      choiceExps: choices.map(c => c.why),
+      correct: choices.findIndex(c => c.original === q.correct),
+      exp: q.exp
+    };
+  });
+  shuffle(cloned);
+  return cloned;
+}
+
+let questions = [];
+let current = 0;
+let score = 0;
+let answered = false;
+let review = [];
+
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+const scoreText = document.getElementById('scoreText');
+const questionNum = document.getElementById('questionNum');
+const questionText = document.getElementById('questionText');
+const answersEl = document.getElementById('answers');
+const feedback = document.getElementById('feedback');
+const explanationText = document.getElementById('explanationText');
+const explainBox = document.getElementById('explainBox');
+const nextBtn = document.getElementById('nextBtn');
+const restartBtn = document.getElementById('restartBtn');
+const retryBtn = document.getElementById('retryBtn');
+const quizPanel = document.getElementById('quizPanel');
+const resultPanel = document.getElementById('resultPanel');
+const finalScore = document.getElementById('finalScore');
+const finalMsg = document.getElementById('finalMsg');
+const reviewList = document.getElementById('reviewList');
+
+function renderQuestion() {
+  const q = questions[current];
+  answered = false;
+  progressText.textContent = `Question ${current + 1} of ${questions.length}`;
+  scoreText.textContent = `Score ${score}/${current}`;
+  progressFill.style.width = `${(current / questions.length) * 100}%`;
+  questionNum.textContent = `Question ${current + 1}`;
+  questionText.textContent = q.q;
+  answersEl.innerHTML = '';
+  feedback.className = 'feedback';
+  feedback.style.display = 'none';
+  feedback.innerHTML = '';
+  explanationText.innerHTML = `<p><strong>Why the correct answer is right:</strong> ${q.exp}</p>`;
+  explainBox.open = false;
+  nextBtn.disabled = true;
+
+  q.choices.forEach((choice, idx) => {
+    const btn = document.createElement('button');
+    btn.className = 'answer-btn';
+    btn.innerHTML = `<span>${String.fromCharCode(65 + idx)}) ${choice}</span>`;
+    btn.addEventListener('click', () => selectAnswer(idx, btn));
+    answersEl.appendChild(btn);
+  });
+}
+
+function buildAllChoiceExplanation(q) {
+  const letters = ['A', 'B', 'C', 'D'];
+  const lines = q.choices.map((choice, idx) => {
+    const label = `<strong>${letters[idx]})</strong> <span class="mini">${choice}</span>`;
+    return `<p>${label}<br>${q.choiceExps[idx]}</p>`;
+  });
+  return `<p><strong>Why the correct answer is right:</strong> ${q.exp}</p><hr style="border:none;border-top:1px solid rgba(138,176,255,0.18);margin:12px 0;"><p><strong>Why each option is right or wrong:</strong></p>${lines.join('')}`;
+}
+
+function selectAnswer(idx, btn) {
+  if (answered) return;
+  answered = true;
+  const q = questions[current];
+  const buttons = [...document.querySelectorAll('.answer-btn')];
+  buttons.forEach(b => b.disabled = true);
+
+  const isCorrect = idx === q.correct;
+  if (isCorrect) {
+    btn.classList.add('correct');
+    feedback.className = 'feedback good';
+    feedback.textContent = 'Correct. Nice work.';
+    score++;
+  } else {
+    btn.classList.add('incorrect');
+    buttons[q.correct].classList.add('reveal-correct');
+    feedback.className = 'feedback bad';
+    feedback.textContent = 'Incorrect. The correct answer is highlighted, and the explanation now breaks down every option.';
+  }
+  feedback.style.display = 'block';
+  nextBtn.disabled = false;
+
+  explanationText.innerHTML = buildAllChoiceExplanation(q);
+
+  review.push({
+    q: q.q,
+    correct: q.choices[q.correct],
+    chosen: q.choices[idx],
+    exp: buildAllChoiceExplanation(q),
+    ok: isCorrect
+  });
+
+  scoreText.textContent = `Score ${score}/${current + 1}`;
+  progressFill.style.width = `${((current + 1) / questions.length) * 100}%`;
+}
+
+function showResults() {
+  quizPanel.style.display = 'none';
+  resultPanel.classList.add('show');
+  finalScore.textContent = `You scored ${score} out of ${questions.length}.`;
+  const pct = Math.round((score / questions.length) * 100);
+  finalMsg.textContent = pct >= 85
+    ? 'Strong work. You are getting solid recognition of application services and what they do.'
+    : pct >= 70
+    ? 'Good progress. Review the explanations and tighten up the service roles and protocol details.'
+    : 'Keep going. Focus on what each service actually does and when it is used.';
+  reviewList.innerHTML = '';
+  review.forEach((item, i) => {
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    div.innerHTML = `
+      <div class="tag ${item.ok ? 'good' : 'bad'}">${item.ok ? 'Correct' : 'Review needed'}</div>
+      <h3>${i + 1}. ${item.q}</h3>
+      <div class="mini">Your answer: ${item.chosen}</div>
+      <div class="mini">Correct answer: ${item.correct}</div>
+      <div style="margin-top:10px; line-height:1.55;">${item.exp}</div>
+    `;
+    reviewList.appendChild(div);
+  });
+}
+
+function nextQuestion() {
+  current++;
+  if (current >= questions.length) {
+    showResults();
+  } else {
+    renderQuestion();
+  }
+}
+
+function startQuiz() {
+  questions = prepQuestions();
+  current = 0;
+  score = 0;
+  review = [];
+  quizPanel.style.display = '';
+  resultPanel.classList.remove('show');
+  renderQuestion();
+}
+
+nextBtn.addEventListener('click', nextQuestion);
+restartBtn.addEventListener('click', startQuiz);
+retryBtn.addEventListener('click', startQuiz);
+
+startQuiz();
+
+</script>
+</body>
+</html>

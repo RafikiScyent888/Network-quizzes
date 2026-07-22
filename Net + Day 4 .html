@@ -1,0 +1,755 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Network+ IPv4 Fundamentals Quiz</title>
+<style>
+  :root {
+    --bg1:#06111f;
+    --bg2:#0b1c33;
+    --panel:#102544;
+    --panel-2:#0d203a;
+    --line:#2a4770;
+    --text:#eaf2ff;
+    --muted:#9eb4d4;
+    --accent:#78a6ff;
+    --good:#12351f;
+    --good-line:#4dd082;
+    --bad:#35161d;
+    --bad-line:#ff7a90;
+    --info:#102b4e;
+    --info-line:#79b8ff;
+    --btn:#18355f;
+    --btn-hover:#204473;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0;
+    padding:24px;
+    font-family: "Segoe UI", Tahoma, sans-serif;
+    color:var(--text);
+    background: radial-gradient(circle at top, #17345f 0%, var(--bg2) 34%, var(--bg1) 100%);
+    min-height:100vh;
+  }
+  .wrap { max-width:980px; margin:0 auto; }
+  .card {
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    border:1px solid rgba(138,176,255,0.20);
+    border-radius:22px;
+    box-shadow:0 18px 50px rgba(0,0,0,0.35);
+    overflow:hidden;
+  }
+  .top {
+    padding:22px 24px 16px;
+    border-bottom:1px solid rgba(138,176,255,0.16);
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.00));
+  }
+  h1 { margin:0 0 8px; font-size:1.6rem; line-height:1.25; letter-spacing:0.2px; }
+  .sub { color:var(--muted); font-size:0.98rem; line-height:1.45; }
+  .statusbar {
+    display:grid;
+    grid-template-columns:1fr auto auto;
+    gap:12px;
+    align-items:center;
+    margin-top:16px;
+  }
+  .progress-shell {
+    height:12px;
+    background:#0a1730;
+    border:1px solid rgba(138,176,255,0.18);
+    border-radius:999px;
+    overflow:hidden;
+  }
+  .progress-fill {
+    height:100%;
+    width:0%;
+    background:linear-gradient(90deg, #6a9cff, #8fd2ff);
+    transition:width 0.25s ease;
+  }
+  .pill {
+    border:1px solid rgba(138,176,255,0.22);
+    background:rgba(255,255,255,0.03);
+    border-radius:999px;
+    padding:8px 12px;
+    font-size:0.92rem;
+    color:var(--text);
+    white-space:nowrap;
+  }
+  .main { padding:24px; }
+  .question-num {
+    color:#8fb2f1;
+    font-size:0.92rem;
+    text-transform:uppercase;
+    letter-spacing:0.12em;
+    margin-bottom:10px;
+  }
+  .question { font-size:1.2rem; line-height:1.55; margin:0 0 18px; }
+  .answers { display:grid; gap:12px; }
+  .answer-btn {
+    width:100%;
+    text-align:left;
+    border:1px solid var(--line);
+    border-radius:16px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.015));
+    color:var(--text);
+    padding:14px 16px;
+    cursor:pointer;
+    transition:transform 0.12s ease, border-color 0.12s ease, background 0.12s ease;
+    font:600 0.98rem/1.45 "Consolas","Menlo","Monaco","Courier New",monospace;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:clip;
+  }
+  .answer-btn:hover:not(:disabled) {
+    transform:translateY(-1px);
+    border-color:#86adff;
+    background:rgba(255,255,255,0.055);
+  }
+  .answer-btn:disabled { cursor:default; }
+  .answer-btn.correct {
+    background:var(--good);
+    border-color:var(--good-line);
+    color:#effff4;
+  }
+  .answer-btn.incorrect {
+    background:var(--bad);
+    border-color:var(--bad-line);
+    color:#fff1f3;
+  }
+  .answer-btn.reveal-correct {
+    background:#102d20;
+    border-color:#55d88c;
+    color:#effff4;
+  }
+  .feedback {
+    margin-top:16px;
+    padding:14px 16px;
+    border-radius:16px;
+    display:none;
+    border:1px solid transparent;
+    line-height:1.5;
+  }
+  .feedback.good { display:block; background:var(--good); border-color:var(--good-line); }
+  .feedback.bad { display:block; background:var(--bad); border-color:var(--bad-line); }
+  details {
+    margin-top:14px;
+    border:1px solid rgba(138,176,255,0.18);
+    border-radius:16px;
+    background:var(--info);
+    overflow:hidden;
+  }
+  summary {
+    cursor:pointer;
+    list-style:none;
+    padding:14px 16px;
+    font-weight:700;
+  }
+  summary::-webkit-details-marker { display:none; }
+  .explanation { padding:0 16px 16px; color:#e4efff; line-height:1.55; }
+  .controls { display:flex; gap:12px; flex-wrap:wrap; margin-top:20px; }
+  .btn {
+    border:none;
+    border-radius:14px;
+    padding:12px 16px;
+    font-weight:700;
+    color:white;
+    background:var(--btn);
+    cursor:pointer;
+    transition:background 0.15s ease, transform 0.12s ease;
+  }
+  .btn:hover { background:var(--btn-hover); transform:translateY(-1px); }
+  .btn.secondary {
+    background:transparent;
+    border:1px solid rgba(138,176,255,0.25);
+    color:var(--text);
+  }
+  .btn[disabled] { opacity:0.55; cursor:not-allowed; transform:none; }
+  .result { display:none; }
+  .result.show { display:block; }
+  .score-big { font-size:2rem; font-weight:800; margin:0 0 8px; }
+  .review-list { margin-top:18px; display:grid; gap:14px; }
+  .review-item {
+    border:1px solid rgba(138,176,255,0.18);
+    background:rgba(255,255,255,0.03);
+    border-radius:18px;
+    padding:16px;
+  }
+  .review-item h3 { margin:0 0 10px; font-size:1rem; line-height:1.45; }
+  .tag {
+    display:inline-block;
+    font-size:0.82rem;
+    border-radius:999px;
+    padding:6px 10px;
+    margin-bottom:10px;
+    border:1px solid rgba(255,255,255,0.16);
+  }
+  .tag.good { background:var(--good); border-color:var(--good-line); }
+  .tag.bad { background:var(--bad); border-color:var(--bad-line); }
+  .mini {
+    font:600 0.95rem/1.45 "Consolas","Menlo","Monaco","Courier New",monospace;
+    color:#eef4ff;
+    margin:4px 0;
+    white-space:normal;
+  }
+  @media (max-width: 780px) {
+    body { padding:14px; }
+    .statusbar { grid-template-columns:1fr; }
+    .answer-btn { white-space:normal; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="card">
+    <div class="top">
+      <h1>CompTIA Network+ — IPv4 Fundamentals</h1>
+      <div class="sub">Scenario-based exam mode with one question at a time, shuffled options, collapsible explanations, and a lighter focus on general IPv4 recognition and troubleshooting.</div>
+      <div class="statusbar">
+        <div class="progress-shell"><div id="progressFill" class="progress-fill"></div></div>
+        <div class="pill" id="progressText">Question 1 of 1</div>
+        <div class="pill" id="scoreText">Score 0/0</div>
+      </div>
+    </div>
+
+    <div class="main">
+      <section id="quizPanel">
+        <div class="question-num" id="questionNum"></div>
+        <h2 class="question" id="questionText"></h2>
+        <div class="answers" id="answers"></div>
+        <div id="feedback" class="feedback"></div>
+        <details id="explainBox">
+          <summary>Explanation</summary>
+          <div id="explanationText" class="explanation"></div>
+        </details>
+        <div class="controls">
+          <button id="nextBtn" class="btn" disabled>Next</button>
+          <button id="restartBtn" class="btn secondary">Restart Quiz</button>
+        </div>
+      </section>
+
+      <section id="resultPanel" class="result">
+        <p class="score-big" id="finalScore"></p>
+        <div class="sub" id="finalMsg"></div>
+        <div class="controls">
+          <button id="retryBtn" class="btn">Retry Quiz</button>
+        </div>
+        <div class="review-list" id="reviewList"></div>
+      </section>
+    </div>
+  </div>
+</div>
+
+<script>
+const sourceQuestions = [
+  {
+    "q": "A help desk technician sees a PC with 169.254.22.14 and notices the user cannot reach network resources. What is the most likely issue?",
+    "choices": [
+      "The PC did not receive a DHCP lease.",
+      "The PC has a valid public address.",
+      "The PC is using the loopback range.",
+      "The PC is connected to the wrong DNS zone."
+    ],
+    "correct": 0,
+    "exp": "An address in the 169.254.0.0/16 range is APIPA. That usually means the device could not contact DHCP and self-assigned an address."
+  },
+  {
+    "q": "A workstation can reach devices on its own subnet but cannot reach a file server on another subnet. Which setting should be checked first?",
+    "choices": [
+      "Default gateway.",
+      "Screen resolution.",
+      "Hostname length.",
+      "MAC vendor."
+    ],
+    "correct": 0,
+    "exp": "Traffic to a different subnet must be sent to a default gateway. If local access works but remote access fails, the gateway is a smart first check."
+  },
+  {
+    "q": "A junior technician asks what a subnet mask is mainly used for. Which answer is best?",
+    "choices": [
+      "To identify which part of an IPv4 address is network and which part is host.",
+      "To translate names into IP addresses.",
+      "To encrypt packets before transmission.",
+      "To assign VLAN numbers automatically."
+    ],
+    "correct": 0,
+    "exp": "A subnet mask tells a device which bits belong to the network portion and which bits belong to the host portion of an IP address."
+  },
+  {
+    "q": "A laptop is configured with 192.168.1.25/24. Which address is in the same subnet?",
+    "choices": [
+      "192.168.1.200.",
+      "192.168.2.25.",
+      "192.168.10.25.",
+      "192.168.0.25."
+    ],
+    "correct": 0,
+    "exp": "A /24 means the first three octets must match for devices to be in the same subnet."
+  },
+  {
+    "q": "A technician wants to test the local TCP/IP stack without sending traffic onto the network. Which address should be used?",
+    "choices": [
+      "127.0.0.1.",
+      "169.254.1.1.",
+      "255.255.255.255.",
+      "224.0.0.1."
+    ],
+    "correct": 0,
+    "exp": "127.0.0.1 is the loopback address. It is used to test the local TCP/IP stack on the device itself."
+  },
+  {
+    "q": "A network admin is reviewing logs and needs to quickly identify a private IPv4 address. Which one is private?",
+    "choices": [
+      "10.24.8.15.",
+      "11.24.8.15.",
+      "172.40.8.15.",
+      "193.168.8.15."
+    ],
+    "correct": 0,
+    "exp": "10.0.0.0/8 is a private IPv4 range. The others are not in the standard private ranges."
+  },
+  {
+    "q": "A branch office uses 192.168.50.0/24. Which address would most likely be assigned to the router interface for users on that subnet?",
+    "choices": [
+      "192.168.50.1.",
+      "192.168.51.1.",
+      "192.168.50.0.",
+      "255.255.255.0."
+    ],
+    "correct": 0,
+    "exp": "The router interface serving a subnet is often assigned the first usable host address, such as .1."
+  },
+  {
+    "q": "A user reports that a PC has the address 255.255.255.0 entered in the IP address field. What is the problem?",
+    "choices": [
+      "That value is a subnet mask, not a host IP address.",
+      "That value is a valid default gateway.",
+      "That value is a loopback address.",
+      "That value is a valid APIPA address."
+    ],
+    "correct": 0,
+    "exp": "255.255.255.0 is a subnet mask. It is not a valid host IP address for a workstation."
+  },
+  {
+    "q": "A technician reads that a network uses a /24 prefix. Which dotted-decimal mask matches that prefix?",
+    "choices": [
+      "255.255.255.0.",
+      "255.255.0.0.",
+      "255.255.255.128.",
+      "255.255.254.0."
+    ],
+    "correct": 0,
+    "exp": "A /24 prefix equals 255.255.255.0. This is one of the most common mask conversions to know."
+  },
+  {
+    "q": "A small office wants two PCs to talk directly over IP on the same LAN without routing. What must be true?",
+    "choices": [
+      "They must be in the same subnet.",
+      "They must use different DNS servers.",
+      "They must have different MAC vendors.",
+      "They must use public addresses."
+    ],
+    "correct": 0,
+    "exp": "Devices communicate directly at Layer 2 when they are in the same IP subnet. Traffic between different subnets requires routing."
+  },
+  {
+    "q": "A support analyst sees 172.20.12.55 on a company laptop. How should that address be classified?",
+    "choices": [
+      "Private IPv4 address.",
+      "Public IPv4 address.",
+      "Loopback address.",
+      "APIPA address."
+    ],
+    "correct": 0,
+    "exp": "172.16.0.0 through 172.31.255.255 is private IPv4 space. 172.20.12.55 falls inside that range."
+  },
+  {
+    "q": "A technician is asked what a default gateway actually does for a host. Which answer is best?",
+    "choices": [
+      "It forwards traffic to remote networks.",
+      "It assigns IP addresses to clients.",
+      "It resolves MAC addresses to hostnames.",
+      "It replaces the subnet mask."
+    ],
+    "correct": 0,
+    "exp": "A default gateway is the router a host uses when it needs to reach a different IP network."
+  },
+  {
+    "q": "A device with address 192.168.10.44/24 needs to reach 192.168.10.99. How will the host treat that destination?",
+    "choices": [
+      "As local traffic on the same subnet.",
+      "As remote traffic that must go to the gateway.",
+      "As multicast traffic.",
+      "As loopback traffic."
+    ],
+    "correct": 0,
+    "exp": "With a /24 mask, both addresses are in the 192.168.10.0 network, so the host treats the destination as local."
+  },
+  {
+    "q": "A user can browse websites by IP address but not by hostname. Which service should be checked first?",
+    "choices": [
+      "DNS.",
+      "NTP.",
+      "DHCP reservation.",
+      "Loopback adapter."
+    ],
+    "correct": 0,
+    "exp": "If IP-based access works but hostname-based access fails, DNS is the most likely issue."
+  },
+  {
+    "q": "A network administrator wants a quick example of a public IPv4 address. Which address fits best?",
+    "choices": [
+      "8.8.8.8.",
+      "10.10.10.10.",
+      "172.16.10.10.",
+      "192.168.10.10."
+    ],
+    "correct": 0,
+    "exp": "8.8.8.8 is a public IPv4 address. The other options are private address ranges."
+  },
+  {
+    "q": "A desktop is manually configured with 192.168.5.25 and mask 255.255.255.0. Which prefix length matches that mask?",
+    "choices": [
+      "/24.",
+      "/16.",
+      "/25.",
+      "/23."
+    ],
+    "correct": 0,
+    "exp": "The mask 255.255.255.0 corresponds to a /24 prefix."
+  },
+  {
+    "q": "A junior admin asks what DHCP does on a typical network. Which answer is correct?",
+    "choices": [
+      "It automatically assigns IP configuration to clients.",
+      "It filters unwanted websites.",
+      "It translates hostnames to IP addresses.",
+      "It encrypts traffic between subnets."
+    ],
+    "correct": 0,
+    "exp": "DHCP automatically assigns IP settings such as the IP address, subnet mask, gateway, and often DNS servers."
+  },
+  {
+    "q": "A technician needs to recognize a Class C network in an old document. Which default mask belongs to that classful range?",
+    "choices": [
+      "255.255.255.0.",
+      "255.255.0.0.",
+      "255.0.0.0.",
+      "255.255.255.192."
+    ],
+    "correct": 0,
+    "exp": "In classful addressing, a Class C network used the default mask 255.255.255.0, or /24."
+  },
+  {
+    "q": "A PC with 10.1.5.10/8 sends traffic to 10.99.44.2. How will the PC view that destination?",
+    "choices": [
+      "As part of the same IP network.",
+      "As a remote host that needs routing.",
+      "As a broadcast destination.",
+      "As an APIPA address."
+    ],
+    "correct": 0,
+    "exp": "With a /8 mask, any address beginning with 10 is in the same IP network from the host's perspective."
+  },
+  {
+    "q": "A company wants to avoid public addressing internally. Which range is designed for private LAN use?",
+    "choices": [
+      "192.168.0.0/16.",
+      "127.0.0.0/8.",
+      "224.0.0.0/4.",
+      "169.254.0.0/16."
+    ],
+    "correct": 0,
+    "exp": "192.168.0.0/16 is one of the standard private IPv4 ranges used on internal networks."
+  },
+  {
+    "q": "A tech is documenting a subnet and asks which address is reserved as the network identifier in 192.168.30.0/24. Which address should be listed?",
+    "choices": [
+      "192.168.30.0.",
+      "192.168.30.1.",
+      "192.168.30.254.",
+      "192.168.30.255."
+    ],
+    "correct": 0,
+    "exp": "In a /24 subnet, the .0 address identifies the network itself and is not assigned to a host."
+  },
+  {
+    "q": "An intern asks which address in 192.168.30.0/24 is reserved for broadcast traffic to all hosts on that subnet. Which answer is correct?",
+    "choices": [
+      "192.168.30.255.",
+      "192.168.30.0.",
+      "192.168.30.1.",
+      "192.168.31.255."
+    ],
+    "correct": 0,
+    "exp": "In a /24 subnet, the final address in the range is the broadcast address, which is .255."
+  },
+  {
+    "q": "A user enters 192.168.1.0 as the IP address of a printer on a /24 network. Why is that a problem?",
+    "choices": [
+      "That is the network address and cannot be used by a host.",
+      "That is the default gateway address only.",
+      "That is an APIPA address.",
+      "That is a multicast address."
+    ],
+    "correct": 0,
+    "exp": "On a /24 network, the .0 address identifies the network itself. Host devices must use usable host addresses instead."
+  },
+  {
+    "q": "A help desk ticket says a workstation has the wrong mask and now thinks remote hosts are local. What problem can that create?",
+    "choices": [
+      "The PC may ARP for devices that actually require routing.",
+      "The PC will stop using MAC addresses completely.",
+      "The PC will automatically become a DHCP server.",
+      "The PC will convert IPv4 traffic to IPv6 traffic."
+    ],
+    "correct": 0,
+    "exp": "A bad subnet mask can make a host misjudge whether a destination is local or remote. That often leads to ARP attempts instead of sending traffic to the gateway."
+  },
+  {
+    "q": "A network diagram shows the mask 255.255.0.0 on an old internal network. Which prefix length is this?",
+    "choices": [
+      "/16.",
+      "/8.",
+      "/24.",
+      "/17."
+    ],
+    "correct": 0,
+    "exp": "255.255.0.0 equals a /16 prefix."
+  },
+  {
+    "q": "A branch router is being configured to support about 250 devices on one subnet. Which choice is the most common fit?",
+    "choices": [
+      "/24.",
+      "/30.",
+      "/29.",
+      "/28."
+    ],
+    "correct": 0,
+    "exp": "A /24 supports 254 usable host addresses, making it a common fit for around 250 devices."
+  },
+  {
+    "q": "A support tech sees that a user can ping 127.0.0.1 but cannot ping the default gateway. What does that prove?",
+    "choices": [
+      "The local TCP/IP stack is functioning.",
+      "The switch port is definitely correct.",
+      "DNS is working normally.",
+      "The remote server is online."
+    ],
+    "correct": 0,
+    "exp": "A successful ping to 127.0.0.1 shows the local TCP/IP stack is working. It does not prove broader network connectivity."
+  },
+  {
+    "q": "A training handout says an interface uses 255.255.255.128. Which prefix is that?",
+    "choices": [
+      "/25.",
+      "/24.",
+      "/26.",
+      "/23."
+    ],
+    "correct": 0,
+    "exp": "255.255.255.128 corresponds to /25. This splits a /24 into two equal halves."
+  },
+  {
+    "q": "A PC is configured with 192.168.10.25/24 and gateway 192.168.20.1. Why is that likely a problem?",
+    "choices": [
+      "The gateway should normally be in the same subnet as the host.",
+      "The gateway must always use a public IP address.",
+      "The gateway must match the host IP exactly.",
+      "The gateway should be the broadcast address."
+    ],
+    "correct": 0,
+    "exp": "A host typically uses a default gateway that is on the same local subnet so it can reach the router directly."
+  },
+  {
+    "q": "A junior technician asks for the main reason subnetting is used in business networks. Which answer is best?",
+    "choices": [
+      "To divide networks into smaller, more manageable segments.",
+      "To replace switches with hubs.",
+      "To eliminate the need for routing.",
+      "To make every IP address public."
+    ],
+    "correct": 0,
+    "exp": "Subnetting helps segment networks, reduce broadcast domains, and organize addressing more efficiently."
+  }
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function letter(index) {
+  return ["A", "B", "C", "D"][index] || "?";
+}
+
+function nbspPad(text, target) {
+  const bare = text.replace(/ /g, "\u00A0");
+  const diff = Math.max(0, target - text.length);
+  return bare + "\u00A0".repeat(diff);
+}
+
+function buildQuiz() {
+  return shuffle(sourceQuestions).map((q) => {
+    const options = q.choices.map((text, idx) => ({ text, correct: idx === q.correct }));
+    const shuffled = shuffle(options);
+    const maxLen = Math.max(...shuffled.map(o => o.text.length));
+    return {
+      q: q.q,
+      explanation: q.exp,
+      options: shuffled.map((opt, idx) => ({
+        label: `${letter(idx)}) ${nbspPad(opt.text, maxLen)}`,
+        text: opt.text,
+        correct: opt.correct
+      }))
+    };
+  });
+}
+
+let quiz = buildQuiz();
+let current = 0;
+let score = 0;
+let locked = false;
+let history = [];
+
+const quizPanel = document.getElementById("quizPanel");
+const resultPanel = document.getElementById("resultPanel");
+const questionNum = document.getElementById("questionNum");
+const questionText = document.getElementById("questionText");
+const answersDiv = document.getElementById("answers");
+const feedback = document.getElementById("feedback");
+const explainBox = document.getElementById("explainBox");
+const explanationText = document.getElementById("explanationText");
+const nextBtn = document.getElementById("nextBtn");
+const restartBtn = document.getElementById("restartBtn");
+const retryBtn = document.getElementById("retryBtn");
+const progressFill = document.getElementById("progressFill");
+const progressText = document.getElementById("progressText");
+const scoreText = document.getElementById("scoreText");
+const finalScore = document.getElementById("finalScore");
+const finalMsg = document.getElementById("finalMsg");
+const reviewList = document.getElementById("reviewList");
+
+function updateHeader() {
+  const answered = history.length;
+  const pct = ((current) / quiz.length) * 100;
+  progressFill.style.width = `${pct}%`;
+  progressText.textContent = `Question ${Math.min(current + 1, quiz.length)} of ${quiz.length}`;
+  scoreText.textContent = `Score ${score}/${answered}`;
+}
+
+function renderQuestion() {
+  locked = false;
+  nextBtn.disabled = true;
+  feedback.className = "feedback";
+  feedback.textContent = "";
+  explainBox.open = false;
+  explanationText.textContent = "";
+  answersDiv.innerHTML = "";
+
+  const item = quiz[current];
+  questionNum.textContent = `Question ${current + 1}`;
+  questionText.textContent = item.q;
+  explanationText.textContent = item.explanation;
+
+  item.options.forEach((opt) => {
+    const btn = document.createElement("button");
+    btn.className = "answer-btn";
+    btn.innerHTML = opt.label;
+    btn.addEventListener("click", () => selectAnswer(btn, opt, item.options));
+    answersDiv.appendChild(btn);
+  });
+
+  updateHeader();
+}
+
+function selectAnswer(clickedBtn, opt, options) {
+  if (locked) return;
+  locked = true;
+  const buttons = [...answersDiv.querySelectorAll(".answer-btn")];
+  buttons.forEach(b => b.disabled = true);
+
+  const correctOption = options.find(o => o.correct);
+  const correctIndex = options.findIndex(o => o.correct);
+
+  if (opt.correct) {
+    score += 1;
+    clickedBtn.classList.add("correct");
+    feedback.className = "feedback good";
+    feedback.textContent = `Correct. ${letter(correctIndex)} is the best fit for this addressing scenario.`;
+  } else {
+    clickedBtn.classList.add("incorrect");
+    const correctBtn = buttons[correctIndex];
+    if (correctBtn) correctBtn.classList.add("reveal-correct");
+    feedback.className = "feedback bad";
+    feedback.textContent = `Not this one. The best answer is ${letter(correctIndex)} because it matches the subnetting or IPv4 behavior more precisely.`;
+  }
+
+  history.push({
+    question: quiz[current].q,
+    chosen: opt.text,
+    correct: correctOption.text,
+    wasCorrect: opt.correct,
+    explanation: quiz[current].explanation
+  });
+
+  explainBox.open = true;
+  nextBtn.disabled = false;
+  scoreText.textContent = `Score ${score}/${history.length}`;
+}
+
+function showResults() {
+  progressFill.style.width = "100%";
+  progressText.textContent = `Completed ${quiz.length} of ${quiz.length}`;
+  scoreText.textContent = `Score ${score}/${quiz.length}`;
+  quizPanel.style.display = "none";
+  resultPanel.classList.add("show");
+
+  const pct = Math.round((score / quiz.length) * 100);
+  finalScore.textContent = `Final Score: ${score}/${quiz.length} (${pct}%)`;
+
+  let msg = "Keep drilling private ranges, masks, and what actually requires routing.";
+  if (pct >= 90) msg = "Strong work. Your IPv4 recognition and subnet judgment look exam-ready.";
+  else if (pct >= 75) msg = "Nice job. A few mask and range near-misses still need tightening.";
+  else if (pct >= 60) msg = "Good foundation. Focus on CIDR, private addressing, and subnet boundaries.";
+  finalMsg.textContent = msg;
+
+  reviewList.innerHTML = history.map((item, idx) => `
+    <div class="review-item">
+      <div class="tag ${item.wasCorrect ? "good" : "bad"}">${item.wasCorrect ? "Correct" : "Review Needed"}</div>
+      <h3>${idx + 1}. ${item.question}</h3>
+      <div class="mini">Your answer: ${item.chosen}</div>
+      <div class="mini">Best answer: ${item.correct}</div>
+      <div class="sub">${item.explanation}</div>
+    </div>
+  `).join("");
+}
+
+nextBtn.addEventListener("click", () => {
+  current += 1;
+  if (current >= quiz.length) showResults();
+  else renderQuestion();
+});
+
+function restartQuiz() {
+  quiz = buildQuiz();
+  current = 0;
+  score = 0;
+  locked = false;
+  history = [];
+  resultPanel.classList.remove("show");
+  quizPanel.style.display = "block";
+  renderQuestion();
+}
+
+restartBtn.addEventListener("click", restartQuiz);
+retryBtn.addEventListener("click", restartQuiz);
+
+renderQuestion();
+</script>
+</body>
+</html>
