@@ -34,7 +34,7 @@ const MIN = 20;
 // Ids of the 20 A+ questions removed on 30 Sept 2026. Never reuse them: a paused
 // quiz saved in a student's browser may still point at them.
 const RETIRED = [650, 651, 652, 653, ...Array.from({ length: 16 }, (_, i) => 655 + i)];
-const PENDING = ['1.5', '1.7', '1.8', '2.2', '2.4', '3.2', '3.3', '3.4', '3.8', '5.1', '5.4'];
+const PENDING = ['2.2', '2.4', '3.2', '3.3', '3.4', '3.8', '5.1', '5.4'];
 
 // ---- the doc: domains in order, each with its topics in order ----
 const DOC = [];

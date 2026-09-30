@@ -53,8 +53,10 @@ answer-key fixes and every question added since.
     - Distractors are near misses.
     - Option lengths are balanced: the right answer is the longest option in
     35 of 145, which is about chance.
-  - Still to write: 1.5 +24, 1.7 +15, 1.8 +6, 2.2 +6, 2.4 +7, 3.2 +24,
-    3.3 +24, 3.4 +23, 3.8 +20, 5.1 +10, 5.4 +14 (173 questions).
+  - 30 Sept 2026, Networking concepts: 45 questions, ids 816–860. 1.5 +24,
+    1.7 +15, 1.8 +6, so each is at 25.
+  - Still to write: 2.2 +6, 2.4 +7, 3.2 +24, 3.3 +24, 3.4 +23, 3.8 +20,
+    5.1 +10, 5.4 +14 (128 questions).
 
 ## Checks: `verify/` (need Playwright; not needed to run the site)
 
