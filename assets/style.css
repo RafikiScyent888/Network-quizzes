@@ -320,3 +320,21 @@ footer.site-footer {
   .tile { min-height: 160px; padding: 20px 16px; }
   .theme-bar { flex-direction: column; align-items: flex-start; }
 }
+
+/* AAA contrast (approved by the owner 30 Sept 2026) — Network+ / Security+ */
+:root { --good: #14532d; --bad: #7f1d1d; }
+.site-header { color: #06122e; }
+.site-header h1 { text-shadow: none; }
+.site-header p { color: #06122e; }
+button, .btn { background: #0b3a82; }
+.btn.secondary { background: #334155; }
+.btn.danger { background: #991b1b; }
+button:disabled, .btn:disabled { opacity: 1; background: #e2e8f0; color: #334155; border: 2px dashed #64748b; }
+.btn.ghost:disabled { background: #e2e8f0; color: #334155; }
+.score-hero .big-score { color: #0b3a82; }
+.objective-tag { color: #0c4a6e; }
+.domain-group h3 { color: #0c4a6e; }
+.resume-banner .text b { color: #78350f; }
+.theme-fire .tile-count { background: rgba(0, 0, 0, 0.38); }
+.theme-sun .tile-count { background: rgba(255, 255, 255, 0.55); color: #2a1000; }
+footer.site-footer { color: #06122e; opacity: 1; }

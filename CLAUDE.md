@@ -87,11 +87,23 @@ answer-key fixes and every question added since.
 - The results screen's per-topic score bars never filled: `.breakdown-fill`
   is an inline `<span>`, so its width was ignored. It is now `display: block`.
 
+## Contrast (fixed 30 September 2026)
+
+Every student-facing screen meets AAA on painted pixels. The owner approved
+the before/after preview: "I like all of the changes in all of the quizzes".
+- The approved colours are in a block marked "AAA contrast" (at the end of `assets/style.css`).
+- Colour changes stay in the royal palette, with no new hues.
+- Disabled buttons are no longer faded out. They're solid silver with a dashed
+  border and readable text.
+- `node verify/contrast.mjs` drives every screen (dashboard, setup, question
+  before and after answering, results, paused-quiz banner) and fails on
+  anything under 7:1 (4.5:1 for large text). `--plant` puts back the old
+  sky-blue buttons and must fail.
+
+Run it after any colour or layout change.
+
 ## Known, not yet fixed
 
-- **Contrast:** the standard buttons measure about 2.8:1, under the AAA
-  floor. The fix is a colour change, so it needs a preview for the owner
-  first.
 - **Footer:** it reads "Network+ Practice Hub · For educational purposes
   only · Not affiliated with CompTIA", which is shorter than the program's
   short form. It is waiting for the owner's go-ahead to change it.
