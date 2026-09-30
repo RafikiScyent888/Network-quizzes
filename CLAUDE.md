@@ -45,6 +45,16 @@ answer-key fixes and every question added since.
   - Take a topic off that list in the same commit that fills it; the check
     fails if a PENDING topic has reached 20.
   - The owner set the order: Network security (4.x) first, then the rest.
+  - Ids 650–653 and 655–670 are retired; new questions start at 671.
+- **Batches written:**
+  - 30 Sept 2026, Network security: 145 questions, ids 671–815. 4.1 +15,
+    4.2 +25, 4.3 +24, 4.4 +24, 4.5 +24, 4.6 +22, 4.8 +11, so every 4.x topic
+    is at 25 (4.7 already had 31).
+    - Distractors are near misses.
+    - Option lengths are balanced: the right answer is the longest option in
+    35 of 145, which is about chance.
+  - Still to write: 1.5 +24, 1.7 +15, 1.8 +6, 2.2 +6, 2.4 +7, 3.2 +24,
+    3.3 +24, 3.4 +23, 3.8 +20, 5.1 +10, 5.4 +14 (173 questions).
 
 ## Checks: `verify/` (need Playwright; not needed to run the site)
 
@@ -52,7 +62,9 @@ answer-key fixes and every question added since.
   - Checks the bank against `verify/objectives-netplus-2026-09-30.md` (the
     doc, verbatim).
   - Drives `custom.html`.
-  - `--plant` runs 15 plants.
+  - Checks that no removed A+ id is reused, and plays a quiz on the newest
+    topics, answering right and confirming each one is marked right.
+  - `--plant` runs 17 plants.
 - `node verify/retake.mjs`
   - Drives "Retake the ones I missed" end to end.
   - `--plant` runs 7 plants.

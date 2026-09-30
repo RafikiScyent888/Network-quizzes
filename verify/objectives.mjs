@@ -9,8 +9,10 @@
 //     the list is emptied as each batch lands
 //   - every question is well formed: 4 options, a correct answer, an
 //     explanation, and a "why" for every option; ids and question texts unique
+//   - no question reuses the id of one of the A+ questions removed on 30 Sept
 //   - the custom quiz page lists every topic that has questions, with its true
 //     count, under its doc domain, and a quiz on one topic draws only that topic
+//   - the newest questions play: answered right on the page, they're marked right
 //   - no script errors
 //   node verify/objectives.mjs [dir]    dir defaults to the repo
 //   node verify/objectives.mjs --plant  proves each check can fail
@@ -29,7 +31,10 @@ const TYPES = { '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/cs
 const MIN = 20;
 // Topics still short of 20 while new questions are written for them (30 Sept 2026).
 // Remove a topic from this list in the same commit that fills it.
-const PENDING = ['1.5', '1.7', '1.8', '2.2', '2.4', '3.2', '3.3', '3.4', '3.8', '4.1', '4.2', '4.3', '4.4', '4.5', '4.6', '4.8', '5.1', '5.4'];
+// Ids of the 20 A+ questions removed on 30 Sept 2026. Never reuse them: a paused
+// quiz saved in a student's browser may still point at them.
+const RETIRED = [650, 651, 652, 653, ...Array.from({ length: 16 }, (_, i) => 655 + i)];
+const PENDING = ['1.5', '1.7', '1.8', '2.2', '2.4', '3.2', '3.3', '3.4', '3.8', '5.1', '5.4'];
 
 // ---- the doc: domains in order, each with its topics in order ----
 const DOC = [];
@@ -64,6 +69,7 @@ async function run(dir, pending = PENDING) {
   const ids = new Set(), texts = new Set(), count = {};
   for (const q of B) {
     ok(!ids.has(q.id), `duplicate question id ${q.id}`); ids.add(q.id);
+    ok(!RETIRED.includes(q.id), `${q.id} reuses the id of a removed A+ question`);
     ok(!texts.has(q.question), `${q.id}: question text repeats another question word for word`); texts.add(q.question);
     const t = topic[q.objectiveId];
     ok(t, `${q.id} is filed under "${q.objectiveId}", which isn't a topic`);
@@ -116,6 +122,28 @@ async function run(dir, pending = PENDING) {
     const text = await page.$eval('.question-text', e => e.textContent);
     const q = B.find(x => x.question === text);
     ok(q && q.objectiveId === '1.3', `a 1.3-only quiz showed a ${q && q.objectiveId} question`);
+
+    // the newest questions play: a quiz on the newest topics, answered right, is marked right
+    const newest = B.filter(x => x.source && x.source.startsWith('written 30 Sept 2026'));
+    const topics = [...new Set(newest.map(x => x.objectiveId))];
+    await page.evaluate(t => { localStorage.clear(); sessionStorage.setItem('nq_config', JSON.stringify({ mode: 'custom', count: 12, objectiveIds: t, theme: 'theme-green', label: 'New questions' })); }, topics);
+    await page.goto(`${URL}/quiz.html`);
+    let played = 0;
+    for (let i = 0; i < 12 && (await page.$('.question-text')); i++) {
+      const qt = await page.$eval('.question-text', e => e.textContent);
+      const x = B.find(y => y.question === qt);
+      const opts = await page.$$eval('.option > span > div:first-child', ds => ds.map(d => d.textContent));
+      const want = opts.indexOf(x.options[x.correctIndex]);
+      ok(want >= 0, `${x.id}: its correct answer isn't among the options on screen`);
+      await page.locator('.option').nth(want).click();
+      await page.click('#primaryBtn');
+      const cls = await page.locator('.option').nth(want).getAttribute('class');
+      ok(/\bcorrect\b/.test(cls) && !/\bincorrect\b/.test(cls), `${x.id}: picking its right answer is marked wrong`);
+      if (newest.includes(x)) played++;
+      await page.click('#primaryBtn');
+    }
+    ok(played >= 6, `only ${played} of 12 questions on the newest topics were new ones`);
+    ok(await page.$eval('body', b => /100/.test(b.textContent)), 'twelve right answers did not score 100');
   } catch (e) { fails.push('could not drive the page — ' + String(e.message).split('\n')[0]); }
   ok(!errors.length, 'script errors: ' + errors.join(' | '));
   await browser.close(); srv.close();
@@ -139,6 +167,8 @@ if (process.argv.includes('--plant')) {
     'option left without a why': data((O, B) => { B[B.length - 1].optionExplanations[1] = ''; }),
     'correct answer out of range': data((O, B) => { B[10].correctIndex = 4; }),
     'duplicate id': data((O, B) => { B[B.length - 1].id = B[0].id; }),
+    'removed A+ id reused': data((O, B) => { B[B.length - 1].id = 657; }),
+    'answers shuffled, key not moved': { common: 'correctIndex: order.indexOf(q.correctIndex),|correctIndex: q.correctIndex,' },
     'duplicate question text': data((O, B) => { B[5].question = B[4].question; }),
     'page miscounts': { custom: custom.replace('countsByObjective[q.objectiveId] = (countsByObjective[q.objectiveId] || 0) + 1;', 'if (q.id !== 1) countsByObjective[q.objectiveId] = (countsByObjective[q.objectiveId] || 0) + 1;') },
     'page hides a topic': { custom: custom.replace('(o) => countsByObjective[o.id] > 0)', '(o) => countsByObjective[o.id] > 0 && o.id !== "3.7")') },
@@ -150,6 +180,11 @@ if (process.argv.includes('--plant')) {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'nq-obj-'));
     fs.cpSync(ROOT, tmp, { recursive: true, filter: s => !s.includes(`${path.sep}.git`) });
     if (p.custom) fs.writeFileSync(path.join(tmp, 'custom.html'), p.custom);
+    if (p.common) {
+      const f = path.join(tmp, 'assets', 'common.js'), [from, to] = p.common.split('|'), src = fs.readFileSync(f, 'utf8');
+      if (!src.includes(from)) { console.log(`STALE  ${name}: the plant changed nothing`); missed++; fs.rmSync(tmp, { recursive: true, force: true }); continue; }
+      fs.writeFileSync(f, src.replace(from, to));
+    }
     if (p.data) {
       const file = path.join(tmp, 'assets', 'questions.js');
       const lines = fs.readFileSync(file, 'utf8').split('\n').map(l =>
@@ -167,5 +202,5 @@ if (process.argv.includes('--plant')) {
 } else {
   const fails = await run(process.argv[2] || ROOT);
   if (fails.length) { console.log('FAIL ' + fails.length); fails.slice(0, 30).forEach(f => console.log('  - ' + f)); process.exit(1); }
-  console.log(`PASS — ${DOC.reduce((a, d) => a + d.topics.length, 0)} topics from the doc, every question filed and well formed, every finished topic at ${MIN}+ (${PENDING.length} still being filled: ${PENDING.join(' ')}), the custom quiz lists true counts, a one-topic quiz draws only from it, no script errors`);
+  console.log(`PASS — ${DOC.reduce((a, d) => a + d.topics.length, 0)} topics from the doc, every question filed and well formed, every finished topic at ${MIN}+ (${PENDING.length} still being filled: ${PENDING.join(' ')}), no removed A+ id reused, the custom quiz lists true counts, a one-topic quiz draws only from it, the newest questions answered right are marked right, no script errors`);
 }
