@@ -29,7 +29,7 @@ still short are being filled in batches.
   per-topic breakdown, review of missed questions with explanations for both
   the correct and incorrect answers, and "Retake the ones I missed").
 - `assets/questions.js` — the topic list (`window.OBJECTIVES`) and the
-  question bank (`window.QUESTION_BANK`, 840 questions). Edit it directly.
+  question bank (`window.QUESTION_BANK`, 853 questions). Edit it directly.
   **Do not regenerate it** with `tools/build-questions.mjs`: that script
   rebuilds from the legacy files below and would throw away the topic
   filing and every question added since.
