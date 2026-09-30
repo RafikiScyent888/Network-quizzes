@@ -59,7 +59,10 @@ answer-key fixes and every question added since.
     2.4 +7, so each is at 25.
   - 30 Sept 2026, Network operations: 91 questions, ids 874–964. 3.2 +24,
     3.3 +24, 3.4 +23, 3.8 +20, so each is at 25.
-  - Still to write: 5.1 +10, 5.4 +14 (24 questions).
+  - 30 Sept 2026, Network troubleshooting: 24 questions, ids 965–988. 5.1 +10,
+    5.4 +14, so each is at 25.
+  - All 34 topics now have 20+ (968 questions). `PENDING` is empty; the plant
+    for it carries its own list, so it still proves the rule.
 
 ## Checks: `verify/` (need Playwright; not needed to run the site)
 

@@ -34,7 +34,7 @@ const MIN = 20;
 // Ids of the 20 A+ questions removed on 30 Sept 2026. Never reuse them: a paused
 // quiz saved in a student's browser may still point at them.
 const RETIRED = [650, 651, 652, 653, ...Array.from({ length: 16 }, (_, i) => 655 + i)];
-const PENDING = ['5.1', '5.4'];
+const PENDING = [];
 
 // ---- the doc: domains in order, each with its topics in order ----
 const DOC = [];
@@ -163,7 +163,8 @@ if (process.argv.includes('--plant')) {
     'question on an old topic': data((O, B) => { B[0].objectiveId = '6.1'; }),
     'question with a stale label': data((O, B) => { B.find(q => q.objectiveId === '1.2').objective = 'Networking Appliances & Applications'; }),
     'topic below 20': data((O, B) => { const drop = new Set(B.filter(q => q.objectiveId === '5.2').slice(0, 1).map(q => q.id)); for (let i = B.length - 1; i >= 0; i--) if (drop.has(B[i].id)) B.splice(i, 1); }),
-    'pending topic filled but still listed': data((O, B) => { const o = O.find(o => o.id === '5.1'); B.filter(q => q.objectiveId === '5.5').slice(0, 6).forEach(q => { q.objectiveId = '5.1'; q.objective = o.label; q.domain = o.domain; }); }),
+    // carries its own PENDING list, so it keeps working once the real list is empty
+    'pending topic filled but still listed': { ...data(() => {}), pending: ['5.2'] },
     'option left without a why': data((O, B) => { B[B.length - 1].optionExplanations[1] = ''; }),
     'correct answer out of range': data((O, B) => { B[10].correctIndex = 4; }),
     'duplicate id': data((O, B) => { B[B.length - 1].id = B[0].id; }),
@@ -192,7 +193,7 @@ if (process.argv.includes('--plant')) {
         l.startsWith('window.QUESTION_BANK = ') ? 'window.QUESTION_BANK = ' + JSON.stringify(p.data.B) + ';' : l);
       fs.writeFileSync(file, lines.join('\n'));
     }
-    const f = await run(tmp);
+    const f = await run(tmp, p.pending || PENDING);
     fs.rmSync(tmp, { recursive: true, force: true });
     console.log(`${f.length ? 'CAUGHT' : 'MISSED'} ${name.padEnd(38)} ${(f[0] || '').slice(0, 110)}`);
     if (!f.length) missed++;
@@ -202,5 +203,5 @@ if (process.argv.includes('--plant')) {
 } else {
   const fails = await run(process.argv[2] || ROOT);
   if (fails.length) { console.log('FAIL ' + fails.length); fails.slice(0, 30).forEach(f => console.log('  - ' + f)); process.exit(1); }
-  console.log(`PASS — ${DOC.reduce((a, d) => a + d.topics.length, 0)} topics from the doc, every question filed and well formed, every finished topic at ${MIN}+ (${PENDING.length} still being filled: ${PENDING.join(' ')}), no removed A+ id reused, the custom quiz lists true counts, a one-topic quiz draws only from it, the newest questions answered right are marked right, no script errors`);
+  console.log(`PASS — ${DOC.reduce((a, d) => a + d.topics.length, 0)} topics from the doc, every question filed and well formed, every finished topic at ${MIN}+ (${PENDING.length ? `${PENDING.length} still being filled: ${PENDING.join(' ')}` : 'none left to fill'}), no removed A+ id reused, the custom quiz lists true counts, a one-topic quiz draws only from it, the newest questions answered right are marked right, no script errors`);
 }

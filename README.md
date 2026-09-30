@@ -16,8 +16,8 @@ so these numbers are this site's, not CompTIA's. A verbatim copy of the list
 is in `verify/objectives-netplus-2026-09-30.md`.
 
 Every question was read and filed under the topic it actually tests
-(30 September 2026). The goal is at least 20 questions per topic; topics
-still short are being filled in batches.
+(30 September 2026). Every topic has at least 20 questions; each topic that was short was topped up
+to 25.
 
 ## What's here
 
@@ -29,7 +29,7 @@ still short are being filled in batches.
   per-topic breakdown, review of missed questions with explanations for both
   the correct and incorrect answers, and "Retake the ones I missed").
 - `assets/questions.js` — the topic list (`window.OBJECTIVES`) and the
-  question bank (`window.QUESTION_BANK`, 944 questions). Edit it directly.
+  question bank (`window.QUESTION_BANK`, 968 questions). Edit it directly.
   **Do not regenerate it** with `tools/build-questions.mjs`: that script
   rebuilds from the legacy files below and would throw away the topic
   filing and every question added since.
