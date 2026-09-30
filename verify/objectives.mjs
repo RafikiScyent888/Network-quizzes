@@ -168,7 +168,7 @@ if (process.argv.includes('--plant')) {
     'question with a stale label': data((O, B) => { B.find(q => q.objectiveId === '1.2').objective = 'Networking Appliances & Applications'; }),
     'topic below 20': data((O, B) => { const drop = new Set(B.filter(q => q.objectiveId === '5.2').slice(0, 1).map(q => q.id)); for (let i = B.length - 1; i >= 0; i--) if (drop.has(B[i].id)) B.splice(i, 1); }),
     // carries its own PENDING list, so it keeps working once the real list is empty
-    'pending topic filled but still listed': { ...data(() => {}), pending: ['5.2'] },
+    'pending topic filled but still listed': { ...data(() => {}), pending: [...PENDING, '5.2'] },
     'option left without a why': data((O, B) => { B[B.length - 1].optionExplanations[1] = ''; }),
     'correct answer out of range': data((O, B) => { B[10].correctIndex = 4; }),
     'duplicate id': data((O, B) => { B[B.length - 1].id = B[0].id; }),
