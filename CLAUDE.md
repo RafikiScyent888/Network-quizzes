@@ -57,8 +57,9 @@ answer-key fixes and every question added since.
     1.7 +15, 1.8 +6, so each is at 25.
   - 30 Sept 2026, Network implementation: 13 questions, ids 861–873. 2.2 +6,
     2.4 +7, so each is at 25.
-  - Still to write: 3.2 +24, 3.3 +24, 3.4 +23, 3.8 +20, 5.1 +10, 5.4 +14
-    (115 questions).
+  - 30 Sept 2026, Network operations: 91 questions, ids 874–964. 3.2 +24,
+    3.3 +24, 3.4 +23, 3.8 +20, so each is at 25.
+  - Still to write: 5.1 +10, 5.4 +14 (24 questions).
 
 ## Checks: `verify/` (need Playwright; not needed to run the site)
 
