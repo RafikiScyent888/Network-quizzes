@@ -114,6 +114,12 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .btn.danger { background: #dc2626; }
 .btn.ghost { background: transparent; color: var(--ink); border: 2px solid rgba(15,23,42,0.15); }
 
+/* Retake the missed. A deeper sky blue than the standard button: white on
+   #075985 clears the 7:1 AAA floor (the standard #0ea5e9 is about 2.8:1). */
+.btn.retake-missed { background: #075985; color: #fff; }
+.retake-banner { background: var(--card); color: var(--ink); border: 2px solid #075985; border-radius: var(--radius); padding: 10px 14px; margin-bottom: 12px; font-size: 14px; }
+.retake-note { max-width: 60ch; margin: 0 auto 20px; text-align: center; color: var(--ink); background: var(--card); border-radius: 8px; padding: 8px 12px; font-size: 13px; }
+
 /* ---------- Tile dashboard ---------- */
 
 .tile-grid {

@@ -70,6 +70,7 @@
           <div class="pill">Score: ${correctCount()} / ${answeredCount()}</div>
         </div>
       </div>
+      ${(state.round || 1) > 1 ? `<div class="retake-banner" role="note"><strong>Retake round ${state.round - 1}</strong> &mdash; only the questions you missed last time.</div>` : ""}
       <div class="progress-wrap"><div class="progress-bar" style="width:${pct}%"></div></div>
       <div class="card">
         <span class="objective-tag">${q.objectiveId} &middot; ${NQ.escapeHtml(q.objective)}</span>
@@ -171,10 +172,13 @@
       .map((q, i) => ({ q, i, ans: state.answers[i] }))
       .filter((x) => x.ans !== x.q.correctIndex);
 
+    const round = state.round || 1;
+    const missedIds = missed.map((x) => x.q.id);
     root.innerHTML = `
       <div class="theme-bar">
-        <h2>${NQ.escapeHtml(state.config.label)} &mdash; Results</h2>
+        <h2>${NQ.escapeHtml(state.config.label)} &mdash; Results${round > 1 ? ` &mdash; retake round ${round - 1}` : ""}</h2>
       </div>
+      ${round > 1 && missed.length === 0 ? `<div class="retake-banner" role="status"><strong>Every one right.</strong> You have now answered every question you missed on your original quiz correctly.</div>` : ""}
       <div class="card score-hero">
         <div class="big-score">${score100}<span>/100</span></div>
         <p style="color:#475569; margin:6px 0 0;">${correct} of ${total} correct</p>
@@ -189,9 +193,11 @@
         <div id="missedList"></div>
       </div>` : `<div class="card"><p style="margin:0;">🎉 No missed questions &mdash; perfect score!</p></div>`}
       <div style="text-align:center; margin: 10px 0 20px; display:flex; gap:10px; justify-content:center; flex-wrap:wrap;">
+        ${missed.length ? `<button class="btn retake-missed" id="retakeMissedBtn">Retake the ${missed.length} I missed</button>` : ""}
         <button class="btn" id="retakeBtn">🔀 Retake (New Random Set)</button>
         <a href="index.html" class="btn ghost" id="dashboardBtn">Back to Dashboard</a>
       </div>
+      ${missed.length ? `<p class="retake-note">&ldquo;Retake the ${missed.length} I missed&rdquo; gives you only the questions you got wrong or didn&rsquo;t answer, in a new order with the answers reshuffled. You can keep retaking until you&rsquo;ve got every one right.</p>` : ""}
     `;
     applyTheme(state.config.theme);
 
@@ -222,6 +228,25 @@
         `));
       });
     }
+
+    // Retake the missed: a new round of only the questions missed this round
+    // (wrong or unanswered), reshuffled, answers reshuffled too. Rounds repeat
+    // until nothing is left to retake.
+    const retakeMissedBtn = document.getElementById("retakeMissedBtn");
+    if (retakeMissedBtn) retakeMissedBtn.addEventListener("click", () => {
+      const ids = new Set(missedIds);
+      const pool = window.QUESTION_BANK.filter((q) => ids.has(q.id));
+      state = {
+        config: state.config,
+        questions: NQ.buildQuizQuestions(pool, pool.length),
+        answers: new Array(pool.length).fill(null),
+        currentIndex: 0,
+        finished: false,
+        round: round + 1,
+        startedAt: Date.now(),
+      };
+      renderQuiz();
+    });
 
     document.getElementById("retakeBtn").addEventListener("click", () => {
       const pool = NQ.poolForObjectives(state.config.objectiveIds);
