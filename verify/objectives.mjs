@@ -12,7 +12,8 @@
 //   - no question reuses the id of one of the A+ questions removed on 30 Sept
 //   - the custom quiz page lists every topic that has questions, with its true
 //     count, under its doc domain, and a quiz on one topic draws only that topic
-//   - the newest questions play: answered right on the page, they're marked right
+//   - the newest questions play: answered right on the page, they're marked right,
+//     and the results screen's per-topic score bars actually paint
 //   - no script errors
 //   node verify/objectives.mjs [dir]    dir defaults to the repo
 //   node verify/objectives.mjs --plant  proves each check can fail
@@ -144,6 +145,9 @@ async function run(dir, pending = PENDING) {
     }
     ok(played >= 6, `only ${played} of 12 questions on the newest topics were new ones`);
     ok(await page.$eval('body', b => /100/.test(b.textContent)), 'twelve right answers did not score 100');
+    // the per-topic score bars paint: all right means every fill spans its whole bar
+    const bars = await page.$$eval('.breakdown-bar', bs => bs.map(b => [b.getBoundingClientRect().width, b.querySelector('.breakdown-fill').getBoundingClientRect().width]));
+    ok(bars.length && bars.every(([w, f]) => w > 0 && f >= w - 1), `score bars don't fill: ${JSON.stringify(bars.map(([w, f]) => `${Math.round(f)}/${Math.round(w)}px`))}`);
   } catch (e) { fails.push('could not drive the page — ' + String(e.message).split('\n')[0]); }
   ok(!errors.length, 'script errors: ' + errors.join(' | '));
   await browser.close(); srv.close();
@@ -173,6 +177,7 @@ if (process.argv.includes('--plant')) {
     'duplicate question text': data((O, B) => { B[5].question = B[4].question; }),
     'page miscounts': { custom: custom.replace('countsByObjective[q.objectiveId] = (countsByObjective[q.objectiveId] || 0) + 1;', 'if (q.id !== 1) countsByObjective[q.objectiveId] = (countsByObjective[q.objectiveId] || 0) + 1;') },
     'page hides a topic': { custom: custom.replace('(o) => countsByObjective[o.id] > 0)', '(o) => countsByObjective[o.id] > 0 && o.id !== "3.7")') },
+    'score bars left unpainted': { css: '.breakdown-fill { display: block; height|.breakdown-fill { height' },
     'one-topic quiz ignores the choice': { custom: custom.replace('const objectiveIds = selectedObjectiveIds();', 'const objectiveIds = window.OBJECTIVES.map((o) => o.id);') },
   };
   let missed = 0;
@@ -181,6 +186,11 @@ if (process.argv.includes('--plant')) {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'nq-obj-'));
     fs.cpSync(ROOT, tmp, { recursive: true, filter: s => !s.includes(`${path.sep}.git`) });
     if (p.custom) fs.writeFileSync(path.join(tmp, 'custom.html'), p.custom);
+    if (p.css) {
+      const f = path.join(tmp, 'assets', 'style.css'), [from, to] = p.css.split('|'), src = fs.readFileSync(f, 'utf8');
+      if (!src.includes(from)) { console.log(`STALE  ${name}: the plant changed nothing`); missed++; fs.rmSync(tmp, { recursive: true, force: true }); continue; }
+      fs.writeFileSync(f, src.replace(from, to));
+    }
     if (p.common) {
       const f = path.join(tmp, 'assets', 'common.js'), [from, to] = p.common.split('|'), src = fs.readFileSync(f, 'utf8');
       if (!src.includes(from)) { console.log(`STALE  ${name}: the plant changed nothing`); missed++; fs.rmSync(tmp, { recursive: true, force: true }); continue; }

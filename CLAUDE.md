@@ -71,8 +71,9 @@ answer-key fixes and every question added since.
     doc, verbatim).
   - Drives `custom.html`.
   - Checks that no removed A+ id is reused, and plays a quiz on the newest
-    topics, answering right and confirming each one is marked right.
-  - `--plant` runs 17 plants.
+    topics, answering right and confirming each one is marked right, and that
+    the results screen's per-topic score bars paint.
+  - `--plant` runs 18 plants.
 - `node verify/retake.mjs`
   - Drives "Retake the ones I missed" end to end.
   - `--plant` runs 7 plants.
@@ -80,6 +81,11 @@ answer-key fixes and every question added since.
   - Checks that no wrong option carries the explanation, and that the three
     keys fixed on 30 Sept (169, 173, 175) are right on the page.
   - `--plant` runs 4 plants.
+
+## Fixed 30 Sept 2026
+
+- The results screen's per-topic score bars never filled: `.breakdown-fill`
+  is an inline `<span>`, so its width was ignored. It is now `display: block`.
 
 ## Known, not yet fixed
 
