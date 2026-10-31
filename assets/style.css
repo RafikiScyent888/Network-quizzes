@@ -422,7 +422,7 @@ dialog.confirm::backdrop { background: rgba(15, 23, 42, 0.6); }
 dialog.confirm h2 { margin: 0 0 10px; font-size: 19px; }
 dialog.confirm p { margin: 0 0 18px; line-height: 1.55; font-size: 15px; }
 .dlg-actions { display: flex; flex-wrap: wrap; gap: 10px; }
-@media (max-width: 640px) { .sc-big { font-size: 38px; } }
+@media (max-width: 640px) { .sc-big { font-size: 38px; } .chips { flex-basis: 100%; } }
 /* Easier reading: a plainer face, wider letter, word and line spacing, a little larger. */
 html.easier body { font-family: Verdana, "DejaVu Sans", Tahoma, "Segoe UI", Arial, sans-serif; letter-spacing: 0.03em; word-spacing: 0.12em; line-height: 1.7; }
 html.easier button, html.easier input, html.easier .btn { font-family: inherit; letter-spacing: 0.02em; }
