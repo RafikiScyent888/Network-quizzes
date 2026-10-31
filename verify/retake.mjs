@@ -203,7 +203,7 @@ if (process.argv.includes('--plant')) {
     'no retake button': ['quiz.js', '${missed.length ? `<button class="btn retake-missed"', '${false ? `<button class="btn retake-missed"'],
     'finish message too early': ['quiz.js', '${round > 1 && missed.length === 0 ?', '${round > 1 ?'],
     'button in the standard sky blue': ['style.css', '.btn.retake-missed { background: #075985; color: #fff; }', '.btn.retake-missed { background: #0ea5e9; color: #fff; }'],
-    'answers not reshuffled on retake': ['quiz.js', 'questions: NQ.buildQuizQuestions(pool, pool.length),', 'questions: pool.map((q) => ({ id: q.id, question: q.question, domain: q.domain, objectiveId: q.objectiveId, objective: q.objective, options: q.options, optionExplanations: q.optionExplanations || q.options.map(() => ""), correctIndex: q.correctIndex })),'],
+    'answers not reshuffled on retake': ['quiz.js', 'questions: NQ.buildQuizQuestions(pool, pool.length, TB.shuffleOn()),', 'questions: pool.map((q) => ({ id: q.id, question: q.question, domain: q.domain, objectiveId: q.objectiveId, objective: q.objective, options: q.options, optionExplanations: q.optionExplanations || q.options.map(() => ""), correctIndex: q.correctIndex })),'],
   };
   let missed = 0;
   for (const [name, [file, a, b]] of Object.entries(PLANTS)) {

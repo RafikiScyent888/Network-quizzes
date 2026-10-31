@@ -64,6 +64,46 @@ answer-key fixes and every question added since.
   - All 34 topics now have 20+ (968 questions). `PENDING` is empty; the plant
     for it carries its own list, so it still proves the rule.
 
+## Score card, question map and filters (31 October 2026, preview)
+
+Built to the owner's decisions in the doc "Test banks: score card, question
+map and filters (plan)" (https://claude.ai/artifact/6vcGwyvSsrwfHBWaKp6rq5),
+the features the owner approved on Core 1 and Core 2, on this engine. It is
+on the branch `claude/student-resources-knowledge-base-vgvfni` and waits for
+the owner's approval before it goes to `main`. Security+ runs the same engine.
+- **`assets/testbank.js`** holds it all: the topic colours, the Missed list,
+  Shuffle order, Easier reading, the confirm dialog, the score card, "Study
+  these first", the parts bar, the chips and the map. `quiz.js` uses it on the
+  quiz and results; `index.html` and `custom.html` use it too.
+- **Topic colours:** `TOPIC_COLOR`, 34 deep shades around the rainbow in topic
+  order (the owner: "Rainbow colors still"), since light colours vanish on
+  this light page. White lettering on each is over 7:1. Neighbouring topics
+  are well apart; a few distant ones look alike, so a colour always goes with
+  its topic's number. The parts don't brighten on hover (that dropped white
+  lettering under 7:1); a white inner ring shows the pointer.
+- **Dashboard:** "Study these first" and "Retake all missed" when the Missed
+  list has anything on it; Shuffle order under the Quick Quizzes. The Full
+  Custom Quiz page has its own Shuffle order box (the same setting) and a dot
+  beside each topic.
+- **Quiz and results:** the parts bar, chips (All, each topic by number, "New
+  for the updated objectives" for the 318 questions whose `source` begins
+  "written 30 Sept 2026", Missed), the "Jump to any question" map, the score
+  card, "Study these first", "Retake all missed" and "Reset this quiz". The
+  results' "Score by Objective" card is replaced by the score card. A square
+  on the results map opens that question for review. The answering flow is
+  unchanged (pick, Submit Answer, Next).
+- **Modes in `nq_config`:** `missed` (the whole Missed list) and `topic`
+  ("Practise this topic", up to 25, its missed ones included), beside `quick`
+  and `custom`. `buildQuizQuestions(pool, count, mix, prepicked)` honours
+  Shuffle order and records each question's answer `order`.
+- **Keys:** `nq_missed_v1` (`{id: {n, at}}`; ids are numbers, stored as text),
+  `nq_shuffle_v1`, and `cwp-easier-reading`, shared with the other test banks.
+- **CertMaster Learn:** `CERTMASTER_URL` is CompTIA's sign-in page
+  (learn.comptia.org/login) until the owner confirms the address students use.
+- A quiz still lives in memory until Pause. Reset, leaving a quiz part-way and
+  finishing with questions left all ask first. `window.quizState()` is a
+  read-only copy for the checks.
+
 ## Checks: `verify/` (need Playwright; not needed to run the site)
 
 - `node verify/objectives.mjs`
@@ -77,6 +117,10 @@ answer-key fixes and every question added since.
 - `node verify/retake.mjs`
   - Drives "Retake the ones I missed" end to end.
   - `--plant` runs 7 plants.
+- `node verify/scorecard.mjs`
+  - Drives the score card, map, chips, parts bar, Missed list, Reset, the
+    prompts, Shuffle order, review and Easier reading across the three pages.
+  - `--plant` runs 22 plants (`--only=<name>` runs one).
 - `node verify/answers.mjs`
   - Checks that no wrong option carries the explanation, and that the three
     keys fixed on 30 Sept (169, 173, 175) are right on the page.
@@ -96,7 +140,9 @@ the before/after preview: "I like all of the changes in all of the quizzes".
 - Disabled buttons are no longer faded out. They're solid silver with a dashed
   border and readable text.
 - `node verify/contrast.mjs` drives every screen (dashboard, setup, question
-  before and after answering, results, paused-quiz banner) and fails on
+  before and after answering, results, paused-quiz banner; since 31 October
+  also a chip and a part chosen, every part hovered, the confirm dialog,
+  Easier reading on every page, and a phone) and fails on
   anything under 7:1 (4.5:1 for large text). `--plant` puts back the old
   sky-blue buttons and must fail.
 

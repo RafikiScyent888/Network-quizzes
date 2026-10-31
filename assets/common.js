@@ -30,13 +30,21 @@
     });
   }
 
-  // Builds a randomized quiz: picks `count` questions from the pool (filtered
-  // by objectiveIds), then shuffles each question's answer order too.
-  function buildQuizQuestions(pool, count) {
-    const picked = shuffle(pool).slice(0, count);
+  // Builds a quiz: picks `count` questions at random from the pool (or the
+  // first `count` when `prepicked`). With Shuffle order on (`mix`, the
+  // default) the questions come in a random order and each question's answers
+  // are shuffled too; off, they come in the bank's order with the answers as
+  // written. `order` keeps each answer's place in the bank's question.
+  function buildQuizQuestions(pool, count, mix = true, prepicked = false) {
+    let picked = prepicked ? pool.slice(0, count) : shuffle(pool).slice(0, count);
+    if (mix && prepicked) picked = shuffle(picked);
+    if (!mix) {
+      const pos = new Map(window.QUESTION_BANK.map((q, i) => [q.id, i]));
+      picked = picked.slice().sort((a, b) => pos.get(a.id) - pos.get(b.id));
+    }
     return picked.map((q) => {
       const optionExplanations = optionExplanationsFor(q);
-      const order = shuffle(q.options.map((_, i) => i));
+      const order = mix ? shuffle(q.options.map((_, i) => i)) : q.options.map((_, i) => i);
       return {
         id: q.id,
         question: q.question,
@@ -46,6 +54,7 @@
         options: order.map((i) => q.options[i]),
         optionExplanations: order.map((i) => optionExplanations[i]),
         correctIndex: order.indexOf(q.correctIndex),
+        order,
       };
     });
   }

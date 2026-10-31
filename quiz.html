@@ -6,15 +6,21 @@
 <title>Quiz &ndash; Network+ Practice Hub</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>⚡</text></svg>" />
 <link rel="stylesheet" href="assets/style.css" />
+<script>
+  /* Easier reading: on stays on, across pages, visits and the program's test banks. Set before the page paints, so it never flickers. */
+  try { if (localStorage.getItem("cwp-easier-reading") === "1") document.documentElement.classList.add("easier"); } catch (e) {}
+</script>
 </head>
 <body>
   <div class="wrap">
+    <div class="topline"><button type="button" class="btn" id="easierBtn" aria-pressed="false">Easier reading: off</button></div>
     <div id="app"><p style="color:#fff; text-align:center;">Loading quiz&hellip;</p></div>
     <div id="footerSlot"></div>
   </div>
 
   <script src="assets/questions.js"></script>
   <script src="assets/common.js"></script>
+  <script src="assets/testbank.js"></script>
   <script>document.getElementById("footerSlot").innerHTML = NQ.renderFooter();</script>
   <script src="assets/quiz.js"></script>
 </body>
