@@ -102,6 +102,10 @@ CertMaster Learn address students use. Security+ runs the same engine.
   `nq_shuffle_v1`, and `cwp-easier-reading`, shared with the other test banks.
 - **CertMaster Learn:** `CERTMASTER_URL` is CompTIA's sign-in page
   (learn.comptia.org/login) until the owner confirms the address students use.
+- **Paused quizzes:** Security+ used to save under the same `nq_paused_state`
+  key (both sites share the address). Since 31 October 2026 Security+ has its
+  own keys, and `loadPaused()` here ignores a paused quiz whose questions
+  aren't all this bank's.
 - A quiz still lives in memory until Pause. Reset, leaving a quiz part-way and
   finishing with questions left all ask first. `window.quizState()` is a
   read-only copy for the checks.

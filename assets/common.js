@@ -75,9 +75,17 @@
   function savePaused(state) {
     localStorage.setItem(STORAGE.paused, JSON.stringify(state));
   }
+  // Security+ used to save its paused quiz under this same key (both sites
+  // live at rafikiscyent888.github.io). A paused quiz whose questions are not all
+  // this bank's belongs to another site: ignore it, never resume it here.
   function loadPaused() {
     const raw = localStorage.getItem(STORAGE.paused);
-    return raw ? JSON.parse(raw) : null;
+    if (!raw) return null;
+    let s = null;
+    try { s = JSON.parse(raw); } catch (e) { return null; }
+    const mine = new Map(window.QUESTION_BANK.map((q) => [q.id, q.question]));
+    if (!s || !Array.isArray(s.questions) || !s.questions.length || !s.questions.every((q) => mine.get(q.id) === q.question)) return null;
+    return s;
   }
   function clearPaused() {
     localStorage.removeItem(STORAGE.paused);

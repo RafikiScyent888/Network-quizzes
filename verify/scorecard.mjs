@@ -20,6 +20,8 @@
 //   - Shuffle order: off gives the bank's order and the answers as written,
 //     remembered; switching part-way keeps every answer
 //   - review from the results: a square opens that question, locked
+//   - a paused quiz from another site (Security+ used to share the key) is
+//     never offered to resume here
 //   - Easier reading stays on across a reload; no script errors
 //   node verify/scorecard.mjs           the site in this repo
 //   node verify/scorecard.mjs --plant   proves each check can fail
@@ -76,6 +78,12 @@ async function run(dir) {
 
   try {
     await page.goto(`${U}/index.html`); await page.evaluate(() => { localStorage.clear(); sessionStorage.clear(); }); await page.reload();
+
+    // ---- a paused quiz from another site is not offered ----
+    await page.evaluate(k => localStorage.setItem(k, JSON.stringify({ config: { mode: 'quick', count: 1, objectiveIds: [], theme: 'theme-sun', label: 'Another site' }, questions: [{ id: 1, question: 'A question from another site', options: ['a', 'b'], optionExplanations: ['', ''], correctIndex: 0, objectiveId: '1.1', objective: 'x' }], answers: [null], currentIndex: 0, finished: false, startedAt: 1 })), PAUSED);
+    await page.reload();
+    ok(!(await page.$('#resumeBtn')), "another site's paused quiz is offered to resume on Network+");
+    await page.evaluate(() => localStorage.clear()); await page.reload();
 
     // ---- topic colours ----
     const COL = await page.evaluate(() => TB.TOPIC_COLOR);
@@ -301,6 +309,7 @@ if (process.argv.includes('--plant')) {
     'shuffle part-way loses answers': ['assets/quiz.js', 'state.answers = qs.map((q) => { const o = chosen.get(q.id); return o === null ? null : q.order.indexOf(o); });', 'state.answers = qs.map(() => null);'],
     'retake all uses the whole bank': ['assets/quiz.js', 'const pool = TB.missedList().map(TB.question);', 'const pool = window.QUESTION_BANK.slice(0, 10);'],
     'practise draws from every topic': ['assets/testbank.js', 'const all = window.QUESTION_BANK.filter((q) => q.objectiveId === sub).map((q) => q.id);', 'const all = window.QUESTION_BANK.map((q) => q.id);'],
+    "another site's pause offered": ['assets/common.js', ' || !s.questions.every((q) => mine.get(q.id) === q.question)) return null;', ') return null;'],
     'easier reading forgotten': ['assets/testbank.js', 'try { localStorage.setItem(KEYS.easier, on ? "1" : "0"); } catch (e) { /* storage off */ }', ''],
   };
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'nq-scorecard-plant-'));
