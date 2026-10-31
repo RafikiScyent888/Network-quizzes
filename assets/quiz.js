@@ -43,6 +43,7 @@
     if (!state.filter) state.filter = "all";
     TB.ensureDialog();
     TB.initEasier();
+    TB.initTheme();
     applyTheme(state.config.theme);
     if (state.finished) {
       renderResults();
@@ -350,7 +351,7 @@
         <div class="main-col">
           <div class="card score-hero">
             <div class="big-score">${score100}<span>/100</span></div>
-            <p style="color:#475569; margin:6px 0 0;">${correct} of ${total} correct</p>
+            <p style="color:var(--muted); margin:6px 0 0;">${correct} of ${total} correct</p>
           </div>
           <div class="results-actions">
             ${missed.length ? `<button class="btn retake-missed" id="retakeMissedBtn">Retake the ${missed.length} I missed</button>` : ""}

@@ -9,11 +9,17 @@
 <script>
   /* Easier reading: on stays on, across pages, visits and the program's test banks. Set before the page paints, so it never flickers. */
   try { if (localStorage.getItem("cwp-easier-reading") === "1") document.documentElement.classList.add("easier"); } catch (e) {}
+  /* Light or dark: the student's own choice, one for the whole program (the acronym sites keep it
+     under the same key). Until they choose, the page follows the device's setting. Set before the
+     page paints, so it never flashes. */
+  (function () { var t = null; try { t = localStorage.getItem("cwp:theme"); } catch (e) {}
+    if (t !== "light" && t !== "dark") t = (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t); })();
 </script>
 </head>
 <body>
   <div class="wrap">
-    <div class="topline"><button type="button" class="btn" id="easierBtn" aria-pressed="false">Easier reading: off</button></div>
+    <div class="topline"><button type="button" class="btn" id="themeBtn">Dark mode</button><button type="button" class="btn" id="easierBtn" aria-pressed="false">Easier reading: off</button></div>
     <div class="site-header">
       <h1>⚡ Network+ Practice Hub</h1>
       <p>CompTIA Network+ (N10-009) style practice questions, tagged by objective.</p>
@@ -25,7 +31,7 @@
 
     <div class="card">
       <h2 style="margin-top:0;">Quick Quizzes</h2>
-      <p style="color:#475569; margin-top:-4px;">Randomized questions pulled from every objective. Great for a fast check-in.</p>
+      <p style="color:var(--muted); margin-top:-4px;">Randomized questions pulled from every objective. Great for a fast check-in.</p>
       <div class="tile-grid">
         <a href="#" class="tile theme-lightning" data-count="10">
           <div>
@@ -65,7 +71,7 @@
 
     <div class="card">
       <h2 style="margin-top:0;">Full Custom Quiz</h2>
-      <p style="color:#475569; margin-top:-4px;">Pick your objectives and question count (45&ndash;245). Scored out of 100.</p>
+      <p style="color:var(--muted); margin-top:-4px;">Pick your objectives and question count (45&ndash;245). Scored out of 100.</p>
       <div class="tile-grid" style="grid-template-columns: 1fr;">
         <a href="custom.html" class="tile theme-green">
           <div>
@@ -92,6 +98,7 @@
     document.getElementById("shuffleSlot").innerHTML = TB.shuffleBox("shuffleChk", true);
     TB.wireShuffle("shuffleChk");
     TB.initEasier();
+    TB.initTheme();
 
     const allObjectiveIds = window.OBJECTIVES.map((o) => o.id);
     const themeMeta = {

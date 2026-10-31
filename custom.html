@@ -9,11 +9,17 @@
 <script>
   /* Easier reading: on stays on, across pages, visits and the program's test banks. Set before the page paints, so it never flickers. */
   try { if (localStorage.getItem("cwp-easier-reading") === "1") document.documentElement.classList.add("easier"); } catch (e) {}
+  /* Light or dark: the student's own choice, one for the whole program (the acronym sites keep it
+     under the same key). Until they choose, the page follows the device's setting. Set before the
+     page paints, so it never flashes. */
+  (function () { var t = null; try { t = localStorage.getItem("cwp:theme"); } catch (e) {}
+    if (t !== "light" && t !== "dark") t = (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+    document.documentElement.setAttribute("data-theme", t); })();
 </script>
 </head>
 <body>
   <div class="wrap">
-    <div class="topline"><button type="button" class="btn" id="easierBtn" aria-pressed="false">Easier reading: off</button></div>
+    <div class="topline"><button type="button" class="btn" id="themeBtn">Dark mode</button><button type="button" class="btn" id="easierBtn" aria-pressed="false">Easier reading: off</button></div>
     <div class="site-header">
       <h1>🌱 Build Your Custom Quiz</h1>
       <p>All objectives are selected by default. Deselect anything you don't want to be tested on.</p>
@@ -59,6 +65,7 @@
     document.getElementById("shuffleSlot").innerHTML = TB.shuffleBox("shuffleSetup", true);
     TB.wireShuffle("shuffleSetup");
     TB.initEasier();
+    TB.initTheme();
 
     const MIN_Q = 45, MAX_Q = 245;
 

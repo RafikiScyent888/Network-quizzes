@@ -110,6 +110,48 @@ CertMaster Learn address students use. Security+ runs the same engine.
   finishing with questions left all ask first. `window.quizState()` is a
   read-only copy for the checks.
 
+## Light or dark (31 October 2026)
+
+The owner asked for a dark/light switch on every test bank ("we need to keep
+things easy for my students to read"). Core 1 was previewed first; the owner
+approved it and said of the other four: "Push it and do the rest". Decided by
+the owner before building:
+- **One choice for the whole program:** the key is `cwp:theme` ("light" or
+  "dark"), the same key the acronym sites use. Nothing is saved until the
+  student presses the button.
+- **Until the student chooses, the page follows the device**, live; once
+  chosen, the choice wins over the device. (Only Core 1 starts dark.)
+
+How it works:
+- Each page's head stamps `data-theme` on `<html>` before it paints.
+- `#themeBtn` beside Easier reading, wired by `TB.initTheme()` (index,
+  custom, and `quiz.js`). It names where it goes ("Dark mode" on the light
+  page), with a moon or sun; its label says both.
+- **Dark mode** is the block at the end of `assets/style.css`, every rule
+  under `:root[data-theme="dark"]`: the program's dark look, as on Core 1
+  (light lettering on deep navy, cyan buttons with dark lettering, a yellow
+  focus ring). The ordinary-button rule sits in `:where()` so the ghost and
+  top-line buttons keep their outline.
+- **Topic colours in dark mode:** `TB.TOPIC_BRIGHT`, a bright shade of each
+  of the 34 hues, dark lettering over 7:1, neighbours alternating in
+  lightness; as with the deep set, a few distant ones look alike, so the
+  number always goes with the colour. `tc(id)` carries both (`--tc`, `--tcb`).
+- Three lines had their grey written into the page (`color:#475569`); they
+  now use `var(--muted)`, so dark mode can change them.
+- **Security+ runs the same engine** and gets the same change.
+
+## AAA on gradients (fixed 31 October 2026)
+
+The contrast check only took a background colour that covered 8% of a text's
+box, so on a gradient it found none and passed the text unmeasured. Fixed in
+`verify/contrast.mjs`: the darkest and lightest parts of a gradient are now
+measured too. It found the tiles' bright glow spots behind their lettering
+(white on the green glow 1.6:1, the grey 2.1:1, the yellow 3.7:1), and the
+orange, green and yellow ends too light. The glows are gone; each tile keeps
+its hue, deeper (fire a deep ember, green a deep green); the small counts sit
+on a darker backing; the quiz's header bar and its pills likewise. Over 7:1
+(4.5:1 for the large titles), both modes.
+
 ## Checks: `verify/` (need Playwright; not needed to run the site)
 
 - `node verify/objectives.mjs`
@@ -125,8 +167,15 @@ CertMaster Learn address students use. Security+ runs the same engine.
   - `--plant` runs 7 plants.
 - `node verify/scorecard.mjs`
   - Drives the score card, map, chips, parts bar, Missed list, Reset, the
-    prompts, Shuffle order, review and Easier reading across the three pages.
-  - `--plant` runs 22 plants (`--only=<name>` runs one).
+    prompts, Shuffle order, review, Easier reading and light or dark (the
+    device followed, live, until chosen; nothing saved until then; the
+    button's words; `cwp:theme` on every page; a choice from another site;
+    the choice beats the device; the bright shades) across the three pages.
+  - `--plant` runs 33 plants (`--only=<name>` runs one).
+  - Fixed 31 Oct: the "finish with questions left" step went to the last
+    square after a reshuffle, which about one run in ten held the question
+    already answered; it now answers it only if it is still open. A failed
+    drive now reports the lines it was on.
 - `node verify/answers.mjs`
   - Checks that no wrong option carries the explanation, and that the three
     keys fixed on 30 Sept (169, 173, 175) are right on the page.
@@ -151,6 +200,11 @@ the before/after preview: "I like all of the changes in all of the quizzes".
   Easier reading on every page, and a phone) and fails on
   anything under 7:1 (4.5:1 for large text). `--plant` puts back the old
   sky-blue buttons and must fail.
+- Since 31 October it drives every screen twice, dark then light, each in a
+  fresh browser, fails if a sweep finds the page in the other theme, and
+  measures text on gradients (above). `--theme=dark` runs one. Calibrated
+  with plants: faint dark-only text, an unreadable dark chip, a glow tile put
+  back, a hard-coded grey put back, the theme setting ignored; all caught.
 
 Run it after any colour or layout change.
 
