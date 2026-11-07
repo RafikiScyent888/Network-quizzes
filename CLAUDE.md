@@ -71,8 +71,9 @@ map and filters (plan)" (https://claude.ai/artifact/6vcGwyvSsrwfHBWaKp6rq5),
 the features the owner approved on Core 1 and Core 2, on this engine. The
 owner saw the preview (the 34 colours, a quiz, the filters, Reset, results,
 the dashboard, the Full Custom Quiz page, Easier reading, a phone) and
-approved it: "Yes push it". Live on `main` the same day. Still open: the
-CertMaster Learn address students use. Security+ runs the same engine.
+approved it: "Yes push it". Live on `main` the same day. (The CertMaster Learn
+address, the one thing left open, was settled 7 November 2026.) Security+ runs
+the same engine.
 - **`assets/testbank.js`** holds it all: the topic colours, the Missed list,
   Shuffle order, Easier reading, the confirm dialog, the score card, "Study
   these first", the parts bar, the chips and the map. `quiz.js` uses it on the
@@ -95,13 +96,19 @@ CertMaster Learn address students use. Security+ runs the same engine.
   on the results map opens that question for review. The answering flow is
   unchanged (pick, Submit Answer, Next).
 - **Modes in `nq_config`:** `missed` (the whole Missed list) and `topic`
-  ("Practise this topic", up to 25, its missed ones included), beside `quick`
+  ("Practice this topic", up to 25, its missed ones included), beside `quick`
   and `custom`. `buildQuizQuestions(pool, count, mix, prepicked)` honours
   Shuffle order and records each question's answer `order`.
 - **Keys:** `nq_missed_v1` (`{id: {n, at}}`; ids are numbers, stored as text),
   `nq_shuffle_v1`, and `cwp-easier-reading`, shared with the other test banks.
-- **CertMaster Learn:** `CERTMASTER_URL` is CompTIA's sign-in page
-  (learn.comptia.org/login) until the owner confirms the address students use.
+- **CertMaster Learn:** `CERTMASTER_URL` is the address the owner gave on 7 November 2026,
+  https://www.comptia.org/en-us/resources/certmaster-training/learn/ (the owner: "needs to be the
+  hyperlink for Review in CertMaster Learn across all of the quizzes"). It replaced CompTIA's sign-in
+  page; `verify/scorecard.mjs` checks the link is exactly this address.
+- **"Practice this topic" (7 November 2026):** the owner: "Please fix the to 'Practice this topic' across
+  all of the quizzes." The link, the topic quiz's banner ("Practicing ...") and its title use the American
+  spelling; `verify/scorecard.mjs` checks the link's words and that no "Practis" is left on the page. The
+  internal attribute `data-practise` keeps its name: students never see it.
 - **Paused quizzes:** Security+ used to save under the same `nq_paused_state`
   key (both sites share the address). Since 31 October 2026 Security+ has its
   own keys, and `loadPaused()` here ignores a paused quiz whose questions

@@ -6,7 +6,7 @@
 
   // The questions for a new quiz, by mode: a quick or custom quiz draws from
   // the chosen objectives; "missed" is the whole lasting Missed list; "topic"
-  // is "Practise this topic" (its missed questions first, up to 25 in all).
+  // is "Practice this topic" (its missed questions first, up to 25 in all).
   function buildFor(config) {
     if (config.mode === "missed") {
       const pool = TB.missedList().map(TB.question);
@@ -134,7 +134,7 @@
     const round = state.round || 1;
     if (round > 1) return `<div class="retake-banner" role="note"><strong>Retake round ${round - 1}</strong> &mdash; only the questions you missed last time.</div>`;
     if (state.config.mode === "missed") return `<div class="retake-banner" role="note"><strong>Your Missed list</strong> &mdash; every question you have answered wrong and not yet answered right. Each one you get right comes off the list.</div>`;
-    if (state.config.mode === "topic") return `<div class="retake-banner" role="note"><strong>Practising ${TB.topicText(state.config.topic)}</strong> &mdash; every question you have missed on this topic is included.</div>`;
+    if (state.config.mode === "topic") return `<div class="retake-banner" role="note"><strong>Practicing ${TB.topicText(state.config.topic)}</strong> &mdash; every question you have missed on this topic is included.</div>`;
     return "";
   }
 
